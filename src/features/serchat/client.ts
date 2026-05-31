@@ -15,12 +15,12 @@ const serchat_commands: serchat.BotCommand[] = [
 ];
 
 export default async function startSerchatClient() {
-    if (!Deno.env.has("EB_SERCHAT_TOKEN")) {
-        output.warn('You should set EB_SERCHAT_TOKEN enviorment variables to a SerChat bot token.\nOtherwise, the SerChat integration will not work');
+    if (!Deno.env.has("JB_SERCHAT_TOKEN")) {
+        output.warn('You should set JB_SERCHAT_TOKEN enviorment variables to a SerChat bot token.\nOtherwise, the SerChat integration will not work');
         return;
     }
 
-    await client.login(Deno.env.get("EB_SERCHAT_TOKEN")!);
+    await client.login(Deno.env.get("JB_SERCHAT_TOKEN")!);
     output.verbose("Logged in to SerChat");
 
     registerLeveling();

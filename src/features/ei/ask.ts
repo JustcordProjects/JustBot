@@ -197,7 +197,7 @@ export async function executeAsk(msg: dsc.Message, question: string, contextMsgs
                 const formData = new FormData();
 
                 formData.append('file', await (await fetch(args.file_url)).blob(), 'image.png');
-                formData.append('apikey', process.env.EB_OCR_API ?? '');
+                formData.append('apikey', process.env.JB_OCR_API ?? '');
 
                 const res = await fetch('https://api8.ocr.space/parse/image', {
                     method: 'POST',
@@ -374,8 +374,8 @@ export async function executeAsk(msg: dsc.Message, question: string, contextMsgs
 
     const toolExecutionHistoryFormatted = JSON.stringify(toolExecutionHistory, null, 4);
     
-    output.verbose(` === BEGIN Eclair Inteligence debug data for input: ${question}`);
-    output.verbose(`Eclair Inteligence final system prompt:\n\n${finalSystemInstruction}`);
-    output.verbose(`Eclair Inteligence tool calls:\n\n${toolExecutionHistoryFormatted}`);
-    output.verbose(` === END Eclair Inteligence debug data for input: ${question}`);
+    output.verbose(` === BEGIN JustInteligence debug data for input: ${question}`);
+    output.verbose(`JustInteligence final system prompt:\n\n${finalSystemInstruction}`);
+    output.verbose(`JustInteligence tool calls:\n\n${toolExecutionHistoryFormatted}`);
+    output.verbose(` === END JustInteligence debug data for input: ${question}`);
 }

@@ -13,8 +13,8 @@ let genai: gemini.GoogleGenerativeAI | null = null;
 let models: Record<string, gemini.GenerativeModel[]> = {};
 
 export async function init() {
-    if (process.env.EB_GEMINI_API_KEY) {
-        genai = new gemini.GoogleGenerativeAI(process.env.EB_GEMINI_API_KEY);
+    if (process.env.JB_GEMINI_API_KEY) {
+        genai = new gemini.GoogleGenerativeAI(process.env.JB_GEMINI_API_KEY);
         models = {};
     }
 }

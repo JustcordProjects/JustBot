@@ -78,7 +78,7 @@ async function prefixCommandsMessageHandler(msg: dsc.OmitPartialGroupDMChannel<d
         log.replyError(
             msg,
             'Hej, a co ty odpie*dalasz?',
-            'Wiesz że nie masz uprawnień? Poczekaj aż hubix się tobą zajmie...',
+            'Wiesz że nie masz uprawnień? Poczekaj aż ktoś się tobą zajmie. Bój się...',
         );
         return;
     }

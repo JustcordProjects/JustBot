@@ -126,7 +126,7 @@ export const onReceivedEmailAction: Action<ReceivedNewEmail> = {
                     },
                     {
                         name: 'Do',
-                        value: receiver ?? process.env.EB_EMAIL_USER ?? '<nieznany odbiorca>',
+                        value: receiver ?? process.env.JB_EMAIL_USER ?? '<nieznany odbiorca>',
                         inline: true,
                     },
                 ],

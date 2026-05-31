@@ -24,7 +24,7 @@ const manageAccountsCmd: Command = {
     aliases: ['account'],
 
     description: {
-        main: 'Zarządzaj swoimi wszystkimi kontami połączonymi w EclairBocie.',
+        main: 'Zarządzaj swoimi wszystkimi kontami połączonymi w JustBocie.',
         short: 'Zarządzaj swoimi multikontami.'
     },
     expectedArgs: [],

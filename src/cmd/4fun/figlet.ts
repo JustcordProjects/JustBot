@@ -146,7 +146,7 @@ const figletCmd: Command = {
         const font = /*api.getArg('font').value as string ??*/ 'Standard';
         const textArg = api.getTypedArg('text', 'string').value as string;
 
-        const text = textArg == 'hubix' ? 'pedał' : textArg == 'eclair bot' ? 'istota wyższa' : textArg;
+        const text = textArg == 'hubix' ? 'pedał' : textArg == 'just bot' ? 'istota wyższa' : textArg;
 
         const availableFonts = await figletFonts();
         if (!availableFonts.includes(font)) {

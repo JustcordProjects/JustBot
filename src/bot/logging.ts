@@ -117,7 +117,7 @@ export namespace output {
     }
 
     export function verbose(msg: string | object | unknown, ...args: unknown[]) {
-        if (process.env.EB_DEVELOPMENT !== 'true') return;
+        if (process.env.JB_DEVELOPMENT !== 'true') return;
         const data = format(msg, ...args);
         const prefixed = decorate('VERB', colors.GRAY, data);
         console.log(prefixed);

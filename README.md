@@ -1,6 +1,6 @@
 # JustBOT 
 
-A Discord bot made for the EclairBakery with a little bit of humour.
+A Discord bot made for the Justcord Discord server with a little bit of humour.
 
 <div align="center">
     <img width="706" height="653" alt="image" src="https://github.com/user-attachments/assets/776bac71-d8d1-4b36-9e59-3bee4c5a48e5" />
@@ -21,5 +21,12 @@ Ensure you have Deno installed. If not, install it from a shell command from [de
 Next, start the bot using this command:
 
 `make run`
+
+Or with hot reload on file changes:
+
+`make dev`
+
+> [!IMPORTANT]
+> To see any verbose messages, please set JB_DEVELOPMENT enviorment variable to true
 
 It's that simple!

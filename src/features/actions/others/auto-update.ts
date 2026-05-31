@@ -6,7 +6,7 @@ import { Action } from '../index.ts';
 import { cfg } from '@/bot/cfg.ts';
 import { output } from '../../../bot/logging.ts';
 
-const enabled = Deno.env.get('EB_AUTO_UPDATE') == 'true';
+const enabled = Deno.env.get('JB_AUTO_UPDATE') == 'true';
 
 export const autoUpdateAction: Action<MessageEventCtx> = {
     name: 'others/auto-update',

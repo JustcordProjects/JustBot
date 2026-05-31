@@ -76,13 +76,13 @@ import { autoUpdateAction } from './features/actions/others/auto-update.ts';
 client.once('clientReady', async () => {
     await output.init();
     output.log(`${ft.CYAN}Logged in.`);
-    if (process.env.EB_DEVELOPMENT == 'true') {
+    if (process.env.JB_DEVELOPMENT == 'true') {
         output.verbose(
             '------------------------------------------------\n' + 
             'Verbose logging enabled.\n' +
             'JustBOT will log more detailed output.\n' +
             'To disable this behaviour, please set\n' +
-            'EB_DEVELOPMENT to false or unset this variable.\n' + 
+            'JB_DEVELOPMENT to false or unset this variable.\n' + 
             '------------------------------------------------'
         );
     }
@@ -95,8 +95,8 @@ client.once('clientReady', async () => {
 
     addVoiceExperience();
 
-    if (!process.env.EB_EMAIL_USER || !process.env.EB_EMAIL_PASS) {
-        output.warn('You should set EB_EMAIL_USER and EB_EMAIL_PASS enviorment variables to a GMail login and temporary password\nOtherwise, the e-mail based commands will not work');
+    if (!process.env.JB_EMAIL_USER || !process.env.JB_EMAIL_PASS) {
+        output.warn('You should set JB_EMAIL_USER and JB_EMAIL_PASS enviorment variables to a GMail login and temporary password\nOtherwise, the e-mail based commands will not work');
     } else {
         await email.init();
         await initEmailActionsIntegration();
@@ -105,7 +105,7 @@ client.once('clientReady', async () => {
 
     await gemini.init();
     if (!gemini.isInitialized()) {
-        output.warn('You should set EB_GEMINI_API_KEY enviroment variable to your Gemini api key\nOtherwise, the Gemini integration based commands will not work');
+        output.warn('You should set JB_GEMINI_API_KEY enviroment variable to your Gemini api key\nOtherwise, the Gemini integration based commands will not work');
     } else if (cfg.features.ai.enabled) {
         initAskCmdModel();
         initWikiModel();

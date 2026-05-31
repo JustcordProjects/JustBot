@@ -63,11 +63,11 @@ const sendEmailCmd: Command = {
         const COOLDOWN_MS = 10 * 60 * 1000;
         const check = await api.checkCooldown('email', COOLDOWN_MS);
 
-        if (!process.env.EB_EMAIL_USER || !process.env.EB_EMAIL_PASS) {
+        if (!process.env.JB_EMAIL_USER || !process.env.JB_EMAIL_PASS) {
             return api.log.replyWarn(
                 api,
                 'Brakuje czegoś!',
-                "Poproś administrację o dostęp do e-mail'a (w skrócie by ustawili EB_EMAIL_USER i EB_EMAIL_PASS).",
+                "Poproś administrację o dostęp do e-mail'a (w skrócie by ustawili JB_EMAIL_USER i JB_EMAIL_PASS).",
             );
         }
 

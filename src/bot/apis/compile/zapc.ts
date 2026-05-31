@@ -42,7 +42,7 @@ export class ZapCompilerDriver implements CompilerDriver {
     private readonly baseUrl: string;
 
     constructor(options: ZapCompilerDriverOptions) {
-        const baseUrl = options.baseUrl ?? process.env.EB_ZAPC_BASE_URL;
+        const baseUrl = options.baseUrl ?? process.env.JB_ZAPC_BASE_URL;
         if (!baseUrl) {
             throw new Error('No zapc api base url provided');
         }

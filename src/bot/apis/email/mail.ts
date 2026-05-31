@@ -10,8 +10,8 @@ export async function init() {
     transporter = nm.createTransport({
         service: 'gmail',
         auth: {
-            user: process.env.EB_EMAIL_USER,
-            pass: process.env.EB_EMAIL_PASS,
+            user: process.env.JB_EMAIL_USER,
+            pass: process.env.JB_EMAIL_PASS,
         },
     });
 
@@ -20,8 +20,8 @@ export async function init() {
         port: 993,
         secure: true,
         auth: {
-            user: process.env.EB_EMAIL_USER!,
-            pass: process.env.EB_EMAIL_PASS!,
+            user: process.env.JB_EMAIL_USER!,
+            pass: process.env.JB_EMAIL_PASS!,
         },
         logger: false,
     });
@@ -41,7 +41,7 @@ export async function sendMessage({ receiver, subject, content }: SendEmail) {
     }
 
     return transporter.sendMail({
-        from: process.env.EB_EMAIL_USER,
+        from: process.env.JB_EMAIL_USER,
         to: receiver,
         subject: subject,
         html: content,

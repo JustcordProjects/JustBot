@@ -13,7 +13,7 @@ export type Repo = {
 let token: string | null;
 
 export async function init(tok?: string) {
-    token = tok ?? process.env.EB_GITHUB_TOKEN ?? null;
+    token = tok ?? process.env.JB_GITHUB_TOKEN ?? null;
 }
 
 async function request(url: string, method?: string) {

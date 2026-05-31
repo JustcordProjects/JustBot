@@ -101,7 +101,7 @@ client.on('interactionCreate', async (int: Interaction) => {
         return log.replyError(
             replyable,
             'Hej, a co ty odpie*dalasz?',
-            'Wiesz że nie masz uprawnień? Poczekaj aż hubix się tobą zajmie...',
+            'Wiesz że nie masz uprawnień? Poczekaj aż ktoś się tobą zajmie. Bój się...',
         );
     }
 
