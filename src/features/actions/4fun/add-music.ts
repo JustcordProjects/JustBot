@@ -21,7 +21,7 @@ export const addMusicAction: Action<MessageEventCtx> = {
             const links = extractMediaLinks(msg.content);
 
             for (const link of links) {
-                db.music.addEntry(msg.id, link);
+                db.music.addEntry(msg.author.id, link);
             }
         },
     ],
