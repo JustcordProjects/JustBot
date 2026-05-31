@@ -43,12 +43,7 @@ export const featuresConfig: Config['features'] = {
             `<mention> opuścił nasz serwer, ale zawsze może wrócić! (nie wróci)`,
         ],
         freeRolesForEveryone: [
-            '1235548306550161451',
-            // roles for appereance
-            '1235540123576176652',
-            '1415582195564806154',
-            '1235541500889137273',
-            '1235540273556361268',
+            '1510682337690652812',
         ],
     },
     forFun: {
