@@ -66,9 +66,6 @@ export interface Config {
             logs: dsc.Snowflake;
             warnings: dsc.Snowflake;
             hallOfShame: dsc.Snowflake;
-            modCommands: dsc.Snowflake;
-            info: dsc.Snowflake;
-            assets: dsc.Snowflake;
         };
         important: {
             lobby: dsc.Snowflake;
@@ -79,33 +76,16 @@ export interface Config {
         };
         general: {
             general: dsc.Snowflake;
-            offtopic: dsc.Snowflake;
             commands: dsc.Snowflake;
             media: dsc.Snowflake;
-            ei: dsc.Snowflake;
-        };
-        dev: {
-            programming: dsc.Snowflake;
         };
         other: {
             music: dsc.Snowflake;
-            communityPolls: dsc.Snowflake;
-            desktopPorn: dsc.Snowflake;
-            minecraft: dsc.Snowflake;
             economy: dsc.Snowflake;
-            files: dsc.Snowflake;
-            info: dsc.Snowflake;
-            safeChat: dsc.Snowflake;
         };
         forfun: {
             counting: dsc.Snowflake;
             lastLetter: dsc.Snowflake;
-            finishSentence: dsc.Snowflake;
-            wordAssociation: dsc.Snowflake;
-            unfiltred: dsc.Snowflake;
-        };
-        isolation: {
-            isolationCell: dsc.Snowflake;
         };
         justbot: {
             stdout: dsc.Snowflake;

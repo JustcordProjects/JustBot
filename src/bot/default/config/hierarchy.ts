@@ -2,24 +2,21 @@ import { Config } from '@/bot/definitions/config/config.ts';
 
 export const hierarchyCfg: Config['hierarchy'] = {
     developers: {
-        allowedRoles: [
-            '1280081773019140096',
-        ],
+        allowedRoles: [],
         allowedUsers: [
             '990959984005222410',
-            '985053803151753316',
             '1274610053843783768',
-            '1401568817766862899',
+            '931732121997959219'
         ],
     },
 
     administration: {
-        headAdmin: '1415710955022843904',
-        admin: '1415710969732005980',
-        headMod: '1415710973288910919',
-        mod: '1415710976644349972',
-        helper: '1415710980612034771',
+        headAdmin: '1510229918212952184',
+        admin: '1510229918212952184',
+        headMod: '1510229918212952184',
+        mod: '1510229918212952184',
+        helper: '1510229918212952184',
     },
 
-    automodBypassRoles: ['1380875827998097418'],
+    automodBypassRoles: ['1510229918212952184'],
 };

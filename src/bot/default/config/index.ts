@@ -84,11 +84,11 @@ export const defaultCfg: Config = {
             },
             spammy: {
                 default: 'block',
-                allow: [channelsCfg.general.commands, channelsCfg.mod.modCommands, channelsCfg.mod.modGeneral, channelsCfg.forfun.unfiltred],
+                allow: [channelsCfg.general.commands, channelsCfg.mod.modGeneral],
             },
             economy: {
                 default: 'block',
-                allow: [channelsCfg.other.economy, channelsCfg.mod.modCommands],
+                allow: [channelsCfg.other.economy],
             },
         },
 

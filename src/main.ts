@@ -64,7 +64,6 @@ import { askAction } from '@/features/actions/4fun/ask.ts';
 import { addVoiceExperience } from '@/bot/level.ts';
 import { addMusicAction } from '@/features/actions/4fun/add-music.ts';
 import { registerCommands } from '@/cmd/list.ts';
-import { communityPollsContentModerator, filesContentModerator } from '@/features/actions/others/content-moderator.ts';
 import { reactionAddHandler, reactionRemoveHandler } from '@/features/actions/4fun/reaction-handler.ts';
 import startSerchatClient from '@/features/serchat/client.ts';
 import { registerMsgEditDscEvents } from '@/features/actions/logs/edit-message.ts';
@@ -137,8 +136,6 @@ function setUpActions() {
         sayGoodbyeAction,
         // automod
         ...AutoModRules.all(),
-        filesContentModerator,
-        communityPollsContentModerator,
         // msg-specific actions 
         mediaChannelAction,
         countingChannelAction,
