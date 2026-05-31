@@ -1,4 +1,4 @@
-console.log('Welcome to EclairBOT!');
+console.log('Welcome to JustBOT!');
 
 // preparation & basic imports
 import { client } from '@/client.ts';
@@ -80,7 +80,7 @@ client.once('clientReady', async () => {
         output.verbose(
             '------------------------------------------------\n' + 
             'Verbose logging enabled.\n' +
-            'EclairBOT will log more detailed output.\n' +
+            'JustBOT will log more detailed output.\n' +
             'To disable this behaviour, please set\n' +
             'EB_DEVELOPMENT to false or unset this variable.\n' + 
             '------------------------------------------------'
@@ -187,10 +187,10 @@ async function main() {
         const availableMemory = process.availableMemory();
         const treshold = 25 * 1024 * 1024; // 25MB
         if (processHeap > availableMemory - treshold) {
-            output.warn(`Low on memory.\nUsing: ${processHeap} of ${availableMemory} available memory.\nEclairBOT will attempt to restart if this situation occurs more than 6 times in the next 10 seconds.`);
+            output.warn(`Low on memory.\nUsing: ${processHeap} of ${availableMemory} available memory.\nJustBOT will attempt to restart if this situation occurs more than 6 times in the next 10 seconds.`);
             memoryIssuesTimes++;
             if (memoryIssuesTimes == 6) {
-                output.log(`Attempting to restart EclairBOT to free up memory.`);
+                output.log(`Attempting to restart JustBOT to free up memory.`);
                 process.exit(1); // start.hosting-only.js should catch this
             }
         }
@@ -222,7 +222,7 @@ async function main() {
         setInterval(async () => {
             let dbBackUpsChannel: dsc.GuildTextBasedChannel;
             try {
-                dbBackUpsChannel = await getChannel(cfg.channels.eclairbot.dbBackups, client) as dsc.GuildTextBasedChannel;
+                dbBackUpsChannel = await getChannel(cfg.channels.justbot.dbBackups, client) as dsc.GuildTextBasedChannel;
             } catch {
                 output.err('could not find the channel to send db backups');
                 return;

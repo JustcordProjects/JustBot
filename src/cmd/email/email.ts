@@ -35,7 +35,7 @@ function parseEmailMessage(input: string): { subject: string; content: string } 
 const sendEmailCmd: Command = {
     name: 'email',
     description: {
-        main: 'Wysyła emaila do danego użytkownika z adresu eclairbota.',
+        main: 'Wysyła emaila do danego użytkownika z adresu justbota.',
         short: 'Wysyła email.',
     },
     aliases: ['send-email'],
@@ -106,7 +106,7 @@ const sendEmailCmd: Command = {
             return await api.log.replyWarn(
                 api,
                 'Niestety nie...',
-                '**Tej domeny nie ma na whiteliście. Nie możesz więc do niej wysyłać maili.** Jeżeli dalej chcesz to robić, **możesz utworzyć konto pocztowe na tej domenie** i wysłać wiadomość do `theeclairbot@gmail.com`, aby **permamentnie dodać ją do whitelisty**.',
+                '**Tej domeny nie ma na whiteliście. Nie możesz więc do niej wysyłać maili.** Jeżeli dalej chcesz to robić, **możesz utworzyć konto pocztowe na tej domenie** i wysłać wiadomość do `thejustbot@gmail.com`, aby **permamentnie dodać ją do whitelisty**.',
             );
         }
 

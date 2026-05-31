@@ -9,7 +9,7 @@ import { ReplyEmbed } from '@/bot/apis/translations/reply-embed.ts';
 async function replyAIModelErr(err: string, msg: dsc.Message) {
     return await msg.edit({
         embeds: [{
-            author: { name: 'EclairBOT' },
+            author: { name: 'JustBOT' },
             title: 'Nie udało mi się znaleźć definicji',
             description: `Aktualnie model AI ${err}, a na Wikipedii nie ma o tym artykułu.`,
             color: PredefinedColors.Red,
@@ -72,7 +72,7 @@ const wikiCmd: Command = {
                             .setTitle(result.title)
                             .setDescription(result.description)
                             .setURL(result.url)
-                            .setAuthor({ name: "EclairBOT" })
+                            .setAuthor({ name: "JustBOT" })
                             .toJSON(),
                         thumbnail: result.thumbnail
                             ? {

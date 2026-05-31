@@ -13,7 +13,7 @@ export const autoUpdateAction: Action<MessageEventCtx> = {
     activatesOn: [PredefinedActionEventTypes.OnMessageCreate],
 
     constraints: [
-        (ctx) => ctx.channelId == cfg.channels.eclairbot.ghBridge,
+        (ctx) => ctx.channelId == cfg.channels.justbot.ghBridge,
         (___) => enabled,
     ],
 

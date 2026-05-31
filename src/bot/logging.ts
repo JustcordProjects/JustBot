@@ -89,9 +89,9 @@ export namespace output {
 
     export async function init() {
         try {
-            stdoutChannel = await client.channels.fetch(cfg.channels.eclairbot.stdout) as GuildTextBasedChannel;
-            stderrChannel = await client.channels.fetch(cfg.channels.eclairbot.stderr) as GuildTextBasedChannel;
-            stdwarnChannel = await client.channels.fetch(cfg.channels.eclairbot.stdwarn) as GuildTextBasedChannel;
+            stdoutChannel = await client.channels.fetch(cfg.channels.justbot.stdout) as GuildTextBasedChannel;
+            stderrChannel = await client.channels.fetch(cfg.channels.justbot.stderr) as GuildTextBasedChannel;
+            stdwarnChannel = await client.channels.fetch(cfg.channels.justbot.stdwarn) as GuildTextBasedChannel;
         } catch {}
     }
 

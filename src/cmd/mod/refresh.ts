@@ -41,7 +41,7 @@ const refreshCmd: Command = {
 
         // checks
         if (!api.guild) {
-            return api.log.replyWarn(api, 'Ta komenda wymaga serwera', 'Coś się wychrzaniło i EclairBOT nie może go znaleźć.');
+            return api.log.replyWarn(api, 'Ta komenda wymaga serwera', 'Coś się wychrzaniło i JustBOT nie może go znaleźć.');
         }
 
         // base reply

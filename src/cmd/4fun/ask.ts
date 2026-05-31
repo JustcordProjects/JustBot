@@ -8,8 +8,8 @@ const askCmd: Command = {
     name: 'ask',
     aliases: ['zapytaj'],
     description: {
-        main: "Poproś EclairBOT'a o to, by zrobił to co chcesz lub po prostu pogadaj z tym samotnym botem",
-        short: 'Zapytaj EclairBOTa',
+        main: "Poproś JustBOT'a o to, by zrobił to co chcesz lub po prostu pogadaj z tym samotnym botem",
+        short: 'Zapytaj JustBOTa',
     },
 
     permissions: CommandPermissions.everyone(),
@@ -24,7 +24,7 @@ const askCmd: Command = {
         },
         {
             name: 'question',
-            description: 'O co chcesz spytać się EclairBOTa',
+            description: 'O co chcesz spytać się JustBOTa',
             optional: false,
             type: { base: 'string', trailing: true, allowCodeBlock: true },
         },

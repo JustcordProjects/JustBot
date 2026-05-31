@@ -19,7 +19,7 @@ const restartCmd: Command = {
 
     async execute(api) {
         output.log('Shutting down...');
-        const msg = await api.log.replyInfo(api, 'Zaczekaj chwilę...', 'EclairBOT powinien być za chwilę gotowy. Gdy się zrestartuje, ta wiadomość zmieni się na wiadomość sukcesu.');
+        const msg = await api.log.replyInfo(api, 'Zaczekaj chwilę...', 'JustBOT powinien być za chwilę gotowy. Gdy się zrestartuje, ta wiadomość zmieni się na wiadomość sukcesu.');
 
         if (api.raw.msg) {
             await cache.store('session', 'last-restart-command-message-id', msg.id);

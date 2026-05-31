@@ -2,7 +2,7 @@
 
 HOME ?= ~
 
-CACHE_DIR ?= $(HOME)/.cache/eclairbot
+CACHE_DIR ?= $(HOME)/.cache/justbot
 PKG_DIR ?= $(HOME)/.cache/deno/npm
 CONFIG_FILE ?= bot/config.js
 DATABASES ?= bot.db,bot.db-journal
@@ -14,7 +14,7 @@ DENO_PERMISSION_FLAGS = $(DENO_IO_PERMS_FLAGS) --allow-net --allow-sys --allow-f
 DENO_FLAGS            = --no-prompt $(DENO_PERMISSION_FLAGS)
 
 all: 
-	@deno compile $(DENO_FLAGS) --output eclairbot src/main.ts
+	@deno compile $(DENO_FLAGS) --output justbot src/main.ts
 
 run:
 	@deno run $(DENO_FLAGS) src/main.ts

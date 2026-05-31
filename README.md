@@ -1,4 +1,4 @@
-# EclairBOT 
+# JustBOT 
 
 A Discord bot made for the EclairBakery with a little bit of humour.
 
@@ -14,7 +14,7 @@ Features:
 - dynamic command and configuration loader 
 - db backups sent to the special channel in case something goes wrong
 
-## Running EclairBOT
+## Running JustBOT
 
 Ensure you have Deno installed. If not, install it from a shell command from [deno.land](https://deno.land).
 

@@ -52,7 +52,7 @@ export const channelsCfg: Config['channels'] = {
     isolation: {
         isolationCell: '1415020477180674048',
     },
-    eclairbot: {
+    justbot: {
         stdout: '1419323394440167555',
         stderr: '1419323609419092019',
         stdwarn: '1448385153364656189',

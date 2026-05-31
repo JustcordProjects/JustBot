@@ -38,7 +38,7 @@ export default class SerChatCommandWiki extends BotCommand {
                     .setDescription(result.description.trim())
                     .setThumbnail(result.thumbnail ? result.thumbnail.source : null)
                     .setURL(result.url)
-                    .setAuthor({ name: "EclairBOT" })
+                    .setAuthor({ name: "JustBOT" })
                     .setColor(PredefinedColors.YellowGreen)
                     .setFooter(result.usedAi ? {text: "Definicja od AI"} : null)
             );

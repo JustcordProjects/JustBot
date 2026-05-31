@@ -5,12 +5,12 @@ import process from 'node:process';
 function getCacheDir(): string {
     const cacheHome = process.env.XDG_CACHE_HOME;
     if (cacheHome) {
-        return path.join(cacheHome, 'eclairbot');
+        return path.join(cacheHome, 'justbot');
     }
 
     const home = process.env.HOME;
     if (home) {
-        return path.join(home, '.cache', 'eclairbot');
+        return path.join(home, '.cache', 'justbot');
     }
 
     return path.join('/', 'tmp', 'eb-cache');

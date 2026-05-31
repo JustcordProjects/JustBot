@@ -9,7 +9,7 @@ const emailDefaultTitleCmd: Command = {
     ],
     description: {
         main: 'Co tu tłumaczyć. Domyślny tytuł e-maila ustawiasz w mailach które wysyłasz przez send-email.',
-        short: 'Ustawiasz domyślny subject w e-mailach wysłanych przez EclairBot.',
+        short: 'Ustawiasz domyślny subject w e-mailach wysłanych przez JustBot.',
     },
     permissions: CommandPermissions.everyone(),
     flags: CommandFlags.Important,

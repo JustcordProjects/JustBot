@@ -20,7 +20,7 @@ export async function executeAsk(msg: dsc.Message, question: string, contextMsgs
         return log.replyError(
             msg,
             'Błąd',
-            'Moduł integracji z gemini nie został załadowany przez eclairbota.' +
+            'Moduł integracji z gemini nie został załadowany przez justbota.' +
                 'A tak po ludzku to poprostu ktoś nie dał api key do .env',
         );
     }
@@ -30,7 +30,7 @@ export async function executeAsk(msg: dsc.Message, question: string, contextMsgs
         return log.replyError(msg, 'Błąd', 'Model nie został zainicjowany.');
     }
 
-    const formatUser = (u: dsc.User) => u.id == client.user?.id ? `EclairBot (Ty)` : `${u.username} ${u.displayName} (${u.id}${u.id == msg.author.id ? ', To osoba której odpowiadasz!' : ''})`;
+    const formatUser = (u: dsc.User) => u.id == client.user?.id ? `JustBot (Ty)` : `${u.username} ${u.displayName} (${u.id}${u.id == msg.author.id ? ', To osoba której odpowiadasz!' : ''})`;
 
     function formatAttachments(atts: Iterable<dsc.Attachment>): string {
         let result: string = '';
@@ -303,7 +303,7 @@ export async function executeAsk(msg: dsc.Message, question: string, contextMsgs
         }
         return msg.reply(
             '❌ Coś się zjebało z EI. Najprawdopodobniej high demand albo jakieś inne rate limity.\n' +
-                `Jeśli jesteś adminem to sprawdź <#${cfg.channels.eclairbot.stderr}>`,
+                `Jeśli jesteś adminem to sprawdź <#${cfg.channels.justbot.stderr}>`,
         );
     }
 

@@ -27,7 +27,7 @@ export async function sendLog(logData: LogData, additionalChannels: dsc.Snowflak
                     .setColor(color)
                     .setFields(fields)
                     .setAuthor({
-                        name: 'EclairBOT',
+                        name: 'JustBOT',
                     }),
             ],
         });

@@ -9,7 +9,7 @@ export interface RedditPost {
 export async function fetchPost(url: string, maxComments: number = 5): Promise<RedditPost | null> {
     try {
         const initialRes = await fetch(url, {
-            headers: { 'User-Agent': 'eclairbot/1.0' },
+            headers: { 'User-Agent': 'justbot/1.0' },
         });
         if (!initialRes.ok) return null;
 
@@ -18,7 +18,7 @@ export async function fetchPost(url: string, maxComments: number = 5): Promise<R
         resolved.pathname = resolved.pathname.replace(/\/$/, '') + '.json';
 
         const jsonRes = await fetch(resolved.toString(), {
-            headers: { 'User-Agent': 'eclairbot/1.0' },
+            headers: { 'User-Agent': 'justbot/1.0' },
         });
         if (!jsonRes.ok) return null;
 

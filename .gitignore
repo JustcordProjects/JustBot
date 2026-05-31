@@ -19,9 +19,9 @@ Dockerfile
 .dockerignore
 
 # compiled binary
-eclairbot
+justbot
 
-# leftovers, should not exist on new eclairbot versions
+# leftovers, should not exist on new justbot versions
 *-player-script.js
 cookies.txt
 *dist

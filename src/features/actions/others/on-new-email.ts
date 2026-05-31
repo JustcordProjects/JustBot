@@ -61,7 +61,7 @@ export const onReceivedEmailAction: Action<ReceivedNewEmail> = {
     constraints: [],
     callbacks: [
         async (ctx) => {
-            const emailChannel = await client.channels.fetch(cfg.channels.eclairbot.email);
+            const emailChannel = await client.channels.fetch(cfg.channels.justbot.email);
             if (emailChannel == null || !emailChannel.isSendable()) return;
 
             const sender = ctx.email.from?.value?.[0]?.address;
@@ -103,7 +103,7 @@ export const onReceivedEmailAction: Action<ReceivedNewEmail> = {
                 }
 
                 return sendLog({
-                    where: cfg.channels.eclairbot.email,
+                    where: cfg.channels.justbot.email,
                     title: '😭 E-mail nie doszedł',
                     color: PredefinedColors.Red,
                     description: `Ktoś próbował wysłać maila do \`${recipient}\`, ale nie doszedł, ponieważ jakiś dzbaniany dostawca poczty zgłosił błąd \`${status}\`. ${sentence}`,
@@ -113,7 +113,7 @@ export const onReceivedEmailAction: Action<ReceivedNewEmail> = {
             const spam = await isSpam(ctx.email.subject ?? '', ctx.email.text ?? '', sender ?? '');
 
             sendLog({
-                where: spam ? undefined : cfg.channels.eclairbot.email,
+                where: spam ? undefined : cfg.channels.justbot.email,
 
                 title: spam ? `😭 Nowy e-mail w spamie: ${ctx.email.subject}` : `📧 ${ctx.email.subject ?? 'Nowy e-mail'}`,
                 description: desc.length > 1000 ? desc.slice(0, 1000) : desc,

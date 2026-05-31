@@ -30,7 +30,7 @@ function getEmbed(type: LogType, title: string, desc: string) {
     return new ReplyEmbed()
         .setTitle(`${settings[type].emoji} ${title}`)
         .setColor(settings[type].color)
-        .setAuthor({ name: 'EclairBOT' })
+        .setAuthor({ name: 'JustBOT' })
         .setDescription(desc);
 }
 

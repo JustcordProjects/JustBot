@@ -174,7 +174,7 @@ const onMuteGivenWatcher: Action<UserEventCtx> = {
             const executor = entry.executor;
 
             if (executor.id === ctx.client.user.id) {
-                output.log('Watchdog: Ignoring mute, given by eclairbot');
+                output.log('Watchdog: Ignoring mute, given by justbot');
                 return;
             }
 

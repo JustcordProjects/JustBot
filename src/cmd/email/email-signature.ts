@@ -9,7 +9,7 @@ const emailSignatureCmd: Command = {
     ],
     description: {
         main: 'Ustawiasz se signature, czy tam polski podpis w e-mailu, który będziesz miał na końcu. Możesz użyć HTML.',
-        short: 'Ustawiasz twój podpis w e-mailach wysłanych przez EclairBot.',
+        short: 'Ustawiasz twój podpis w e-mailach wysłanych przez JustBot.',
     },
     permissions: CommandPermissions.everyone(),
     flags: CommandFlags.Important,

@@ -107,7 +107,7 @@ export interface Config {
         isolation: {
             isolationCell: dsc.Snowflake;
         };
-        eclairbot: {
+        justbot: {
             stdout: dsc.Snowflake;
             stderr: dsc.Snowflake;
             stdwarn: dsc.Snowflake;
