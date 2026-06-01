@@ -3,6 +3,8 @@ import { cfg } from '@/bot/cfg.ts';
 import { GuildTextBasedChannel } from 'discord.js';
 import { mkMessageReferenceEmbed } from '@/bot/templates/message-reference.ts';
 import { PredefinedColors } from '@/util/color.ts';
+import User from '@/bot/apis/db/user.ts';
+import { computeLevelForMessage } from '@/bot/level.ts';
 
 export const deleteMessageAction: Action<MessageEventCtx> = {
     name: "logs/delete-messages",
@@ -11,6 +13,8 @@ export const deleteMessageAction: Action<MessageEventCtx> = {
     constraints: [ () => true ],
     callbacks: [
         async (msg) => {
+            await new User(msg.author.id).leveling.removeXP(-1 * computeLevelForMessage(msg));
+
             const logs_channel = await msg.client.channels.fetch(cfg.channels.mod.logs) as GuildTextBasedChannel;
             logs_channel.send({
                 embeds: [

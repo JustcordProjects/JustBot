@@ -67,6 +67,11 @@ export default class User {
             await db.runSql(`UPDATE users SET xp = xp + ? WHERE user_id = ?`, [amount, this.id]);
         },
 
+        removeXP: async (amount: number) => {
+            await this.ensureExists();
+            await db.runSql(`UPDATE users SET xp = xp - ? WHERE user_id = ?`, [amount, this.id]);
+        },
+
         setXP: async (value: number) => {
             await this.ensureExists();
             await db.runSql(`UPDATE users SET xp = ? WHERE user_id = ?`, [value, this.id]);

@@ -34,6 +34,9 @@ export const countingChannelAction: Action<MessageEventCtx> = {
 
             let lastNumber = 0;
             if (lastMsg) {
+                if (lastMsg.author.id == msg.author.id)
+                    return await msg.reply(`nie wolno tu spamić ${fmtEmoji(cfg.emojis.sadEmoji)}`);
+
                 const parsed = parseInt(lastMsg.content.trim());
                 if (!isNaN(parsed)) {
                     lastNumber = parsed;

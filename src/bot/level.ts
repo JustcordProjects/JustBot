@@ -98,19 +98,24 @@ export async function addLvlRole(
     return roleGiven;
 }
 
-export async function addExperiencePoints(msg: dsc.OmitPartialGroupDMChannel<dsc.Message<boolean>>) {
-    // check if eligible
-    if (cfg.features.leveling.excludedChannels.includes(msg.channelId)) return;
-
-    // amount
+export function computeLevelForMessage(msg: dsc.Message<boolean>) {
     let amount = cfg.features.leveling.xpPerMessage;
     if (msg.attachments.size > 0 && msg.content.length > 5) amount = Math.floor(amount * 1.5);
     if (msg.content.length > 100) amount = Math.floor(amount * 1.2);
 
-    // events
     if (cfg.features.leveling.currentEvent.enabled && cfg.features.leveling.currentEvent.channels.includes(msg.channelId)) {
         amount = Math.floor(amount * cfg.features.leveling.currentEvent.multiplier);
     }
+
+    return amount;
+}
+
+export async function addExperiencePoints(msg: dsc.OmitPartialGroupDMChannel<dsc.Message<boolean>>) {
+    // check if eligible
+    if (cfg.features.leveling.excludedChannels.includes(msg.channelId)) return;
+    
+    // amount
+    const amount = computeLevelForMessage(msg);
 
     // logic
     const user = new User(msg.author.id);
