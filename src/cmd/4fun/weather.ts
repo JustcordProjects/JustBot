@@ -4,7 +4,7 @@ import { CommandPermissions } from '@/bot/apis/commands/permissions.ts';
 import { ReplyEmbed } from '@/bot/apis/translations/reply-embed.ts';
 import { PredefinedColors } from '@/util/color.ts';
 
-export const weatherCmd: Command = {
+const weatherCmd: Command = {
     name: 'weather',
     description: {
         main: 'W skrócie no to wyświetla pogodę w danej lokalizacji co sobie wybierzesz.',
@@ -76,3 +76,5 @@ export const weatherCmd: Command = {
         ] })
     }
 };
+
+export default weatherCmd;
