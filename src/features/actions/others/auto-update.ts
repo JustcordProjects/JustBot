@@ -39,6 +39,19 @@ export const autoUpdateAction: Action<MessageEventCtx> = {
                 });
             }
 
+            const cmd_check = new Deno.Command('make', {
+                args: ['check', 'lint'],
+            });
+            const out_check = await cmd_check.output();
+
+            if (out_check.code != 0) {
+                return sendLog({
+                    title: 'Auto update się zjebał',
+                    description: 'Niestety kod który został bezmyślnie pushnięty na GitHub\'a zawiera błędy, więc postanowione zostało go nie uruchamiać.',
+                    color: PredefinedColors.Red,
+                });
+            }
+
             sendLog({
                 title: 'Zrobiłem ten auto update!',
                 description: 'Auto update się wykonał. Teraz bot się zrestartuje, by nowe zmiany weszły w życie. Poczekaj chwilę czy coś.',
