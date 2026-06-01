@@ -37,7 +37,7 @@ export async function registerTemplateChannels(client: dsc.Client) {
             PredefinedActionEventTypes.OnUserQuit,
             OnForceReloadTemplates,
         ],
-        format: (_ctx) => makeChannelName({ emoji: '🎯', name: `Cel: ${getNextGoal(templateChannelTarget.guild.memberCount)} pieczywa`, leaveSpaces: true }),
+        format: (_ctx) => makeChannelName({ emoji: '🎯', name: `Cel: ${getNextGoal(templateChannelTarget.guild.memberCount)} userów`, leaveSpaces: true }),
     });
 
     const bansTemplateChannel = await getChannel(cfg.channels.stats.bans, client) as dsc.GuildChannel;
