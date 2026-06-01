@@ -1,7 +1,6 @@
 import * as log from '@/util/log.ts';
 import * as dsc from 'discord.js';
 import logError from '@/util/log-error.ts';
-import { output } from '@/bot/logging.ts';
 import { cfg } from '@/bot/cfg.ts';
 
 export type MessageEventCtx = dsc.Message;
@@ -307,7 +306,6 @@ class ActionManager {
                 for (const callback of action.callbacks) {
                     const result = await callback(ctx as PromiseLike<unknown>);
                     if (await result == MagicSkipAllActions) {
-                        output.verbose(`Action ${action.name}: breaking - MagicSkipAllActions`);
                         break actionsLoop;
                     }
                 }
