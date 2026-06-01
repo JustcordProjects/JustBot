@@ -6,6 +6,7 @@ import { CommandFlags } from '@/bot/apis/commands/misc.ts';
 import { db } from '@/bot/apis/db/bot-db.ts';
 import { output } from '@/bot/logging.ts';
 import { ReplyEmbed } from '@/bot/apis/translations/reply-embed.ts';
+import { cfg } from '@/bot/cfg.ts';
 
 const ecoRoles = [
     '1235548306550161451',
@@ -48,7 +49,7 @@ const topecoCmd: Command = {
                     fields.push({
                         name: `${i} » ${member.user.username}`,
                         value: [
-                            `${userEcoRole ? `<@&${userEcoRole}>` : 'Nowicjusz...'}`,
+                            `${userEcoRole ? `<@&${userEcoRole}>` : ( cfg.features.welcomer.freeRolesForEveryone[0] ?? 'Nowicjusz...' )}`,
                             `**${balance.wallet.add(balance.bank).format()}$**`,
                         ].join('\n'),
                         inline: true,
