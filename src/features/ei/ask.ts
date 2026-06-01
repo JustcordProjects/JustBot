@@ -363,7 +363,7 @@ export async function executeAsk(msg: dsc.Message, question: string, contextMsgs
         }
 
         const payload = {
-            content,
+            content: `${content}\n-# just inteligence`,
             allowedMentions: {
                 parse: [],
             },

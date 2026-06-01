@@ -23,7 +23,8 @@ export const askAction: Action<MessageEventCtx> = {
                     ? (
                         referenced.author.id == client.user?.id &&
                         ctx.type == MessageType.Reply &&
-                        referenced.embeds.length <= 0
+                        referenced.embeds.length <= 0 &&
+                        referenced.content?.endsWith('\n-# just inteligence')
                     )
                     : false);
         },
