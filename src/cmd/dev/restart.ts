@@ -18,13 +18,15 @@ const restartCmd: Command = {
     permissions: CommandPermissions.devOnly(),
 
     async execute(api) {
-        output.log('Shutting down...');
-        const msg = await api.log.replyInfo(api, 'Zaczekaj chwilę...', 'JustBOT powinien być za chwilę gotowy. Gdy się zrestartuje, ta wiadomość zmieni się na wiadomość sukcesu.');
-
         if (api.raw.msg) {
+            const msg = await api.log.replyInfo(api, 'Zaczekaj chwilę...', 'JustBOT powinien być za chwilę gotowy. Gdy się zrestartuje, ta wiadomość zmieni się na wiadomość sukcesu.');
             await cache.store('session', 'last-restart-command-message-id', msg.id);
             await cache.store('session', 'last-restart-command-channel-id', (api.raw.msg?.channel ?? api.raw.interaction?.channel!).id);
+        } else {
+            await api.log.replySuccess(api, 'Wysłano sygnał restartu!', 'JustBOT za chwilę powinien wstać ponownie. Niestety komenda nie została wywołana używając prefix commands, więc nie mogę Ci wyświetlić kiedy dokładnie powrócę do życia (sprawdź to sam).')
         }
+        
+        output.log('Shutting down... (reason: restart command)');
         process.exit(1);
     },
 };

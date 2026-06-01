@@ -185,7 +185,7 @@ async function main() {
             output.warn(`Low on memory.\nUsing: ${processHeap} of ${availableMemory} available memory.\nJustBOT will attempt to restart if this situation occurs more than 6 times in the next 10 seconds.`);
             memoryIssuesTimes++;
             if (memoryIssuesTimes == 6) {
-                output.log(`Attempting to restart JustBOT to free up memory.`);
+                output.log(`Shutting down... (reason: out of memory)`);
                 process.exit(1); // start.hosting-only.js should catch this
             }
         }

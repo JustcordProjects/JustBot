@@ -4,6 +4,7 @@ import { MessageEventCtx, PredefinedActionEventTypes } from '../index.ts';
 import { Action } from '../index.ts';
 import { cfg } from '@/bot/cfg.ts';
 import process from 'node:process';
+import { output } from '@/bot/logging.ts';
 
 export const autoUpdateAction: Action<MessageEventCtx> = {
     name: 'others/auto-update',
@@ -52,6 +53,8 @@ export const autoUpdateAction: Action<MessageEventCtx> = {
                 description: 'Auto update się wykonał. Teraz bot się zrestartuje, by nowe zmiany weszły w życie. Poczekaj chwilę czy coś.',
                 color: PredefinedColors.Gold,
             });
+
+            output.log("Shutting down... (reason: auto-update)");
             Deno.exit(1);
         },
     ],
