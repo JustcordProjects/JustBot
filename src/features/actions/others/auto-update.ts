@@ -3,7 +3,6 @@ import { PredefinedColors } from '@/util/color.ts';
 import { MessageEventCtx, PredefinedActionEventTypes } from '../index.ts';
 import { Action } from '../index.ts';
 import { cfg } from '@/bot/cfg.ts';
-import { output } from '../../../bot/logging.ts';
 import process from 'node:process';
 
 export const autoUpdateAction: Action<MessageEventCtx> = {
@@ -22,8 +21,6 @@ export const autoUpdateAction: Action<MessageEventCtx> = {
                 args: ['pull', '--rebase'],
             });
             const out = await cmd.output();
-
-            output.log('executing fucking auto update action');
 
             if (out.code != 0) {
                 return sendLog({
