@@ -33,7 +33,9 @@ const weatherCmd: Command = {
             },
             wind: "%w",
             pressure: "%P",
-            precipitation: "%p"
+            precipitation: "%p",
+            moonPhase: "%m",
+            moonDay: "%M"
         } satisfies object;
 
         const data = await fetch(
@@ -69,7 +71,10 @@ const weatherCmd: Command = {
                         name: 'Wiatr', value: result.wind, inline: true
                     },
                     {
-                        name: 'Opady', value: result.precipitation.replace('mm', ' mm')
+                        name: 'Opady', value: result.precipitation.replace('mm', ' mm'), inline: true
+                    },
+                    {
+                        name: 'Faza księżyca', value: `${result.moonPhase} (dzień księżycowy: ${result.moonDay})`, inline: true
                     }
                 ])
                 .setColor(PredefinedColors.Blue)
