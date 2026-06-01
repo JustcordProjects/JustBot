@@ -10,7 +10,7 @@ export async function init() {
     if (!exePath) return;
     
     const cmd = new Deno.Command(exePath, {
-        args: ['build'],
+        args: ['setup'],
     });
     const out = await cmd.output();
 
