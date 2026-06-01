@@ -23,7 +23,7 @@ export const autoUpdateAction: Action<MessageEventCtx> = {
             const out = await cmd.output();
 
             if (out.code != 0) {
-                return sendLog({
+                return await sendLog({
                     title: 'Auto update się zjebał',
                     description: 'Niestety pan `git` się nas nie posłuchał i nie wykonał git pull.',
                     fields: [
@@ -40,14 +40,14 @@ export const autoUpdateAction: Action<MessageEventCtx> = {
             const out_check = await cmd_check.output();
 
             if (out_check.code != 0) {
-                return sendLog({
+                return await sendLog({
                     title: 'Auto update się zjebał',
                     description: 'Niestety kod który został bezmyślnie pushnięty na GitHub\'a zawiera błędy, więc postanowione zostało go nie uruchamiać.',
                     color: PredefinedColors.Red,
                 });
             }
 
-            sendLog({
+            await sendLog({
                 title: 'Zrobiłem ten auto update!',
                 description: 'Auto update się wykonał. Teraz bot się zrestartuje, by nowe zmiany weszły w życie. Poczekaj chwilę czy coś.',
                 color: PredefinedColors.Gold,
