@@ -10,7 +10,7 @@ const enabled = Deno.env.get('JB_AUTO_UPDATE') == 'true';
 
 export const autoUpdateAction: Action<MessageEventCtx> = {
     name: 'others/auto-update',
-    activatesOn: [PredefinedActionEventTypes.OnMessageCreate],
+    activatesOn: PredefinedActionEventTypes.OnMessageCreate,
     worksOutsideGuild: true,
 
     constraints: [
