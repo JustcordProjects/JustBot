@@ -14,7 +14,7 @@ export default async function ban(
             embeds: [
                 new ReplyEmbed()
                     .setTitle('📢 Zostałeś zbanowany z serwera Piekarnia eklerki!')
-                    .setDescription(`To straszne wiem. Powód bana brzmi: ${data.reason}\nAle jesteśmy mili. Możesz wysłać email do \`thejustbot@gmail.com\` by sie z nami skontaktować; emaile są forwardowane na kanał dla administracji, więc są czytane czy coś`)
+                    .setDescription(`To straszne wiem. Powód bana brzmi: ${data.reason}\nAle jesteśmy mili. Możesz wysłać email do \`justcord3105@gmail.com\` by sie z nami skontaktować; emaile są forwardowane na kanał dla administracji, więc są czytane czy coś`)
                     .setColor(PredefinedColors.Orange),
             ],
         });

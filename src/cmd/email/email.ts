@@ -106,7 +106,7 @@ const sendEmailCmd: Command = {
             return await api.log.replyWarn(
                 api,
                 'Niestety nie...',
-                '**Tej domeny nie ma na whiteliście. Nie możesz więc do niej wysyłać maili.** Jeżeli dalej chcesz to robić, **możesz utworzyć konto pocztowe na tej domenie** i wysłać wiadomość do `thejustbot@gmail.com`, aby **permamentnie dodać ją do whitelisty**.',
+                '**Tej domeny nie ma na whiteliście. Nie możesz więc do niej wysyłać maili.** Jeżeli dalej chcesz to robić, **możesz utworzyć konto pocztowe na tej domenie** i wysłać wiadomość do `justcord3105@gmail.com`, aby **permamentnie dodać ją do whitelisty**.',
             );
         }
 
