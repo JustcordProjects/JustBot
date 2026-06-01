@@ -13,7 +13,7 @@ export interface PingAPI {
 
 export const pings: Record<string, PingAPI> = {
     'death-chat': {
-        roleId: '1411646441511714827',
+        roleId: '1511009335877046364',
         questions: [
             // life
             'jakie filmy ostatnio oglądałeś',
@@ -45,7 +45,7 @@ export const pings: Record<string, PingAPI> = {
             // hardware
             'karty graficzne: Nvidia, AMD czy Intel',
             'jaki producent CPU jest twoim ulubionym',
-            'ile masz RAMu Czy według ciebie to dużo czy mało',
+            'ile masz RAMu; czy według ciebie to dużo czy mało',
             'wolisz czarne czy białe podzespoły',
             'lubisz RGB czy wolisz wyłączone',
             'jaki rozmiar klawiatury jest najlepszy',
