@@ -34,10 +34,7 @@ export function mkTemplateChannelUpdateAction({ channel, updateOnEvents, format,
         ],
         callbacks: [
             async (ctx: AnyEventCtx) => {
-                let newName: string | Promise<string> = format(ctx);
-                if (newName instanceof Promise) {
-                    newName = await newName;
-                }
+                const newName: string = await format(ctx);
                 channel.setName(newName);
             },
             ...additionalCallbacks || [],

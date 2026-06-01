@@ -18,5 +18,22 @@ export function makeChannelName(data: ChannelName) {
     if (data.name.length < 3) {
         output.warn(`Suspicious channel name at makeChannelName (data: ${JSON.stringify(data)})`);
     }
-    return `${cfg.channels.settings.emojiPlacement == 'before-name' ? makeEmojiForChannelName(data.emoji) : ''}${data.name.replace(' ', data.leaveSpaces ? ' ' : (cfg.channels.settings.spaceReplacement ?? '-'))}${cfg.channels.settings.emojiPlacement == 'after-name' ? makeEmojiForChannelName(data.emoji) : ''}`;
+
+    let channel_name = '';
+
+    if (cfg.channels.settings.emojiPlacement == 'before-name')
+        channel_name += makeEmojiForChannelName(data.emoji);
+
+    channel_name += data.name 
+        .replaceAll(
+            ' ', 
+            data.leaveSpaces 
+                ? ' ' 
+                : (cfg.channels.settings.spaceReplacement ?? '-')
+        );
+
+    if (cfg.channels.settings.emojiPlacement == 'after-name')
+        channel_name += makeEmojiForChannelName(data.emoji);
+
+    return channel_name;
 }

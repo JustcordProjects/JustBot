@@ -6,11 +6,13 @@ import { addTemplateChannel, getChannel } from './template-channels.ts';
 import { makeChannelName } from '@/util/make-channel-name.ts';
 import { cfg } from '../../../bot/cfg.ts';
 
+const GOAL_SPLITTER = 25;
+
 function getNextGoal(memberCount: number): number {
-    const base = Math.floor(memberCount / 50) * 50;
-    let goal = base + 50;
+    const base = Math.floor(memberCount / GOAL_SPLITTER) * GOAL_SPLITTER;
+    let goal = base + GOAL_SPLITTER;
     if (goal <= memberCount) {
-        goal += 50;
+        goal += GOAL_SPLITTER;
     }
     return goal;
 }
