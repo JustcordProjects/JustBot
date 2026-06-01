@@ -50,7 +50,7 @@ export const featuresConfig: Config['features'] = {
         media: [
             {
                 channel: channelsCfg.general.media,
-                addReactions: ['👍', '👎', '😭', '🙏', '🤣', '<:joe_i_git:1376096877610799205>'],
+                addReactions: ['👍', '👎', '😭', '🙏', '🤣'],
                 deleteMessageIfNotMedia: true,
                 shallCreateThread: true,
             },
