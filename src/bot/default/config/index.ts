@@ -115,21 +115,21 @@ export const defaultCfg: Config = {
     features: featuresConfig,
 
     emojis: {
-        darkRedBlock: { name: 'dark_red_block', id: '1416021203331715082' },
-        lightRedBlock: { name: 'light_red_block', id: '1416021243379056700' },
-        darkGreenBlock: { name: 'dark_green_block', id: '1416021182964043856' },
-        lightGreenBlock: { name: 'light_green_block', id: '1416021218485600357' },
+        darkRedBlock: { name: 'dark_red_block', id: '1510910262868447293' },
+        lightRedBlock: { name: 'light_red_block', id: '1510910293235073074' },
+        darkGreenBlock: { name: 'dark_green_block', id: '1510910240902611014' },
+        lightGreenBlock: { name: 'light_green_block', id: '1510910281222455347' },
 
         circleProgressBar: {
-            '0/4': { name: 'circle_progress_bar_04', id: '1416021170750492775' },
-            '1/4': { name: 'circle_progress_bar_14', id: '1416021158779945020' },
-            '2/4': { name: 'circle_progress_bar_24', id: '1416021143315546162' },
-            '3/4': { name: 'circle_progress_bar_34', id: '1416021126890655894' },
+            '0/4': { name: 'circle_progress_bar_04', id: '1510910145884983326' },
+            '1/4': { name: 'circle_progress_bar_14', id: '1510910162020601919' },
+            '2/4': { name: 'circle_progress_bar_24', id: '1510910188347981885' },
+            '3/4': { name: 'circle_progress_bar_34', id: '1510910132492435456' },
         },
 
-        heartAttackEmoji: { name: 'joe_zatrzymanie_akcji_serca', id: '1308174897758994443' },
-        sadEmoji: { name: 'joe_smutny', id: '1317904814025474088' },
-        wowEmoji: { name: 'joe_wow', id: '1308174905489100820' },
-        idkEmoji: { name: 'joe_noniewiemno', id: '1317904812779503676' },
+        heartAttackEmoji: { name: 'joe_zatrzymanie_akcji_serca', id: '1510990624382259361' },
+        sadEmoji: { name: 'joe_smutny', id: '1510990698424569916' },
+        wowEmoji: { name: 'joe_wow', id: '1510990747011125450' },
+        idkEmoji: { name: 'joe_no_trudno', id: '1510694676158742770' },
     },
 };

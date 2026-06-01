@@ -38,11 +38,11 @@ export const welcomeNewUserAction: Action<UserEventCtx> = {
                 return;
             } else {
                 await welcomeChannel.send({
-                    content: '<:join:1500553049779998930>' +
+                    content: '<:join:1510910009368641667>' +
                         cfg.features.welcomer.welcomeMsgs[Math.floor(Math.random() * cfg.features.welcomer.welcomeMsgs.length)].replace('<mention>', `<@${member.user.id}>`),
                     allowedMentions: cfg.features.welcomer.mentionNewPeopleInLobby ? {} : { parse: [] },
                 });
-                await generalChannel.send(`witaj <@${member.user.id}>, będzie nam miło jak się przywitasz czy coś <:emoji_a_radosci_nie_bylo_konca:1376664467416420362>`);
+                await generalChannel.send(`witaj <@${member.user.id}>, będzie nam miło jak się przywitasz czy coś <:emoji_a_radosci_nie_bylo_konca:1510697737920839680>`);
             }
         },
     ],
@@ -65,7 +65,7 @@ export const sayGoodbyeAction: Action<UserEventCtx> = {
             }
 
             await channel.send({
-                content: '<:leave:1500553021484961853>' +
+                content: '<:leave:1510910039777345576>' +
                     cfg.features.welcomer.goodbyeMsgs[Math.floor(Math.random() * cfg.features.welcomer.goodbyeMsgs.length)].replace('<mention>', `<@${member.user.id}> (${member.user.username})`),
                 allowedMentions: cfg.features.welcomer.mentionNewPeopleInLobby ? {} : { parse: [] },
             });
