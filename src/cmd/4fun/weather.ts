@@ -29,7 +29,7 @@ const weatherCmd: Command = {
             condition: "%c %C",
             temperature: {
                 actual: "%t",
-                feelsLike: "%s"
+                feelsLike: "%f"
             },
             wind: "%w",
             pressure: "%P",
