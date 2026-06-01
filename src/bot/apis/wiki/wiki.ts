@@ -32,17 +32,44 @@ async function getDisambiguationTitles(title: string, lang: string): Promise<str
     return data.parse.links.filter((l) => l.ns === 0).map((l) => l['*']);
 }
 
-async function downloadFromWikipedia(languageVersions: string[], args: string[]) {
-    let fetched: Response;
-    let lango: string = null!;
+async function searchWikipedia(lang: string, query: string) {
+    const url =
+        `https://${lang}.wikipedia.org/w/api.php` +
+        `?action=query` +
+        `&list=search` +
+        `&srsearch=${encodeURIComponent(query)}` +
+        `&format=json` +
+        `&origin=*`;
+
+    const res = await fetch(url);
+    if (!res.ok) return null;
+
+    const data = await res.json();
+    return data.query?.search?.[0]?.title ?? null;
+}
+
+async function downloadFromWikipedia(
+    languageVersions: string[],
+    args: string[]
+) {
+    const query = args.join(" ");
+
     for (const lang of languageVersions) {
-        const url = `https://${lang}.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(args.join('_'))}`;
-        fetched = await fetch(url);
-        if (!fetched.ok) continue;
-        lango = lang;
-        break;
+        const title = await searchWikipedia(lang, query);
+        if (!title) continue;
+
+        const summaryUrl =
+            `https://${lang}.wikipedia.org/api/rest_v1/page/summary/` +
+            encodeURIComponent(title);
+
+        const fetched = await fetch(summaryUrl);
+
+        if (fetched.ok) {
+            return { fetched, lang, title };
+        }
     }
-    return { fetched: fetched!, lang: lango };
+
+    return null;
 }
 
 export interface WikiError {
@@ -71,7 +98,7 @@ export default async function getWikiArticle(rawQuery: string): Promise<WikiErro
     const query = rawQuery == 'hubix' ? 'Niepełnosprawność intelektualna w stopniu głębokim' : rawQuery;
 
     const fetched_raw = await downloadFromWikipedia(['pl', 'simple', 'en'], [query]);
-    const fetched = fetched_raw.fetched;
+    const fetched = fetched_raw?.fetched;
 
     if (!fetched || !fetched.ok) {
         if (!gemini.isInitialized() || !gemini.getModels('wiki-cmd').length) {
