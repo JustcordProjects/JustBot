@@ -1,12 +1,10 @@
 import { sendLog } from '@/bot/apis/log/send-log.ts';
 import { PredefinedColors } from '@/util/color.ts';
 import { MessageEventCtx, PredefinedActionEventTypes } from '../index.ts';
-
 import { Action } from '../index.ts';
 import { cfg } from '@/bot/cfg.ts';
 import { output } from '../../../bot/logging.ts';
-
-const enabled = Deno.env.get('JB_AUTO_UPDATE') == 'true';
+import process from 'node:process';
 
 export const autoUpdateAction: Action<MessageEventCtx> = {
     name: 'others/auto-update',
@@ -15,7 +13,7 @@ export const autoUpdateAction: Action<MessageEventCtx> = {
 
     constraints: [
         (ctx) => ctx.channelId == cfg.channels.justbot.ghBridge,
-        () => enabled,
+        () => process.env.JB_AUTO_UPDATE == 'true',
     ],
 
     callbacks: [
@@ -33,7 +31,7 @@ export const autoUpdateAction: Action<MessageEventCtx> = {
                     description: 'Niestety pan `git` się nas nie posłuchał i nie wykonał git pull.',
                     fields: [
                         { name: 'Exit code', value: `${out.code}` },
-                        { name: 'Standard error', value: new TextDecoder().decode(out.stderr) },
+                        { name: 'Standard error', value: '```ansi\n' + new TextDecoder().decode(out.stderr) + '```' },
                     ],
                     color: PredefinedColors.Red,
                 });
