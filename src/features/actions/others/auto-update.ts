@@ -14,13 +14,13 @@ export const autoUpdateAction: Action<MessageEventCtx> = {
 
     constraints: [
         (ctx) => ctx.channelId == cfg.channels.justbot.ghBridge,
-        (___) => enabled,
+        () => enabled,
     ],
 
     callbacks: [
-        async (_) => {
+        async () => {
             const cmd = new Deno.Command('git', {
-                args: ['pull'],
+                args: ['pull', '--rebase'],
             });
             const out = await cmd.output();
 
@@ -28,23 +28,22 @@ export const autoUpdateAction: Action<MessageEventCtx> = {
 
             if (out.code != 0) {
                 return sendLog({
-                    title: 'Auto update failed',
-                    description: 'Git się wyjebal czy coś',
+                    title: 'Auto update się zjebał',
+                    description: 'Niestety pan `git` się nas nie posłuchał i nie wykonał git pull.',
                     fields: [
-                        { name: 'Exit Code', value: `${out.code}` },
-                        { name: 'Std Error', value: new TextDecoder().decode(out.stderr) },
+                        { name: 'Exit code', value: `${out.code}` },
+                        { name: 'Standard error', value: new TextDecoder().decode(out.stderr) },
                     ],
                     color: PredefinedColors.Red,
                 });
             }
 
             sendLog({
-                title: 'Auto update succeeded',
-                description: 'Auto update się wykonał czy coś.',
+                title: 'Zrobiłem ten auto update!',
+                description: 'Auto update się wykonał. Teraz bot się zrestartuje, by nowe zmiany weszły w życie. Poczekaj chwilę czy coś.',
                 color: PredefinedColors.Gold,
             });
             Deno.exit(1);
         },
     ],
 };
-
