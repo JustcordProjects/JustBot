@@ -27,7 +27,7 @@ async function isWandbox(lang: string): Promise<boolean> {
 
 export async function getCompilerForLang(lang: string): Promise<CompilerDriver> {
     if (['zap', 'zp', 'zapc'].includes(lang)) {
-        return new ZapCompilerDriver({});
+        return new ZapCompilerDriver();
     }
     if (await isWandbox(lang)) {
         return new WandboxCompilerDriver({ compiler: findWandboxCompilerName(lang) });
