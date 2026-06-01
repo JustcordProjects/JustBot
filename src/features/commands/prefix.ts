@@ -19,6 +19,8 @@ import { makeCommandApi } from './helpers/make-command-api.ts';
 import { ReplyEmbed } from '@/bot/apis/translations/reply-embed.ts';
 import { CommandTokenizer } from './helpers/tokenizer.ts';
 
+import sleep from '@/util/sleep.ts';
+
 function waitForButton(interaction: dsc.Message, buttonId: string, time = 15000) {
     return new Promise((resolve, reject) => {
         const collector = interaction.channel.createMessageComponentCollector({
@@ -40,6 +42,14 @@ function waitForButton(interaction: dsc.Message, buttonId: string, time = 15000)
             }
         });
     });
+}
+
+async function tempReaction(msg: dsc.Message, reaction: string) {
+    const react = await msg.react(reaction);
+    await sleep(2000);
+    try {
+        await react.remove(); 
+    } catch {}
 }
 
 async function prefixCommandsMessageHandler(msg: dsc.OmitPartialGroupDMChannel<dsc.Message<boolean>>) {
@@ -69,7 +79,7 @@ async function prefixCommandsMessageHandler(msg: dsc.OmitPartialGroupDMChannel<d
             return;
         }
 
-        return await msg.react('❌');
+        return await tempReaction(msg, '❌');
     }
 
     const { command, config } = result;
@@ -85,8 +95,7 @@ async function prefixCommandsMessageHandler(msg: dsc.OmitPartialGroupDMChannel<d
 
     const isBlocked = isCommandBlockedOnChannel(command, msg.channelId, !msg.inGuild());
     if (isBlocked) {
-        await msg.react('❌');
-        return;
+        return await tempReaction(msg, '❌');
     }
 
     if (!msg.inGuild() && !(command.flags & CommandFlags.WorksInDM)) {
