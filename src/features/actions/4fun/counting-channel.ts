@@ -34,8 +34,12 @@ export const countingChannelAction: Action<MessageEventCtx> = {
 
             let lastNumber = 0;
             if (lastMsg) {
-                if (lastMsg.author.id == msg.author.id)
-                    return await msg.reply(`nie wolno tu spamić ${fmtEmoji(cfg.emojis.sadEmoji)}`);
+                if (lastMsg.author.id == msg.author.id) {
+                    const reply = await msg.reply(`nie wolno tu spamić ${fmtEmoji(cfg.emojis.sadEmoji)}`);
+                    await sleep(1000);
+                    await msg.delete();
+                    await reply.delete();
+                }
 
                 const parsed = parseInt(lastMsg.content.trim());
                 if (!isNaN(parsed)) {
