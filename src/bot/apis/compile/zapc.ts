@@ -1,144 +1,151 @@
+import { output } from '../../logging.ts';
 import { CompilerDriver, CompilerErrorKind, CompilerInfo, CompilerInput, CompilerOutput } from './driver.ts';
 
-import process from 'node:process';
+namespace Zapbox {
+    export type MessageKind = 'stdout' | 'stderr';
+    
+    export interface Message {
+        kind:    MessageKind;
+        content: string;
+    }
+    
+    export interface ExecResult {
+        messages: Message[];
+        exitcode: number;
+    }
+    
+    export interface Input {
+        src:    string;
+        stdin?: string;
+    }
+    
+    export enum Status {
+        Success = 'success',
+        UnknownError = 'error',
+        InternalError = 'internal',
+        TimeLimitExceeded = 'time-limit-exceeded',
+        MemLimitExceeded = 'mem-limit-exceeded',
+    }
+
+    export type Output = {
+        status:   Exclude<Status, Status.InternalError>;
+        compiler: ExecResult;
+        runtime?: ExecResult;
+    } | {
+        status: Status.InternalError,
+        message: string;
+    };
+}
 
 export interface ZapCompilerDriverOptions {
-    baseUrl?: string;
-}
-
-interface ZapcEvent {
-    type: string;
-    data: string;
-}
-
-function normalizeBaseUrl(url: string): string {
-    return url.replace(/\/+$/, '');
-}
-
-function collectCompilerMessages(events: ZapcEvent[]): { error: string | null; logs: string[] } {
-    let error: string | null = null;
-    const logs: string[] = [];
-    for (const e of events) {
-        if (e.type == 'compiler_error') {
-            error = e.data;
-            break;
-        }
-        if (e.type == 'compiler_log' && e.data) {
-            logs.push(e.data);
-        }
-    }
-    return { error, logs };
-}
-
-function splitCompileRun(events: ZapcEvent[]): { compile: ZapcEvent[]; run: ZapcEvent[] } {
-    const idx = events.findIndex((e) => e.type == 'stdout' || e.type == 'stderr');
-    if (idx == -1) {
-        return { compile: events, run: [] };
-    }
-    return { compile: events.slice(0, idx), run: events.slice(idx) };
+    exePath?: string;
 }
 
 export class ZapCompilerDriver implements CompilerDriver {
-    private readonly baseUrl: string;
+    private readonly exePath: string;
 
     constructor(options: ZapCompilerDriverOptions) {
-        const baseUrl = options.baseUrl ?? process.env.JB_ZAPC_BASE_URL;
-        if (!baseUrl) {
-            throw new Error('No zapc api base url provided');
+        const exePath: string | undefined = options.exePath ?? Deno.env.get('JB_ZAPBOX_PATH');
+        if (!exePath) {
+            throw new Error('No zapbox path provided');
         }
-        this.baseUrl = normalizeBaseUrl(baseUrl);
+        this.exePath = exePath;
     }
 
     async info(): Promise<CompilerInfo> {
         return {
             lang: 'zap',
             displayName: 'Zap',
-            version: 'v0.1.1', // TODO: don't hard code version
-            backend: 'Zap Compiler Service',
+            version: 'v0.2.0', // TODO: don't hard code version
+            backend: 'Zapbox',
         };
     }
 
-    async compile(input: CompilerInput): Promise<CompilerOutput> {
+    async runZapbox(input: Zapbox.Input): Promise<Zapbox.Output> {
+        const cmd = new Deno.Command(this.exePath, {
+            args: ['run', JSON.stringify(input)],
+            stdout: 'piped',
+            stderr: 'piped',
+        });
+        const out = await cmd.output();
+
+        if (out.code != 0) {
+            const message = new TextDecoder().decode(out.stderr);
+            return { status: Zapbox.Status.InternalError, message };
+        }
+
         try {
-            const response = await fetch(`${this.baseUrl}/compile`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ code: input.source }), // TODO: stdin is ignored for now
-            });
+            const outputString = new TextDecoder().decode(out.stdout);
+            output.log(outputString);
+            return JSON.parse(outputString) as Zapbox.Output;
+        } catch (err: unknown) {
+            const message = err instanceof Error ? err.message : `${err}`;
+            return { status: Zapbox.Status.InternalError, message };
+        }
+    }
 
-            if (response.status == 429) {
-                return {
-                    ok: false,
-                    errKind: CompilerErrorKind.Internal,
-                    errMessage: 'Compiler service is busy (429). Try again shortly.',
-                };
+    mapMessages(msgs: Zapbox.Message[]): { stdout: string; stderr: string; } {
+        let stdout = '', stderr = '';
+        for (const msg of msgs) {
+            switch (msg.kind) {
+            case 'stdout': stdout += msg.content; break;
+            case 'stderr': stderr += msg.content; break;
             }
+        }
+        return { stdout, stderr };
+    }
 
-            const text = await response.text();
-            let events: ZapcEvent[];
-            try {
-                events = JSON.parse(text) as ZapcEvent[];
-            } catch {
-                return {
-                    ok: false,
-                    errKind: CompilerErrorKind.Internal,
-                    errMessage: `Invalid JSON from Zap service (${response.status}): ${text.slice(0, 200)}`,
-                };
-            }
+    mapErr(s: Zapbox.Status, r: boolean): CompilerErrorKind {
+        if (!r) return CompilerErrorKind.Compile;
+        switch (s) {
+        case Zapbox.Status.Success:
+        case Zapbox.Status.InternalError:
+            throw Error("invalid argument passed to mapErr");
 
-            if (!Array.isArray(events)) {
-                return {
-                    ok: false,
-                    errKind: CompilerErrorKind.Internal,
-                    errMessage: 'Zap service returned a non-array JSON body',
-                };
-            }
+        case Zapbox.Status.UnknownError:
+            return CompilerErrorKind.Internal;
+        case Zapbox.Status.TimeLimitExceeded:
+            return CompilerErrorKind.Timeout;
+        case Zapbox.Status.MemLimitExceeded:
+            return CompilerErrorKind.Memory;
+        }
+    }
 
-            if (!response.ok) {
-                const msg = events
-                    .map((e) => (typeof e.data == 'string' ? e.data : JSON.stringify(e)))
-                    .join('\n')
-                    .trim();
-                return {
-                    ok: false,
-                    errKind: CompilerErrorKind.Internal,
-                    errMessage: msg || `Zap service error: ${response.status} ${response.statusText}`,
-                };
-            }
+    async compile(input: CompilerInput): Promise<CompilerOutput> {
+        const zapboxInput: Zapbox.Input = {
+            src: input.source,
+            stdin: input.stdin,
+        };
+        
+        const zapboxOutput = await this.runZapbox(zapboxInput);
+        if (zapboxOutput.status == Zapbox.Status.InternalError) {
+            return {
+                ok: false, errKind: CompilerErrorKind.Internal,
+                errMessage: zapboxOutput.message,
+            };
+        }
 
-            const { compile: compilePhase, run: runEvents } = splitCompileRun(events);
-            const { error, logs } = collectCompilerMessages(compilePhase);
+        let { stdout, stderr } = this.mapMessages(zapboxOutput.compiler.messages);
+        let exitcode = zapboxOutput.compiler.exitcode;
 
-            if (error !== null) {
-                return {
-                    ok: false,
-                    errKind: CompilerErrorKind.Compile,
-                    errMessage: error.trimEnd(),
-                };
-            }
+        if (zapboxOutput.runtime) {
+            const mapped = this.mapMessages(zapboxOutput.runtime.messages);
+            stdout += mapped.stdout; stderr += mapped.stderr;
+            exitcode = zapboxOutput.runtime.exitcode;
+        }
 
-            let stdout = '';
-            let stderr = logs.join('');
-            for (const e of runEvents) {
-                if (e.type == 'stdout' && e.data) {
-                    stdout += e.data;
-                } else if (e.type == 'stderr' && e.data) {
-                    stderr += e.data;
-                }
-            }
-
+        if (zapboxOutput.status == Zapbox.Status.Success) {
             return {
                 ok: true,
-                stdout,
-                stderr,
-                exitcode: 0,
+                exitcode,
+                stdout, stderr,
             };
-        } catch (error: unknown) {
+        } else {
             return {
                 ok: false,
-                errKind: CompilerErrorKind.Internal,
-                errMessage: error instanceof Error ? error.message : String(error),
-            };
+                errKind: this.mapErr(zapboxOutput.status, !!zapboxOutput.runtime),
+                errMessage: stderr,
+            }
         }
     }
 }

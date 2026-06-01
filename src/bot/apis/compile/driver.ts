@@ -6,6 +6,7 @@ export interface CompilerInput {
 export enum CompilerErrorKind {
     Compile,
     Timeout,
+    Memory,
     Internal,
 }
 

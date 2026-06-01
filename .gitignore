@@ -12,6 +12,7 @@ package-lock.json
 .env
 *.db
 bot/config*
+local.mk
 
 # hosting only files
 *.hosting-only.js
