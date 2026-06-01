@@ -20,10 +20,3 @@ Dockerfile
 
 # compiled binary
 justbot
-
-# leftovers, should not exist on new justbot versions
-*-player-script.js
-cookies.txt
-*dist
-bundle.js*
-.prettierrc
