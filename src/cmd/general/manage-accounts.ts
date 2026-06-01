@@ -5,11 +5,10 @@ import { ReplyEmbed } from '@/bot/apis/translations/reply-embed.ts';
 import { PredefinedColors } from '@/util/color.ts';
 import { client } from '@/client.ts';
 import logError from '@/util/log-error.ts';
-import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, ComponentType, LabelBuilder, ModalBuilder, StringSelectMenuBuilder, StringSelectMenuInteraction, TextInputBuilder, TextInputStyle } from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, ComponentType, StringSelectMenuBuilder, StringSelectMenuInteraction } from 'discord.js';
 import { db } from '@/bot/apis/db/bot-db.ts';
 import { addLvlRole, xpToLevel } from '@/bot/level.ts';
 import User from '@/bot/apis/db/user.ts';
-import awaitUserConfirmation from '@/features/serchat/await-user-confirmation.ts';
 
 function getMainAccount(id: string) {
     try {
@@ -58,12 +57,8 @@ const manageAccountsCmd: Command = {
                 new ActionRowBuilder<ButtonBuilder>()
                     .addComponents([
                         new ButtonBuilder()
-                            .setCustomId('add-external-account')
-                            .setStyle(ButtonStyle.Primary)
-                            .setLabel('Dodaj zewnętrzne konto'),
-                        new ButtonBuilder()
                             .setCustomId('move-primary')
-                            .setStyle(ButtonStyle.Secondary)
+                            .setStyle(ButtonStyle.Primary)
                             .setLabel('Zmień główne konto'),
                         new ButtonBuilder()
                             .setCustomId('leave-group')
@@ -165,61 +160,6 @@ const manageAccountsCmd: Command = {
                 await msg.edit({
                     embeds: [ api.log.getSuccessEmbed("Przeniesiono.", `Od teraz to ${i.values[0]} jest Twoim głównym kontem.`) ],
                     components: []
-                });
-            } else if (i.customId == 'add-external-account' && i.isButton()) {
-                await msg.edit({
-                    embeds: [ api.log.getInfoEmbed('Wybierz platformę', 'Musisz wybrać zewnętrzną platformę, o którą Ci chodzi.') ],
-                    components: [
-                        new ActionRowBuilder<StringSelectMenuBuilder>()
-                            .addComponents([
-                                new StringSelectMenuBuilder()
-                                    .setPlaceholder('Poproszę platformę')
-                                    .setCustomId('add-external-account-user-sel')
-                                    .setOptions([ { label: "Serchat", description: "Platforma @catflare z ser.chat.", value: "serchat" } ])
-                            ])
-                    ]
-                });
-            } else if (i.customId == 'add-external-account-user-sel' && i.isStringSelectMenu() && i.values?.[0] == "serchat") {
-                i.showModal(
-                    new ModalBuilder()
-                        .setCustomId('add-external-account-final')
-                        .setTitle('Jeszcze tylko dwa kroki...')
-                        .addLabelComponents(
-                            new LabelBuilder()
-                                .setLabel("Wpisz user ID na Serchat")
-                                .setDescription("Możesz je uzyskać klikając na swój profil prawym przyciskiem myszy i następnie kopiując ID usera.")
-                                .setTextInputComponent(
-                                    new TextInputBuilder()
-                                        .setStyle(TextInputStyle.Short)
-                                        .setCustomId('userid')
-                                        .setPlaceholder("np. 0000000b78c0")
-                                        .setRequired(true)
-                                )
-                        )
-                );
-
-                const ms = await i.awaitModalSubmit({
-                    filter: (interaction) => 
-                        i.user.id === interaction.user.id &&
-                        interaction.customId == 'add-external-account-final',
-                    time: 60_000
-                });
-                await ms.deferUpdate();
-                await msg.edit({
-                    embeds: [
-                        api.log.getInfoEmbed('Sprawdź SerChat', 'Musisz potwierdzić, że to jest naprawdę Twoje konto.')
-                    ],
-                    components: []
-                });
-
-                const serchat_userid = ms.fields.getTextInputValue('userid');
-                await awaitUserConfirmation(`accept-discord-user ${i.user.id}`, serchat_userid, `<userid:'${serchat_userid}'>, napisz \`accept-discord-user ${i.user.id}\`, aby zaakceptować połączenie kont dla użytkownika Discorda ${i.user.username}`);
-                await db.platforms.addAccount('serchat', i.user.id, serchat_userid)
-
-                await msg.edit({
-                    embeds: [
-                        api.log.getSuccessEmbed('Połączono', 'Udało Ci się połączyć konto Discord z kontem SerChat.')
-                    ]
                 });
             }
         })
