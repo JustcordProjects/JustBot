@@ -43,6 +43,7 @@ import * as slashCommands from '@/features/commands/slash.ts';
 import * as prefixCommands from '@/features/commands/prefix.ts';
 
 // integrations
+import * as zapbox from '@/bot/apis/compile/zapbox.ts';
 import * as github from '@/bot/apis/github/github.ts';
 import * as gemini from '@/bot/apis/gemini/model.ts';
 import * as email from '@/bot/apis/email/mail.ts';
@@ -108,6 +109,13 @@ client.once('clientReady', async () => {
         initAskCmdModel();
         initWikiModel();
         output.verbose(`Gemini initialized.`);
+    }
+
+    if (!zapbox.isAvailable()) {
+        output.warn('You should set JB_ZAPBOX_PATH enviroment variable to path to the zapbox executable\nOtherwise, the zapbox compiler driver will not work');
+    } else {
+        await zapbox.init();
+        output.verbose(`Zapbox container initialized.`);
     }
 
     await github.init();

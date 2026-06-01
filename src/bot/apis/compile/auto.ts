@@ -1,7 +1,7 @@
 import { CompilerDriver } from './driver.ts';
 import { GodBoltCompilerDriver } from '@/bot/apis/compile/godbolt.ts';
 import { WandboxCompilerDriver } from './wandbox.ts';
-import { ZapCompilerDriver } from './zapc.ts';
+import { ZapCompilerDriver } from './zapbox.ts';
 
 import { cfg } from '@/bot/cfg.ts';
 

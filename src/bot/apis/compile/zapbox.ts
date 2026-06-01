@@ -1,6 +1,25 @@
 import { output } from '../../logging.ts';
 import { CompilerDriver, CompilerErrorKind, CompilerInfo, CompilerInput, CompilerOutput } from './driver.ts';
 
+export function isAvailable(): boolean {
+    return Deno.env.get('JB_ZAPBOX_PATH') != undefined;
+}
+
+export async function init() {
+    const exePath = Deno.env.get('JB_ZAPBOX_PATH')
+    if (!exePath) return;
+    
+    const cmd = new Deno.Command(exePath, {
+        args: ['build'],
+    });
+    const out = await cmd.output();
+
+    if (out.code != 0) {
+        output.err('failed to build zapbox image:');
+        output.err(new TextDecoder().decode(out.stderr));
+    }
+}
+
 namespace Zapbox {
     export type MessageKind = 'stdout' | 'stderr';
     
@@ -37,15 +56,11 @@ namespace Zapbox {
     };
 }
 
-export interface ZapCompilerDriverOptions {
-    exePath?: string;
-}
-
 export class ZapCompilerDriver implements CompilerDriver {
     private readonly exePath: string;
 
-    constructor(options: ZapCompilerDriverOptions) {
-        const exePath: string | undefined = options.exePath ?? Deno.env.get('JB_ZAPBOX_PATH');
+    constructor() {
+        const exePath = Deno.env.get('JB_ZAPBOX_PATH');
         if (!exePath) {
             throw new Error('No zapbox path provided');
         }
@@ -76,7 +91,6 @@ export class ZapCompilerDriver implements CompilerDriver {
 
         try {
             const outputString = new TextDecoder().decode(out.stdout);
-            output.log(outputString);
             return JSON.parse(outputString) as Zapbox.Output;
         } catch (err: unknown) {
             const message = err instanceof Error ? err.message : `${err}`;
