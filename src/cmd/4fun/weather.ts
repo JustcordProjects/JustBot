@@ -39,7 +39,7 @@ const weatherCmd: Command = {
         } satisfies object;
 
         const data = await fetch(
-            `https://wttr.in/${encodeURIComponent(location)}?format=${encodeURIComponent(JSON.stringify(schema))}`,
+            `https://wttr.in/${encodeURIComponent(location)}?lang=pl&format=${encodeURIComponent(JSON.stringify(schema))}`,
             {
                 headers: {
                     "Accept-Language": "pl"
