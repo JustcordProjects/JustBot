@@ -26,7 +26,7 @@ export const warnGivenLogAction: Action<WarnEventCtx> = {
                         value: ctx.expiresAt ? `<t:${ctx.expiresAt?.toString()}:R>` : 'nigdy',
                     },
                 ],
-            }, [cfg.channels.mod.warnings]);
+            }, [cfg.channels.mod.punishments]);
         },
     ],
 };

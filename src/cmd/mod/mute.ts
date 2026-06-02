@@ -76,10 +76,10 @@ const muteCmd: Command = {
 
         sendLog({
             color: PredefinedColors.Purple,
-            title: 'Nałożono kłódkę na buzię',
-            description: `Użytkownik <@${targetUser.id}> został wyciszony przez <@${api.invoker.id}>. Dostanie unmute <t:${expiresAt}:R>.`,
-            fields: [{ name: 'Powód', value: reason }],
-        });
+            title: 'Użytkownik dostał mute',
+            description: `Użytkownik <@${targetUser.id}> został wyciszony przez <@${api.invoker.id}>.`,
+            fields: [{ name: 'Powód', value: reason }, { name: 'Wygasa', value: `<t:${expiresAt}:R>` }],
+        }, [ cfg.channels.mod.punishments ]);
 
         return api.reply({
             embeds: [

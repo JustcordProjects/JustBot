@@ -12,7 +12,7 @@ export const channelsCfg: Config['channels'] = {
     mod: {
         modGeneral: '1510229839016230986',
         logs: '1510286821848912043',
-        warnings: '1510287088258519221',
+        punishments: '1510287088258519221',
         hallOfShame: '1510287730330832969',
         automod: '1511258690156498974'
     },

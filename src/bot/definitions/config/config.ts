@@ -64,7 +64,7 @@ export interface Config {
         mod: {
             modGeneral: dsc.Snowflake;
             logs: dsc.Snowflake;
-            warnings: dsc.Snowflake;
+            punishments: dsc.Snowflake;
             hallOfShame: dsc.Snowflake;
             automod: dsc.Snowflake;
         };
