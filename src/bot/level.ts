@@ -113,6 +113,10 @@ export function computeLevelForMessage(msg: dsc.Message<boolean>) {
 export async function addExperiencePoints(msg: dsc.OmitPartialGroupDMChannel<dsc.Message<boolean>>) {
     // check if eligible
     if (cfg.features.leveling.excludedChannels.includes(msg.channelId)) return;
+    if (
+        [cfg.commands.prefix, ...cfg.commands.alternativePrefixes]
+            .some((p) => msg.content.startsWith(p))
+    ) return;
     
     // amount
     const amount = computeLevelForMessage(msg);

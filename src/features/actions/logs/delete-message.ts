@@ -13,7 +13,11 @@ export const deleteMessageAction: Action<MessageEventCtx> = {
     constraints: [ () => true ],
     callbacks: [
         async (msg) => {
-            if (!msg.author.bot) await new User(msg.author.id).leveling.removeXP(computeLevelForMessage(msg));
+            if (
+                !msg.author.bot && 
+                ![cfg.commands.prefix, ...cfg.commands.alternativePrefixes]
+                    .some((p) => msg.content.startsWith(p))
+            ) await new User(msg.author.id).leveling.removeXP(computeLevelForMessage(msg));
 
             const logs_channel = await msg.client.channels.fetch(cfg.channels.mod.logs) as GuildTextBasedChannel;
             logs_channel.send({
