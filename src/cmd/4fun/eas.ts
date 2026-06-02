@@ -60,18 +60,13 @@ const easCmd: Command = {
             if (
                 warn.type !== 'Feature' ||
                 warn.properties.status !== 'Actual' ||
-                warn.properties.event == 'Test Message' ||
+                ['Test Message', 'Small Craft Advisory'].includes(warn.properties.event) ||
                 !['Update', 'Actual'].includes(warn.properties.messageType) ||
                 !warn.properties.parameters.BLOCKCHANNEL.includes('EAS')
             ) continue;
 
-            while (warn.properties.description.includes('\n\n')) {
-                warn.properties.description = warn.properties.description.replaceAll('\n\n', '\n');
-            }
-
-            while (warn.properties.instruction.includes('\n\n')) {
-                warn.properties.instruction = warn.properties.instruction.replaceAll('\n\n', '\n');
-            }
+            warn.properties.description = warn.properties.description.replaceAll('\n', ' ');
+            warn.properties.instruction = warn.properties.instruction.replaceAll('\n', ' ');
 
             warnings.push({
                 title: warn.properties.event,
@@ -94,7 +89,7 @@ const easCmd: Command = {
 
             return new ReplyEmbed()
                 .setTitle(`🚨 ${w.title}`)
-                .setDescription(`${w.headline}\n\n${w.description}\n\n${w.instruction}`)
+                .setDescription(`\`\`\`${w.headline}\n\n${w.description}\n\n${w.instruction}\`\`\``)
                 .setColor(PredefinedColors.Red);
         };
 
