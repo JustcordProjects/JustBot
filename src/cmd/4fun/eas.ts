@@ -65,8 +65,8 @@ const easCmd: Command = {
                 !warn.properties.parameters.BLOCKCHANNEL.includes('EAS')
             ) continue;
 
-            warn.properties.description = warn.properties.description.replaceAll('\n', ' ');
-            warn.properties.instruction = warn.properties.instruction.replaceAll('\n', ' ');
+            warn.properties.description = warn.properties.description?.replaceAll('\n', ' ') ?? "nothing here";
+            warn.properties.instruction = warn.properties.instruction?.replaceAll('\n', ' ') ?? "nothing here";
 
             warnings.push({
                 title: warn.properties.event,
