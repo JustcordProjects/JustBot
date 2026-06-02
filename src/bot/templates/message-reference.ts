@@ -42,8 +42,8 @@ export async function mkMessageReferenceEmbed(
 
     const embed = new ReplyEmbed()
         .setAuthor({
-            name: quotedMsg.author.tag,
-            iconURL: quotedMsg.author.displayAvatarURL(),
+            name: quotedMsg.author?.tag ?? 'Nieznany user',
+            iconURL: quotedMsg.author?.displayAvatarURL() ?? client.user!.displayAvatarURL(),
         })
         .setDescription(
             quotedMsg.content ||

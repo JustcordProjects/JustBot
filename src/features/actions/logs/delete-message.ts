@@ -14,6 +14,7 @@ export const deleteMessageAction: Action<MessageEventCtx> = {
     callbacks: [
         async (msg) => {
             if (
+                msg.author &&
                 !msg.author.bot && 
                 ![cfg.commands.prefix, ...cfg.commands.alternativePrefixes]
                     .some((p) => msg.content.startsWith(p))
