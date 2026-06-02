@@ -125,7 +125,7 @@ export class ZapCompilerDriver implements CompilerDriver {
         }
     }
 
-    async compile(input: CompilerInput): Promise<CompilerOutput> {
+    async compileWrapper(input: CompilerInput): Promise<CompilerOutput> {
         const zapboxInput: Zapbox.Input = {
             src: input.source,
             stdin: input.stdin,
@@ -161,5 +161,12 @@ export class ZapCompilerDriver implements CompilerDriver {
                 errMessage: stderr,
             }
         }
+    }
+
+    async compile(input: CompilerInput): Promise<CompilerOutput> {
+        const result = await this.compileWrapper(input);
+        output.log('zapbox compile() result:');
+        output.log(result);
+        return result;
     }
 }
