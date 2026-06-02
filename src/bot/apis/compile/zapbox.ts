@@ -84,6 +84,9 @@ export class ZapCompilerDriver implements CompilerDriver {
         });
         const out = await cmd.output();
 
+        output.log('zapbox run output:');
+        output.log(out);
+
         if (out.code != 0) {
             const message = new TextDecoder().decode(out.stderr);
             return { status: Zapbox.Status.InternalError, message };
