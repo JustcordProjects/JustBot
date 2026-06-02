@@ -6,17 +6,21 @@ export function isAvailable(): boolean {
 }
 
 export async function init() {
+    output.log('zapbox.init() called');
+
     const exePath = Deno.env.get('JB_ZAPBOX_PATH')
     if (!exePath) return;
-    
+
     const cmd = new Deno.Command(exePath, {
         args: ['setup'],
     });
     const out = await cmd.output();
 
     if (out.code != 0) {
-        output.err('failed to build zapbox image:');
+        output.err('failed to initialize zapbox:');
         output.err(new TextDecoder().decode(out.stderr));
+    } else {
+        output.log('zapbox initialized');
     }
 }
 
