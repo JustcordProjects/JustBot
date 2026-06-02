@@ -53,8 +53,8 @@ const lvlCmd: Command = {
                                 row,
                                 cfg.features.leveling.levelDivider,
                             )
-                        }\n` +
-                        `Do kolejnego lvl: ${next_level_xp - row} XP/ok. ${Math.floor((next_level_xp - row) / cfg.features.leveling.xpPerMessage)} wiad.`,
+                        }\n\n` +
+                        `Do kolejnego lvl: ${next_level_xp - row} XP - ok. ${Math.floor((next_level_xp - row) / cfg.features.leveling.xpPerMessage)} wiad.`,
                 )
                 .setThumbnail(who.displayAvatarURL({ size: 128 }));
 
