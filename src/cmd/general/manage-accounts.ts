@@ -74,10 +74,13 @@ const manageAccountsCmd: Command = {
         collector.on('collect', async (i) => {
             if (i.customId !== 'add-external-account-user-sel') i.deferUpdate();
 
-            if ([ 'leave-group', 'leave-group-final', 'move-primary', 'move-primary-selected' ].includes(i.customId)) {
+            if (
+                [ 'leave-group', 'leave-group-final', 'move-primary', 'move-primary-selected' ].includes(i.customId) &&
+                alternative_accounts.length <= 0
+            ) {
                 return await msg.edit({ embeds: [
                     api.log.getErrorEmbed('Nie masz tu altów.', 'Te funkcje są dozwolone tylko dla osób, które posiadają tu alternatywne konta.')
-                ] });
+                ], components: [] });
             }
 
             if (i.customId == 'leave-group' && i.isButton()) {
