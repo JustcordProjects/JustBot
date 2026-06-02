@@ -68,6 +68,8 @@ export function mkAutoreplyAction({ activationOptions, reply, additionalCallback
         ],
         callbacks: [
             (msg) => {
+                if (!msg.channel.isSendable()) return;
+
                 let replyValue: string | dsc.MessagePayload | dsc.MessageReplyOptions;
                 if (typeof reply == 'function') {
                     replyValue = (reply as AutoReplyGetMessageCallback)(msg);
@@ -75,17 +77,17 @@ export function mkAutoreplyAction({ activationOptions, reply, additionalCallback
                     replyValue = reply as (string | dsc.MessagePayload | dsc.MessageReplyOptions);
                 }
                 if (typeof replyValue === 'string') {
-                    msg.reply({
+                    msg.channel.send({
                         content: replyValue,
                         allowedMentions: { repliedUser: false },
                     });
                 } else if ('content' in replyValue || 'embeds' in replyValue || 'components' in replyValue) {
-                    msg.reply({
+                    msg.channel.send({
                         ...replyValue,
                         allowedMentions: { repliedUser: false },
                     });
                 } else {
-                    msg.reply(replyValue satisfies (dsc.MessageReplyOptions | dsc.MessagePayload));
+                    msg.channel.send(replyValue satisfies (dsc.MessageReplyOptions | dsc.MessagePayload));
                 }
                 if (shallEndActionsLoop) {
                     return MagicSkipAllActions;

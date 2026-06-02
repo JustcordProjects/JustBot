@@ -37,7 +37,7 @@ export default class AutoModRules {
                 keyword: '(?:discord\\.gg|discord\\.com\\/invite)\\/[A-Za-z0-9]{4,}',
             },
         ],
-        reply: 'Wypier*alaj ze swoją reklamą na serwery reklamowe ;)',
+        reply: (msg) => `<@${msg.author.id}> ładnie proszę, wypier*alaj ze swoją reklamą na serwery reklamowe ;)'`,
         additionalCallbacks: [PredefinedActionCallbacks.deleteMsgAutomod],
         additionalConstraints: [AutoModRules.msgAuthorIsNotImmuneToAutomod],
     });
