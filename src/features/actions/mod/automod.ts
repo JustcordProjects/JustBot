@@ -23,7 +23,7 @@ export default class AutoModRules {
         ],
         reply: (msg) => `Upomnienie dla <@${msg.author.id}> za próbe pingu everyone!!11!1@!!`,
         additionalConstraints: [AutoModRules.msgAuthorIsNotImmuneToAutomod],
-        additionalCallbacks: [PredefinedActionCallbacks.deleteMsg],
+        additionalCallbacks: [PredefinedActionCallbacks.deleteMsgAutomod],
     });
 
     static readonly BlockInvites: Action<MessageEventCtx> = mkAutoreplyAction({
@@ -38,7 +38,7 @@ export default class AutoModRules {
             },
         ],
         reply: 'Wypier*alaj ze swoją reklamą na serwery reklamowe ;)',
-        additionalCallbacks: [PredefinedActionCallbacks.deleteMsg],
+        additionalCallbacks: [PredefinedActionCallbacks.deleteMsgAutomod],
         additionalConstraints: [AutoModRules.msgAuthorIsNotImmuneToAutomod],
     });
 

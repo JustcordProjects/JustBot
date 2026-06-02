@@ -66,6 +66,7 @@ export interface Config {
             logs: dsc.Snowflake;
             warnings: dsc.Snowflake;
             hallOfShame: dsc.Snowflake;
+            automod: dsc.Snowflake;
         };
         important: {
             lobby: dsc.Snowflake;

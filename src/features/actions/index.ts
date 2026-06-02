@@ -2,6 +2,8 @@ import * as log from '@/util/log.ts';
 import * as dsc from 'discord.js';
 import logError from '@/util/log-error.ts';
 import { cfg } from '@/bot/cfg.ts';
+import { mkMessageReferenceEmbed } from '@/bot/templates/message-reference.ts';
+import { PredefinedColors } from '@/util/color.ts';
 
 export type MessageEventCtx = dsc.Message;
 export type ReactionEventCtx = { reaction: dsc.MessageReaction; user: dsc.User };
@@ -114,6 +116,21 @@ export class PredefinedActionCallbacks {
 
     static deleteMsg: ActionCallback<MessageEventCtx> = (msg) => {
         msg.delete();
+        return MagicSkipAllActions;
+    };
+
+    static deleteMsgAutomod: ActionCallback<MessageEventCtx> = (msg) => {
+        msg.guild?.channels.fetch(cfg.channels.mod.automod).then(async (c) => {
+            if (c?.isSendable()) c.send({
+                content: 'wiadomość została przez automoda usunięta',
+                embeds: [ await mkMessageReferenceEmbed(msg, { color: PredefinedColors.Red }) ]
+            }).then(() => {
+                msg.delete()
+            });
+            else msg.delete();
+        }).catch(() => {
+            msg.delete()
+        }) 
         return MagicSkipAllActions;
     };
 }

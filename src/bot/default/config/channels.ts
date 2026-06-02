@@ -14,6 +14,7 @@ export const channelsCfg: Config['channels'] = {
         logs: '1510286821848912043',
         warnings: '1510287088258519221',
         hallOfShame: '1510287730330832969',
+        automod: '1511258690156498974'
     },
     important: {
         lobby: '1510651678809002095',
