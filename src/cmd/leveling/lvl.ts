@@ -6,7 +6,7 @@ import { PredefinedColors } from '@/util/color.ts';
 import { Command } from '@/bot/command.ts';
 import { CommandFlags } from '@/bot/apis/commands/misc.ts';
 import { CommandAPI } from '@/bot/apis/commands/api.ts';
-import { mkLvlProgressBar, xpToLevel } from '@/bot/level.ts';
+import { levelToXp, mkLvlProgressBar, xpToLevel } from '@/bot/level.ts';
 import { output } from '@/bot/logging.ts';
 import { ReplyEmbed } from '@/bot/apis/translations/reply-embed.ts';
 
@@ -41,6 +41,7 @@ const lvlCmd: Command = {
         try {
             const user = new User(who.id);
             const row = await user.leveling.getXP();
+            const next_level_xp = levelToXp(xpToLevel(row, cfg.features.leveling.levelDivider) + 1, cfg.features.leveling.levelDivider);
 
             const embed = new ReplyEmbed()
                 .setColor(PredefinedColors.Blue)
@@ -52,7 +53,8 @@ const lvlCmd: Command = {
                                 row,
                                 cfg.features.leveling.levelDivider,
                             )
-                        }`,
+                        }` +
+                        `Do kolejnego lvl: ${next_level_xp - row} XP/ok. ${Math.floor((next_level_xp - row) / cfg.features.leveling.xpPerMessage)} wiad.`,
                 )
                 .setThumbnail(who.displayAvatarURL({ size: 128 }));
 
