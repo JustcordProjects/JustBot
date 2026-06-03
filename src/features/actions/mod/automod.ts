@@ -39,7 +39,7 @@ export default class AutoModRules {
         ],
         reply: (msg) => `<@${msg.author.id}> ładnie proszę, wypier*alaj ze swoją reklamą na serwery reklamowe ;)'`,
         additionalCallbacks: [PredefinedActionCallbacks.deleteMsgAutomod],
-        additionalConstraints: [AutoModRules.msgAuthorIsNotImmuneToAutomod, (ctx) => ctx.channelId !== '1511773012951568434'],
+        additionalConstraints: [AutoModRules.msgAuthorIsNotImmuneToAutomod, (ctx) => !(ctx.channel.isThread() && ctx.channel.parentId == '1511773012951568434')],
     });
 
     static readonly BlockNWords: Action<MessageEventCtx> = mkAutoreplyAction({
