@@ -26,15 +26,11 @@ function buildSelectMenu(commands: Map<Category, Command[]>): dsc.StringSelectMe
         );
 }
 
-function buildIntroEmbed(isQuick: boolean): ReplyEmbed {
+function buildIntroEmbed(): ReplyEmbed {
     return new ReplyEmbed()
         .setTitle('📢 Moje komendy, władzco!')
         .setDescription(
-            'Wybierz kategorię z menu poniżej, aby zobaczyć jej komendy! ' +
-                (isQuick
-                    ? ('Plus, używasz uproszczonej wersji `help`. ' +
-                        'Użyj `detail-help`/`man`, jak serio się chcesz komend nauczyć...')
-                    : ''),
+            'Wybierz kategorię z menu poniżej, aby zobaczyć jej komendy!'
         )
         .setColor(PredefinedColors.Cyan);
 }
@@ -43,7 +39,6 @@ function buildCategoryEmbed(
     category: Category,
     cmds: Command[],
     blockedCmds: string[] = [],
-    isQuick: boolean,
 ): ReplyEmbed {
     const embed = new ReplyEmbed()
         .setTitle(`${category.emoji} ${category.name}`)
@@ -63,7 +58,7 @@ function buildCategoryEmbed(
 
         embed.addFields({
             name: '',
-            value: `**:star: ${cfg.commands.prefix}${formattedName}:** ${isQuick ? cmd.description.short : cmd.description.main}`,
+            value: `**:star: ${cfg.commands.prefix}${formattedName}:** ${cmd.description.main}`,
             inline: false,
         });
     }
@@ -101,10 +96,10 @@ function getBlockedCommands(
 
 const helpCmd: Command = {
     name: 'help',
-    aliases: ['quick-help', 'detail-help'],
+    aliases: ['pomoc', 'kolo-ratunkowe'],
     description: {
         main: 'Pokazuje losowe komendy z bota wraz z opisami, by w końcu nauczyć Twojego zapyziałego mózgu jego używania.',
-        short: 'Lista komend',
+        short: 'Ukazuje listę komend',
     },
     flags: CommandFlags.WorksInDM | CommandFlags.Spammy,
 
@@ -116,7 +111,7 @@ const helpCmd: Command = {
     expectedArgs: [
         {
             name: 'category',
-            description: 'Kategoria lub "all" aby zobaczyć wszystkie',
+            description: 'Kategoria',
             type: { base: 'string' },
             optional: true,
         },
@@ -125,36 +120,29 @@ const helpCmd: Command = {
     async execute(api: CommandAPI) {
         const { commands } = api;
 
-        const isQuick = api.invokedViaAlias !== 'detail-help';
         const argCategory = api.getTypedArg('category', 'string');
 
         const sendInteractiveMenu = async () => {
             const selectMenu = buildSelectMenu(commands);
             const row = new dsc.ActionRowBuilder<dsc.StringSelectMenuBuilder>().addComponents(selectMenu);
 
-            const introEmbed = buildIntroEmbed(isQuick);
+            const introEmbed = buildIntroEmbed();
             const replyMsg = await api.reply({ embeds: [introEmbed], components: [row] });
 
             const collector = replyMsg.createMessageComponentCollector({
                 componentType: dsc.ComponentType.StringSelect,
                 time: 60000,
+                filter: (i) => i.user.id == api.invoker.id
             });
 
             collector.on('collect', async (interaction: dsc.StringSelectMenuInteraction) => {
-                if (interaction.user.id !== api.invoker.id) {
-                    await interaction.reply({ content: 'To menu nie jest dla Ciebie!', flags: ['Ephemeral'] });
-                    return;
-                }
-
                 const chosenCategory = [...commands.keys()].find((c) => c.name === interaction.values[0]);
 
-                if (!chosenCategory) {
-                    await interaction.reply({ content: 'Nie znaleziono tej kategorii!', flags: ['Ephemeral'] });
+                if (!chosenCategory) 
                     return;
-                }
 
                 const cmds = commands.get(chosenCategory) ?? [];
-                const embed = buildCategoryEmbed(chosenCategory, cmds, [], isQuick);
+                const embed = buildCategoryEmbed(chosenCategory, cmds, []);
 
                 await interaction.update({ embeds: [embed], components: [row] });
             });
@@ -172,36 +160,21 @@ const helpCmd: Command = {
             return;
         }
 
-        const values = (argCategory.value as string).split(/\s+/);
+        const val = argCategory.value;
         const categoriesToShow: Set<Category> = new Set();
+ 
+        const category = Category.fromString(val);
 
-        if (values.includes('all')) {
-            for (const c of commands.keys()) categoriesToShow.add(c);
-        } else {
-            for (const val of values) {
-                const category = Category.fromString(val);
-
-                if (!category) {
-                    api.log.replyError(api, 'Nieznana kategoria', `Nie znam kategorii ${val}. Czy możesz powtórzyć?`);
-                    return;
-                }
-
-                categoriesToShow.add(category);
-            }
+        if (!category) {
+            api.log.replyError(api, 'Nieznana kategoria', `Nie znam kategorii ${val}. Czy możesz powtórzyć?`);
+            return;
         }
+
+        categoriesToShow.add(category);
 
         const blockedCmds = getBlockedCommands(commands, categoriesToShow, api.invoker.member ?? api.invoker.user);
 
-        const introEmbed = new ReplyEmbed()
-            .setTitle('📢 Moje komendy, władzco!')
-            .setDescription(
-                'O to lista komend podzielona na kategorie! ' +
-                    (isQuick
-                        ? ('Plus, używasz uproszczonej wersji `help`. ' +
-                            'Użyj `detail-help`/`man`, jak serio się chcesz komend nauczyć...')
-                        : ''),
-            )
-            .setColor(PredefinedColors.Cyan);
+        const introEmbed = buildIntroEmbed();
 
         if (blockedCmds.length > 0) {
             introEmbed.addFields({
@@ -214,7 +187,7 @@ const helpCmd: Command = {
 
         for (const category of categoriesToShow) {
             const cmds = commands.get(category) ?? [];
-            allEmbeds.push(buildCategoryEmbed(category, cmds, blockedCmds, isQuick));
+            allEmbeds.push(buildCategoryEmbed(category, cmds, blockedCmds));
         }
 
         await api.reply({ embeds: allEmbeds });
