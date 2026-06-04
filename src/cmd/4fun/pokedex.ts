@@ -8,7 +8,6 @@ import * as dsc from 'discord.js';
 import capitalizeFirst from '@/util/capitalize-first.ts';
 import { ReplyEmbed } from '@/bot/apis/translations/reply-embed.ts';
 import { PredefinedColors } from '@/util/color.ts';
-import { output } from '@/bot/logging.ts';
 
 const pokedexSpeciesColorMap: Record<string, dsc.ColorResolvable> = {
     'black': PredefinedColors.NotQuiteBlack,
