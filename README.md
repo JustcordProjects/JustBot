@@ -3,16 +3,16 @@
 A Discord bot made for the Justcord Discord server with a little bit of humour.
 
 <div align="center">
-    <img width="706" height="653" alt="image" src="https://github.com/user-attachments/assets/776bac71-d8d1-4b36-9e59-3bee4c5a48e5" />
+    <img width="726" height="657" alt="image" src="https://github.com/user-attachments/assets/e5c20262-9bb8-4bac-bf5d-81c6e479086f" />
 </div>
 
 Features:
 
 - many well-done commands from different categories 
 - fully customizable look and feel through configuration and Translations API
-- easy-to-use custom action system
-- dynamic command and configuration loader 
-- db backups sent to the special channel in case something goes wrong
+- dynamic command and configuration loader
+- automatic hot reload with type checking
+- regular database backups sent to the special channel 
 
 ## Running JustBOT
 
@@ -27,6 +27,6 @@ Or with hot reload on file changes:
 `make dev`
 
 > [!IMPORTANT]
-> To see any verbose messages, please set JB_DEVELOPMENT enviorment variable to true
+> To see any verbose messages, you have to set `JB_DEVELOPMENT` enviorment variable to `true`
 
 It's that simple!
