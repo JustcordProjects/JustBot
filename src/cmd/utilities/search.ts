@@ -58,7 +58,7 @@ const searchCmd: Command = {
             return await api.log.replyError(
                 api,
                 'Problem jest',
-                `Niestety żadna instancja nie zwróciła wyników dla twojego wyszukiwania.` +
+                `Niestety żadna instancja nie zwróciła wyników dla twojego wyszukiwania. ` +
                     `[Może poszukaj w Google](${buildSearchURL('https://google.com', searchQuery, false)})`,
             );
         }

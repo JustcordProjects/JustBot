@@ -17,61 +17,68 @@ export class Category {
 
     stringId(): string | undefined {
         switch (this) {
-            case Category.General:
-                return 'general';
-            case Category.Mod:
-                return 'mod';
-            case Category.Economy:
-                return 'economy';
-            case Category.Leveling:
-                return 'leveling';
-            case Category.DevelopersOnly:
-                return 'dev';
-            case Category.ForFun:
-                return 'forfun';
-            case Category.Email:
-                return 'email';
+        case Category.General:
+            return 'general';
+        case Category.Mod:
+            return 'mod';
+        case Category.Economy:
+            return 'economy';
+        case Category.Leveling:
+            return 'leveling';
+        case Category.DevelopersOnly:
+            return 'dev';
+        case Category.ForFun:
+            return 'forfun';
+        case Category.Email:
+            return 'email';
+        case Category.Utilities:
+            return 'utilities';
         }
     }
 
     static fromString(str: string): Category | null {
         switch (str.toLowerCase()) {
-            case 'general':
-            case 'ogólne':
-                return Category.General;
+        case 'general':
+        case 'ogólne':
+            return Category.General;
 
-            case 'mod':
-            case 'moderacja':
-            case 'administracja':
-                return Category.Mod;
+        case 'mod':
+        case 'moderacja':
+        case 'administracja':
+            return Category.Mod;
 
-            case 'ekonomia':
-            case 'economy':
-                return Category.Economy;
+        case 'ekonomia':
+        case 'economy':
+            return Category.Economy;
 
-            case 'poziomy':
-            case 'leveling':
-            case 'levels':
-            case 'level':
-            case 'xp':
-                return Category.Leveling;
+        case 'poziomy':
+        case 'leveling':
+        case 'levels':
+        case 'level':
+        case 'xp':
+            return Category.Leveling;
 
-            case 'deweloperskie':
-            case 'dev':
-                return Category.DevelopersOnly;
+        case 'deweloperskie':
+        case 'dev':
+            return Category.DevelopersOnly;
 
-            case '4fun':
-            case 'forfun':
-            case 'for-fun':
-                return Category.ForFun;
+        case '4fun':
+        case 'forfun':
+        case 'for-fun':
+            return Category.ForFun;
 
-            case 'email':
-            case 'e-mail':
-            case 'mail':
-                return Category.Email;
+        case 'email':
+        case 'e-mail':
+        case 'mail':
+            return Category.Email;
 
-            default:
-                return null;
+        case 'utilities':
+        case 'narzędzia':
+        case 'tools':
+            return Category.Utilities;
+
+        default:
+            return null;
         }
     }
 
@@ -124,5 +131,12 @@ export class Category {
         'Możesz wysyłać e-maile.',
         "Kontaktuj się z innymi za pomocą przełomowej technologii XXI wieku - e-mail'i!",
         PredefinedColors.Aqua,
+    );
+    static readonly Utilities = new Category(
+        '⚒️',
+        'Narzędzia',
+        'Wspomóż swoją pracę z użytecznymi narzędziami.',
+        'Użyj naszych bardzo użytecznych narzędzi i ułatwij sobie trudną pracę za darmo.',
+        PredefinedColors.Brown
     );
 }

@@ -49,10 +49,30 @@ const translateCmd: Command = {
     async execute(api) {
         const optsString = api.getTypedArg('opts', 'string').value;
         const text = api.getTypedArg('text', 'string').value;
-
         const opts = parseOpts(optsString);
+        
+        if (opts.to && opts.to == opts.from) {
+            return api.log.replyError(api, 'Co to ma być?', 'Wydaje się że tłumaczysz z języka x na język x? To nie ma sensu? Dlaczego tłumaczysz z jednego języka na ten sam?');
+        }
+
+        if (
+            (opts.to
+                ? !/^[a-z]{2}(?:-[A-Z]{2})?$/.test(opts.to)
+                : false) ||
+            (opts.from
+                ? !/^[a-z]{2}(?:-[A-Z]{2})?$/.test(opts.from)
+                : false)
+        ) {
+            return api.log.replyError(api, 'To jest język w ogóle?', 'Wydaje mi się, że źle podałeś języki. Generalnie według różnych specyfikacji powinieneś je podawać tak: `xx` lub `xx-XX`.')
+        }
+
         try {
             const result = await translate(text, { to: opts.to, from: opts.from });
+            
+            if (result.text.trim() == text.trim()) {
+                return api.log.replyWarn(api, 'Ten sam tekst', 'Po tłumaczeniu wyszedł ten sam tekst co wkleiłeś. Prawdopodobnie w języku do którego tłumaczysz ma on takie sao odzwierciedlenie.');
+            }
+
             return api.log.replyInfo(
                 api, 'Tłumaczenie',
                 `Twój tekst w tłumaczeniu to:\n${result.text}`
