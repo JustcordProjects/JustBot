@@ -29,7 +29,7 @@ const pokedexCmd: Command = {
         main: 'Dowiedz się więcej o podanym pokemonie',
         short: 'Info o danym pokemonie',
     },
-    flags: CommandFlags.Spammy,
+    flags: CommandFlags.None,
 
     expectedArgs: [
         {
