@@ -1,4 +1,4 @@
-import { CompilerDriver } from './driver.ts';
+import * as compile from './driver.ts';
 import { GodBoltCompilerDriver } from '@/bot/apis/compile/godbolt.ts';
 import { WandboxCompilerDriver } from './wandbox.ts';
 import { ZapCompilerDriver } from './zapbox.ts';
@@ -25,7 +25,7 @@ async function isWandbox(lang: string): Promise<boolean> {
     return available.includes(lang) || isInReplaceMap;
 }
 
-export async function getCompilerForLang(lang: string): Promise<CompilerDriver> {
+export async function getCompilerForLang(lang: string): Promise<compile.Driver> {
     if (['zap', 'zp', 'zapc'].includes(lang)) {
         return new ZapCompilerDriver();
     }

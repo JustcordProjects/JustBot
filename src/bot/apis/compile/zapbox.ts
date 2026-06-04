@@ -1,5 +1,5 @@
-import { output } from '../../logging.ts';
-import { CompilerDriver, CompilerErrorKind, CompilerInfo, CompilerInput, CompilerOutput } from './driver.ts';
+import * as compile from '@/bot/apis/compile/driver.ts';
+import { output } from '@/bot/logging.ts';
 
 export function isAvailable(): boolean {
     return Deno.env.get('JB_ZAPBOX_PATH') != undefined;
@@ -45,22 +45,18 @@ namespace Zapbox {
     export enum Status {
         Success = 'success',
         UnknownError = 'error',
-        InternalError = 'internal',
         TimeLimitExceeded = 'time-limit-exceeded',
         MemLimitExceeded = 'mem-limit-exceeded',
     }
 
-    export type Output = {
-        status:   Exclude<Status, Status.InternalError>;
+    export interface Output {
+        status:   Status;
         compiler: ExecResult;
         runtime?: ExecResult;
-    } | {
-        status: Status.InternalError,
-        message: string;
-    };
+    }
 }
 
-export class ZapCompilerDriver implements CompilerDriver {
+export class ZapCompilerDriver implements compile.Driver {
     private readonly exePath: string;
 
     constructor() {
@@ -71,7 +67,7 @@ export class ZapCompilerDriver implements CompilerDriver {
         this.exePath = exePath;
     }
 
-    async info(): Promise<CompilerInfo> {
+    async info(): Promise<compile.Info> {
         return {
             lang: 'zap',
             displayName: 'Zap',
@@ -80,7 +76,7 @@ export class ZapCompilerDriver implements CompilerDriver {
         };
     }
 
-    async runZapbox(input: Zapbox.Input): Promise<Zapbox.Output> {
+    async runZapbox(input: Zapbox.Input): Promise<Zapbox.Output | { internalError: string }> {
         const cmd = new Deno.Command(this.exePath, {
             args: ['run', JSON.stringify(input)],
             stdout: 'piped',
@@ -93,7 +89,7 @@ export class ZapCompilerDriver implements CompilerDriver {
 
         if (out.code != 0) {
             const message = new TextDecoder().decode(out.stderr);
-            return { status: Zapbox.Status.InternalError, message };
+            return { internalError: message };
         }
 
         try {
@@ -101,7 +97,7 @@ export class ZapCompilerDriver implements CompilerDriver {
             return JSON.parse(outputString) as Zapbox.Output;
         } catch (err: unknown) {
             const message = err instanceof Error ? err.message : `${err}`;
-            return { status: Zapbox.Status.InternalError, message };
+            return { internalError: message };
         }
     }
 
@@ -116,64 +112,63 @@ export class ZapCompilerDriver implements CompilerDriver {
         return { stdout, stderr };
     }
 
-    mapErr(s: Zapbox.Status, r: boolean): CompilerErrorKind {
-        if (!r) return CompilerErrorKind.Compile;
+    mapStatus(s: Zapbox.Status): compile.Status {
         switch (s) {
         case Zapbox.Status.Success:
-        case Zapbox.Status.InternalError:
-            throw Error("invalid argument passed to mapErr");
-
+            return compile.Status.Success;
         case Zapbox.Status.UnknownError:
-            return CompilerErrorKind.Internal;
+            return compile.Status.InternalError;
         case Zapbox.Status.TimeLimitExceeded:
-            return CompilerErrorKind.Timeout;
+            return compile.Status.TimeLimitExceeded;
         case Zapbox.Status.MemLimitExceeded:
-            return CompilerErrorKind.Memory;
+            return compile.Status.MemLimitExceeded;
         }
     }
 
-    async compileWrapper(input: CompilerInput): Promise<CompilerOutput> {
+    async compile(input: compile.Input): Promise<compile.Output> {
         const zapboxInput: Zapbox.Input = {
             src: input.source,
             stdin: input.stdin,
         };
         
         const zapboxOutput = await this.runZapbox(zapboxInput);
-        if (zapboxOutput.status == Zapbox.Status.InternalError) {
-            return {
-                ok: false, errKind: CompilerErrorKind.Internal,
-                errMessage: zapboxOutput.message,
-            };
-        }
-
-        let { stdout, stderr } = this.mapMessages(zapboxOutput.compiler.messages);
-        let exitcode = zapboxOutput.compiler.exitcode;
-
-        if (zapboxOutput.runtime) {
-            const mapped = this.mapMessages(zapboxOutput.runtime.messages);
-            stdout += mapped.stdout; stderr += mapped.stderr;
-            exitcode = zapboxOutput.runtime.exitcode;
-        }
-
-        if (zapboxOutput.status == Zapbox.Status.Success) {
-            return {
-                ok: true,
-                exitcode,
-                stdout, stderr,
-            };
-        } else {
-            return {
-                ok: false,
-                errKind: this.mapErr(zapboxOutput.status, !!zapboxOutput.runtime),
-                errMessage: stderr,
-            }
-        }
-    }
-
-    async compile(input: CompilerInput): Promise<CompilerOutput> {
-        const result = await this.compileWrapper(input);
         output.log('zapbox compile() result:');
-        output.log(result);
-        return result;
+        output.log(zapboxOutput);
+
+        if ('internalError' in zapboxOutput) {
+            return {
+                status: compile.Status.InternalError,
+                compile: {
+                    messages: [{ kind: 'stderr', content: zapboxOutput.internalError }],
+                    exitcode: -1,
+                },
+                runtime: null,
+            };
+        }
+
+        const compileRes: compile.ExecResult = {
+            messages: zapboxOutput.compiler.messages.map(m => ({
+                kind: m.kind as 'stdout' | 'stderr',
+                content: m.content
+            })),
+            exitcode: zapboxOutput.compiler.exitcode,
+        };
+
+        let runtimeRes: compile.ExecResult | null = null;
+        if (zapboxOutput.runtime) {
+            runtimeRes = {
+                messages: zapboxOutput.runtime.messages.map(m => ({
+                    kind: m.kind as 'stdout' | 'stderr',
+                    content: m.content
+                })),
+                exitcode: zapboxOutput.runtime.exitcode,
+            };
+        }
+
+        return {
+            status: this.mapStatus(zapboxOutput.status),
+            compile: compileRes,
+            runtime: runtimeRes,
+        };
     }
 }

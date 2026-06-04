@@ -2,7 +2,7 @@ import { Command } from '@/bot/command.ts';
 import { CommandFlags } from '@/bot/apis/commands/misc.ts';
 import { CommandPermissions } from '@/bot/apis/commands/permissions.ts';
 import { getCompilerForLang } from '@/bot/apis/compile/auto.ts';
-import { CompilerErrorKind } from '@/bot/apis/compile/driver.ts';
+import * as compile from '@/bot/apis/compile/driver.ts';
 
 const compileCmd: Command = {
     name: 'compile',
@@ -87,43 +87,51 @@ const compileCmd: Command = {
             stdin: stdin?.src ?? '',
         });
 
-        if (!result.ok) {
-            let title = 'Błąd!';
-            let errMsg = result.errMessage;
-            if (result.errKind === CompilerErrorKind.Compile) {
+        if (result.status != compile.Status.Success || result.runtime == null) {
+            let title: string;
+            let body: string;
+            if (result.runtime == null) {
                 title = 'Błąd kompilacji!';
-                errMsg = '```' + errMsg + '```';
-            } else if (result.errKind === CompilerErrorKind.Timeout) {
+                body = '```\n' + result.compile.messages.map(m => m.content).join('\n') + '```';
+            } else if (result.status == compile.Status.TimeLimitExceeded) {
                 title = 'Timeout!';
+                body = 'Twój program działał za długo i musiał zostać zabity. Przykra strata.'
+            } else if (result.status == compile.Status.MemLimitExceeded) {
+                title = 'Przekroczyłeś limit pamięci!';
+                body = 'Twój program zużywał za dużo pamięci, zdajesz sobie sprawe, że RAM nie rośnie na drzewach?';
+            } else {
+                title = 'Błąd!';
+                body = 'Jakiś nieznany internal błąd czy coś. Sprawdź logi jeśli jesteś adminem a jeśli nie jesteś to chuja cie to obchodzi.';
             }
 
             return await msg.edit({
                 embeds: [
-                    api.log.getErrorEmbed(title, errMsg)
+                    api.log.getErrorEmbed(title, body)
                         .setFooter({ text: footerText }),
                 ],
             });
         }
 
-        let cmdOutput = '';
+        let cmdOutput: string = '```';
 
-        if (result.stdout) {
-            const lines = result.stdout.trim().split('\n');
-            for (const line of lines) {
-                if (!line.trim()) continue;
-                cmdOutput += `:white_large_square: \`${line.replaceAll('\`', '').trim()}\`\n`;
+        const allMessages = result.compile.messages;
+        if (result.runtime) allMessages.push(...result.runtime.messages);
+
+        const addStreamMarker = allMessages.some((m) => m.kind == 'stderr');
+
+        for (const msg of allMessages) {
+            switch (msg.kind) {
+            case 'stdout':
+                cmdOutput += `${addStreamMarker ? '[stdout] ' : ''}${msg.content.replaceAll('\`', '').trim()}\n`;
+                break;
+            case 'stderr':
+                cmdOutput += `[stderr] ${msg.content.replaceAll('\`', '').trim()}\n`;
+                break;
             }
         }
 
-        if (result.stderr) {
-            const lines = result.stderr.trim().split('\n');
-            for (const line of lines) {
-                if (!line.trim()) continue;
-                cmdOutput += `:red_square: \`${line.replaceAll('\`', '').trim()}\`\n`;
-            }
-        }
-
-        cmdOutput += `:black_large_square: exited with code: \`${result.exitcode}\``;
+        cmdOutput += '```\n';
+        cmdOutput += `exited with code: \`${result.runtime?.exitcode ?? result.compile.exitcode}\``;
 
         if (cmdOutput.length > 1500) {
             return await msg.edit({

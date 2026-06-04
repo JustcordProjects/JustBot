@@ -1,4 +1,4 @@
-import { CompilerDriver, CompilerErrorKind, CompilerInfo, CompilerInput, CompilerOutput } from '@/bot/apis/compile/driver.ts';
+import * as compile from '@/bot/apis/compile/driver.ts';
 
 interface GodBoltLanguageListEntry {
     id: string;
@@ -11,7 +11,7 @@ interface GodBoltCompilerListEntry {
     lang: string;
 }
 
-export class GodBoltCompilerDriver implements CompilerDriver {
+export class GodBoltCompilerDriver implements compile.Driver {
     private lang: string;
 
     constructor(lang: string) {
@@ -67,7 +67,7 @@ export class GodBoltCompilerDriver implements CompilerDriver {
         return compiler!.id;
     }
 
-    async info(): Promise<CompilerInfo> {
+    async info(): Promise<compile.Info> {
         return {
             lang: (await this.getGodboltCompiler()) == 'unknown' ? 'unknown' : this.lang, // TODO: do this better
             version: '1.0.0', // TODO: get actual version
@@ -76,7 +76,7 @@ export class GodBoltCompilerDriver implements CompilerDriver {
         };
     }
 
-    async compile(input: CompilerInput): Promise<CompilerOutput> {
+    async compile(input: compile.Input): Promise<compile.Output> {
         try {
             const compiler = await this.getGodboltCompiler();
 
@@ -120,19 +120,51 @@ export class GodBoltCompilerDriver implements CompilerDriver {
                 stdout: { text: string }[];
                 stderr: { text: string }[];
                 code: number;
+                timedOut?: boolean;
+                execResult?: {
+                    stdout: { text: string }[];
+                    stderr: { text: string }[];
+                    code: number;
+                };
             }>('https://godbolt.org/api/compiler/' + compiler + '/compile', body);
 
+            const compileMessages: compile.Message[] = [
+                ...result.stdout.map((t) => ({ kind: 'stdout' as const, content: t.text })),
+                ...result.stderr.map((t) => ({ kind: 'stderr' as const, content: t.text })),
+            ];
+
+            let runtime: compile.ExecResult | null = null;
+            if (result.execResult) {
+                runtime = {
+                    messages: [
+                        ...result.execResult.stdout.map((t) => ({ kind: 'stdout' as const, content: t.text })),
+                        ...result.execResult.stderr.map((t) => ({ kind: 'stderr' as const, content: t.text })),
+                    ],
+                    exitcode: result.execResult.code,
+                };
+            }
+
+            let status = compile.Status.Success;
+            if (result.timedOut) {
+                status = compile.Status.TimeLimitExceeded;
+            }
+
             return {
-                ok: true,
-                stdout: result.stdout.map((t) => t.text).join('\n'),
-                stderr: result.stderr.map((t) => t.text).join('\n'),
-                exitcode: result.code,
+                status,
+                compile: {
+                    messages: compileMessages,
+                    exitcode: result.code,
+                },
+                runtime,
             };
         } catch (err: unknown) {
             return {
-                ok: false,
-                errKind: CompilerErrorKind.Internal,
-                errMessage: err instanceof Error ? err.message : String(err),
+                status: compile.Status.InternalError,
+                compile: {
+                    messages: [{ kind: 'stderr', content: err instanceof Error ? err.message : String(err) }],
+                    exitcode: -1,
+                },
+                runtime: null,
             };
         }
     }

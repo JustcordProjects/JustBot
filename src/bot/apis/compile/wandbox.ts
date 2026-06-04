@@ -1,4 +1,4 @@
-import { CompilerDriver, CompilerErrorKind, CompilerInfo, CompilerInput, CompilerOutput } from './driver.ts';
+import * as compile from '@/bot/apis/compile/driver.ts';
 
 export interface WandboxOptions {
     compiler: string;
@@ -19,7 +19,7 @@ interface WandboxCompiler {
     switches?: unknown[];
 }
 
-export class WandboxCompilerDriver implements CompilerDriver {
+export class WandboxCompilerDriver implements compile.Driver {
     private readonly compiler: string;
     private readonly options: string;
     private readonly compilerOptionRaw: string;
@@ -45,7 +45,7 @@ export class WandboxCompilerDriver implements CompilerDriver {
         return (await this.fetchCompilers()).map((entry) => entry.name);
     }
 
-    async info(): Promise<CompilerInfo> {
+    async info(): Promise<compile.Info> {
         const compilers = await WandboxCompilerDriver.fetchCompilers();
         const compiler = compilers.find((c) => c.name === this.compiler);
         if (!compiler) {
@@ -65,7 +65,7 @@ export class WandboxCompilerDriver implements CompilerDriver {
         };
     }
 
-    async compile(input: CompilerInput): Promise<CompilerOutput> {
+    async compile(input: compile.Input): Promise<compile.Output> {
         try {
             const body = {
                 compiler: this.compiler,
@@ -87,9 +87,12 @@ export class WandboxCompilerDriver implements CompilerDriver {
 
             if (!response.ok) {
                 return {
-                    ok: false,
-                    errKind: CompilerErrorKind.Internal,
-                    errMessage: `Wandbox API error: ${response.status} ${response.statusText}`,
+                    status: compile.Status.InternalError,
+                    compile: {
+                        messages: [{ kind: 'stderr', content: `Wandbox API error: ${response.status} ${response.statusText}` }],
+                        exitcode: -1,
+                    },
+                    runtime: null,
                 };
             }
 
@@ -97,47 +100,65 @@ export class WandboxCompilerDriver implements CompilerDriver {
 
             if (data.error) {
                 return {
-                    ok: false,
-                    errKind: CompilerErrorKind.Internal,
-                    errMessage: data.error,
+                    status: compile.Status.InternalError,
+                    compile: {
+                        messages: [{ kind: 'stderr', content: data.error }],
+                        exitcode: -1,
+                    },
+                    runtime: null,
                 };
             }
 
             if (data.signal === 'Killed' || data.signal === 'SIGKILL' || data.status === '137' || data.status === '124') {
                 return {
-                    ok: false,
-                    errKind: CompilerErrorKind.Timeout,
-                    errMessage: 'Execution timed out or exceeded resource limits',
+                    status: compile.Status.TimeLimitExceeded,
+                    compile: {
+                        messages: [{ kind: 'stderr', content: 'Execution timed out or exceeded resource limits' }],
+                        exitcode: -1,
+                    },
+                    runtime: null,
                 };
             }
 
             const exitcode = parseInt(data.status ?? '0', 10);
-            const compileLog: string = data.compiler_message ?? `${data.compiler_output ?? ''}${data.compiler_error ?? ''}`;
+            const compileLog = (data.compiler_message ?? `${data.compiler_output ?? ''}${data.compiler_error ?? ''}`).trim();
+            const progOut = (data.program_output ?? '').trim();
+            const progErr = (data.program_error ?? '').trim();
 
-            if (
-                exitcode !== 0 &&
-                compileLog.trim() &&
-                !(data.program_output ?? '').trim() &&
-                !(data.program_error ?? '').trim()
-            ) {
-                return {
-                    ok: false,
-                    errKind: CompilerErrorKind.Compile,
-                    errMessage: compileLog.trimEnd(),
+            const isCompileError = exitcode !== 0 && compileLog && !progOut && !progErr;
+
+            const compileMessages: compile.Message[] = [
+                ...(data.compiler_output?.split('\n').filter(Boolean).map((content: string) => ({ kind: 'stdout' as const, content })) ?? []),
+                ...(data.compiler_error?.split('\n').filter(Boolean).map((content: string) => ({ kind: 'stderr' as const, content })) ?? []),
+            ];
+
+            let runtime: compile.ExecResult | null = null;
+            if (!isCompileError) {
+                runtime = {
+                    messages: [
+                        ...(data.program_output?.split('\n').filter(Boolean).map((content: string) => ({ kind: 'stdout' as const, content })) ?? []),
+                        ...(data.program_error?.split('\n').filter(Boolean).map((content: string) => ({ kind: 'stderr' as const, content })) ?? []),
+                    ],
+                    exitcode,
                 };
             }
 
             return {
-                ok: true,
-                stdout: data.program_output ?? '',
-                stderr: compileLog + (data.program_error ?? ''),
-                exitcode,
+                status: compile.Status.Success,
+                compile: {
+                    messages: compileMessages,
+                    exitcode: isCompileError ? exitcode : 0,
+                },
+                runtime,
             };
         } catch (error: unknown) {
             return {
-                ok: false,
-                errKind: CompilerErrorKind.Internal,
-                errMessage: error instanceof Error ? error.message : String(error),
+                status: compile.Status.InternalError,
+                compile: {
+                    messages: [{ kind: 'stderr', content: error instanceof Error ? error.message : String(error) }],
+                    exitcode: -1,
+                },
+                runtime: null,
             };
         }
     }
