@@ -115,8 +115,9 @@ client.once('clientReady', async () => {
     if (!zapbox.isAvailable()) {
         output.warn('You should set JB_ZAPBOX_PATH enviroment variable to path to the zapbox executable\nOtherwise, the zapbox compiler driver will not work');
     } else {
-        await zapbox.init();
-        output.verbose(`Zapbox container initialized.`);
+        zapbox.init().then(() => {
+            output.verbose(`Zapbox container initialized.`)
+        });
     }
 
     await pokedex.init();

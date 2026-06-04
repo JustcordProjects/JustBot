@@ -5,6 +5,8 @@ export function isAvailable(): boolean {
     return Deno.env.get('JB_ZAPBOX_PATH') != undefined;
 }
 
+let initialized: boolean = false;
+
 export async function init() {
     output.log('zapbox.init() called');
 
@@ -21,6 +23,7 @@ export async function init() {
         output.err(new TextDecoder().decode(out.stderr));
     } else {
         output.log('zapbox initialized');
+        initialized = true;
     }
 }
 
@@ -126,6 +129,17 @@ export class ZapCompilerDriver implements compile.Driver {
     }
 
     async compile(input: compile.Input): Promise<compile.Output> {
+        if (!initialized) {
+            return {
+                status: compile.Status.InternalError,
+                compile: {
+                    messages: [ { kind: 'stderr', content: 'zapbox not fully initialized, please wait a while and run the command again or conbtact bot developers' } ],
+                    exitcode: 127
+                },
+                runtime: null
+            }
+        }
+
         const zapboxInput: Zapbox.Input = {
             src: input.source,
             stdin: input.stdin,
