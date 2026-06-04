@@ -44,6 +44,7 @@ import * as prefixCommands from '@/features/commands/prefix.ts';
 
 // integrations
 import * as zapbox from '@/bot/apis/compile/zapbox.ts';
+import * as pokedex from '@/bot/apis/pokedex/pokedex.ts';
 import * as github from '@/bot/apis/github/github.ts';
 import * as gemini from '@/bot/apis/gemini/model.ts';
 import * as email from '@/bot/apis/email/mail.ts';
@@ -117,6 +118,9 @@ client.once('clientReady', async () => {
         await zapbox.init();
         output.verbose(`Zapbox container initialized.`);
     }
+
+    await pokedex.init();
+    output.verbose(`Pokedex integration initialized`);
 
     await github.init();
     output.verbose(`Github integration initialized`);
