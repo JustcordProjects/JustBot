@@ -75,7 +75,7 @@ const translateCmd: Command = {
 
             return api.log.replyInfo(
                 api, 'Tłumaczenie',
-                `Twój tekst w tłumaczeniu to:\n${result.text}`
+                `Twój tekst w tłumaczeniu to:\n\n\`\`\`${result.text}\`\`\``
             );
         } catch (err: unknown) {
             logError('stdwarn', err);
