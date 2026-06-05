@@ -13,17 +13,19 @@ export const autoUpdateAction: Action<MessageEventCtx> = {
 
     constraints: [
         (ctx) => ctx.channelId == cfg.channels.justbot.ghBridge,
+        (ctx) => ctx.webhookId != null,
         () => process.env.JB_AUTO_UPDATE == 'true',
     ],
 
     callbacks: [
-        async () => {
+        async (msg) => {
             const cmd = new Deno.Command('git', {
                 args: ['pull', '--rebase'],
             });
             const out = await cmd.output();
 
             if (out.code != 0) {
+                await msg.react('❌');
                 return await sendLog({
                     title: 'Auto update się zjebał',
                     description: 'Niestety pan `git` się nas nie posłuchał i nie wykonał git pull.',
@@ -41,6 +43,7 @@ export const autoUpdateAction: Action<MessageEventCtx> = {
             const out_check = await cmd_check.output();
 
             if (out_check.code != 0) {
+                await msg.react('❌');
                 return await sendLog({
                     title: 'Auto update się zjebał',
                     description: 'Niestety kod który został bezmyślnie pushnięty na GitHub\'a zawiera błędy, więc postanowione zostało go nie uruchamiać.',
@@ -48,6 +51,7 @@ export const autoUpdateAction: Action<MessageEventCtx> = {
                 });
             }
 
+            await msg.react('✅');
             await sendLog({
                 title: 'Zrobiłem ten auto update!',
                 description: 'Auto update się wykonał. Teraz bot się zrestartuje, by nowe zmiany weszły w życie. Poczekaj chwilę czy coś.',
@@ -55,7 +59,9 @@ export const autoUpdateAction: Action<MessageEventCtx> = {
             });
 
             output.log("Shutting down... (reason: auto-update)");
-            Deno.exit(1);
+            setTimeout(() => {
+                Deno.exit(1)
+            }, 250);
         },
     ],
 };
