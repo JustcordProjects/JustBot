@@ -32,20 +32,41 @@ async function getDisambiguationTitles(title: string, lang: string): Promise<str
     return data.parse.links.filter((l) => l.ns === 0).map((l) => l['*']);
 }
 
-async function searchWikipedia(lang: string, query: string) {
+interface WikiPageResult {
+    title: string;
+    extract?: string;
+    index: number;
+}
+
+async function searchWikipedia(lang: string, query: string, limit = 10) {
     const url =
         `https://${lang}.wikipedia.org/w/api.php` +
         `?action=query` +
-        `&list=search` +
-        `&srsearch=${encodeURIComponent(query)}` +
+        `&generator=search` +
+        `&gsrsearch=${encodeURIComponent(query)}` +
+        `&gsrlimit=${limit}` +
+        `&prop=extracts` +
+        `&exintro=1` +
+        `&explaintext=1` +
         `&format=json` +
         `&origin=*`;
 
     const res = await fetch(url);
-    if (!res.ok) return null;
+    if (!res.ok) return [];
 
     const data = await res.json();
-    return data.query?.search?.[0]?.title ?? null;
+    if (!data.query?.pages) return [];
+
+    return Object.values(data.query.pages)
+        .map((p: unknown) => {
+            const page = p as WikiPageResult;
+            return {
+                title: page.title,
+                extract: page.extract || "",
+                index: page.index
+            };
+        })
+        .sort((a, b) => a.index - b.index);
 }
 
 async function downloadFromWikipedia(
@@ -53,19 +74,28 @@ async function downloadFromWikipedia(
     args: string[]
 ) {
     const query = args.join(" ");
+    const lowerQuery = query.toLowerCase();
 
     for (const lang of languageVersions) {
-        const title = await searchWikipedia(lang, query);
-        if (!title) continue;
+        const results = await searchWikipedia(lang, query);
+        
+        for (const res of results) {
+            const lowerTitle = res.title.toLowerCase();
+            const firstParagraph = res.extract
+                .split('\n')
+                .find((p: string) => p.trim().length > 0)?.toLowerCase() || "";
 
-        const summaryUrl =
-            `https://${lang}.wikipedia.org/api/rest_v1/page/summary/` +
-            encodeURIComponent(title);
+            if (lowerTitle.includes(lowerQuery) && firstParagraph.includes(lowerQuery)) {
+                const summaryUrl =
+                    `https://${lang}.wikipedia.org/api/rest_v1/page/summary/` +
+                    encodeURIComponent(res.title);
 
-        const fetched = await fetch(summaryUrl);
+                const fetched = await fetch(summaryUrl);
 
-        if (fetched.ok) {
-            return { fetched, lang, title };
+                if (fetched.ok) {
+                    return { fetched, lang, title: res.title };
+                }
+            }
         }
     }
 
