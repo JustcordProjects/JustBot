@@ -1,18 +1,13 @@
 import * as dsc from 'discord.js';
-import { cfg } from '@/bot/cfg.ts';
 
-import { PredefinedColors } from '@/util/color.ts';
 import { Command } from '@/bot/command.ts';
 import { CommandFlags } from '@/bot/apis/commands/misc.ts';
 import { CommandPermissions } from '@/bot/apis/commands/permissions.ts';
 import { CommandAPI } from '@/bot/apis/commands/api.ts';
-import { ReplyEmbed } from '@/bot/apis/translations/reply-embed.ts';
-
-const cmdCfg = cfg.commands.configuration.warn;
 
 const clearCmd: Command = {
     name: 'clear',
-    aliases: cmdCfg.aliases,
+    aliases: [],
     description: {
         main: 'Ktoś spami? Ta komenda pomoże Ci ogarnąć usuwanie wiadomości!',
         short: 'Wywala wiadomości!',
@@ -21,7 +16,7 @@ const clearCmd: Command = {
 
     expectedArgs: [
         {
-            type: { base: 'float' },
+            type: { base: 'int' },
             optional: false,
             name: 'amount',
             description: 'Liczba wiadomości do usunięcia',
@@ -33,22 +28,15 @@ const clearCmd: Command = {
             description: 'Opcjonalnie, usuń wiadomości tylko tego użytkownika',
         },
     ],
-    permissions: CommandPermissions.fromCommandConfig(cmdCfg),
+    permissions: CommandPermissions.modPlus(),
 
     async execute(api: CommandAPI) {
         const amount = api.getTypedArg('amount', 'float')?.value as number;
         const who = api.getTypedArg('user', 'user-mention')?.value as dsc.GuildMember;
 
-        if (!amount || amount < 1) {
-            return api.reply({
-                embeds: [
-                    new ReplyEmbed()
-                        .setTitle('Hej!')
-                        .setDescription('Pierwszy argument to liczba wiadomości do usunięcia!')
-                        .setColor(PredefinedColors.Red),
-                ],
-            });
-        }
+        if (amount > 98 || amount < 0) {
+            return api.log.replyError(api, 'Zła ta liczba', 'Maksymalnie wolno usunąć 98 wiadomości, a minimalnie to musisz choć jedną dać.')
+        } 
 
         await api.log.replyInfo(api, 'Proszę', 'Aktualnie zaczynam się tym zajmować.');
 

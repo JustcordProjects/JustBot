@@ -3,66 +3,34 @@ import { hierarchyCfg } from './hierarchy.ts';
 import { channelsCfg } from './channels.ts';
 import { featuresConfig } from './features.ts';
 
-const commandsCfg: Config['commands']['configuration'] = {
-    ban: {
-        enabled: true,
-        aliases: [],
-        allowedRoles: [hierarchyCfg.administration.headAdmin, hierarchyCfg.administration.admin, hierarchyCfg.administration.headMod],
-        allowedUsers: [],
-        reasonRequired: false,
-    },
-    kick: {
-        enabled: true,
-        aliases: [],
-        allowedRoles: [hierarchyCfg.administration.headAdmin, hierarchyCfg.administration.admin, hierarchyCfg.administration.headMod],
-        allowedUsers: [],
-        reasonRequired: false,
-    },
-    mute: {
-        enabled: true,
-        aliases: [],
-        allowedRoles: [hierarchyCfg.administration.headAdmin, hierarchyCfg.administration.admin, hierarchyCfg.administration.headMod, hierarchyCfg.administration.mod, hierarchyCfg.administration.helper],
-        allowedUsers: [],
-        reasonRequired: false,
-    },
-    warn: {
-        enabled: true,
-        aliases: [],
-        allowedRoles: [hierarchyCfg.administration.headAdmin, hierarchyCfg.administration.admin, hierarchyCfg.administration.headMod, hierarchyCfg.administration.mod, hierarchyCfg.administration.helper],
-        allowedUsers: [],
-        reasonRequired: false,
-        maxPoints: 30,
-        minPoints: 1,
-    },
-    izolatka: {
-        aliases: [],
-        enabledForNormalAdministrators: true,
-        allowedRoles: [hierarchyCfg.administration.headAdmin, hierarchyCfg.administration.admin, hierarchyCfg.administration.headMod, hierarchyCfg.administration.mod, hierarchyCfg.administration.helper],
-        allowedUsers: [],
-        enabled: true,
-    },
-    reset: {
-        enabled: true,
-        aliases: [],
-        allowedRoles: [hierarchyCfg.administration.headAdmin],
-        allowedUsers: [],
-    },
-    crime: {
-        enabled: true,
-        aliases: [],
-        allowedRoles: null,
-        allowedUsers: null,
-
-        cooldown: 15 * 60 * 1000,
-        maximumCrimeAmount: 8000,
-        minimumCrimeAmount: 2500,
-        successRatio: 0.4,
-    },
-};
-
 export const defaultCfg: Config = {
-    hierarchy: hierarchyCfg,
+    bot: {
+        status: 'dnd',
+        activities: [
+            {
+                type: 'listening',
+                name: 'Merytoryczne konwersacje na Justcord',
+                description: 'Nie są merotoryczne, ale udaję, że są.'
+            },
+            {
+                type: 'playing',
+                name: 'Windows 11',
+                description: 'Absolutnie denerwujący system, odinstaluję zaraz.'
+            },
+            {
+                type: 'playing',
+                name: 'Arch Linux',
+                description: 'Próbuję zainstalować ten system operacyjny.'
+            },
+            {
+                type: 'watching',
+                name: 'Serwer Justcord',
+                description: 'Zastanawiam się co się tu dzieje.'
+            }
+        ]
+    },
 
+    hierarchy: hierarchyCfg,
     channels: channelsCfg,
 
     commands: {
@@ -72,6 +40,10 @@ export const defaultCfg: Config = {
         ],
         confirmUnsafeCommands: false,
         confirmDeprecatedCommands: false,
+
+        restrictedCommands: [],
+        disabledCommands: [],
+        cooldownBypasses: [],
 
         blocking: {
             full: {
@@ -90,15 +62,6 @@ export const defaultCfg: Config = {
                 default: 'block',
                 allow: [channelsCfg.other.economy],
             },
-        },
-
-        configuration: commandsCfg,
-        defaultConfiguration: {
-            enabled: true,
-            aliases: [],
-
-            allowedUsers: null,
-            allowedRoles: null,
         },
     },
 

@@ -85,7 +85,7 @@ client.on('interactionCreate', async (int: Interaction) => {
         return int.reply({ content: 'Nie znam takiej komendy', flags: dsc.MessageFlags.Ephemeral });
     }
 
-    const { command, config } = result;
+    const { command } = result;
 
     const replyable: log.Replyable = {
         reply: async (options) => {
@@ -148,20 +148,7 @@ client.on('interactionCreate', async (int: Interaction) => {
         }
     }
 
-    let isDisallowed = false;
-
-    if (config.disallowedRoles && int.member) {
-        const member = int.member as dsc.GuildMember;
-        for (const role of config.disallowedRoles) {
-            if (isDisallowed) break;
-            isDisallowed ||= member.roles.cache.has(role);
-        }
-    }
-    if (config.disallowedUsers && config.disallowedUsers.includes(int.user.id)) {
-        isDisallowed = true;
-    }
-
-    if (isDisallowed) {
+    if (cfg.commands.restrictedCommands.find((r) => int.user.id == r.targetUserID && command.name == r.commandName)) {
         return await log.replyWarn(replyable, 'Nie dla psa kiełbasa...', 'Niestety ktoś mądry pomyślał, by specjalnie dla ciebie wyłączyć tę komendę.');
     }
 

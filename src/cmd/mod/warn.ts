@@ -2,7 +2,6 @@ import { Command } from '@/bot/command.ts';
 import { CommandFlags } from '@/bot/apis/commands/misc.ts';
 import { CommandPermissions } from '@/bot/apis/commands/permissions.ts';
 import { PredefinedColors } from '@/util/color.ts';
-import { cfg } from '@/bot/cfg.ts';
 
 import * as dsc from 'discord.js';
 
@@ -13,7 +12,7 @@ import { ReplyEmbed } from '@/bot/apis/translations/reply-embed.ts';
 
 const warnCmd: Command = {
     name: 'warn',
-    aliases: cfg.commands.configuration.warn.aliases,
+    aliases: [],
     description: {
         main: 'Daj komuś warna, by go onieśmielić, uciszyć, zamknąć mu morde i nadużyć władzy. Żart, ale nie nadużywaj bo to się źle skończy... Nie wiesz z czym zadzierasz przybyszu!',
         short: 'Warnuje podaną osobę',
@@ -29,7 +28,7 @@ const warnCmd: Command = {
         },
         {
             name: 'points',
-            description: `Tu ile warn-pointsów chcesz dać, domyślnie 1 i raczej tego nie zmieniaj. No i ten, maksymalnie możesz dać ${cfg.commands.configuration.warn.maxPoints}`,
+            description: `Tu ile warn-pointsów chcesz dać, domyślnie 1 i raczej tego nie zmieniaj. No i ten, maksymalnie możesz dać 30`,
             type: { base: 'float' },
             optional: true,
         },
@@ -41,13 +40,13 @@ const warnCmd: Command = {
         },
         {
             name: 'reason',
-            description: cfg.commands.configuration.warn.reasonRequired ? 'Po prostu powód warna' : 'Po prostu powód warna. Możesz go pominąć ale nie polecam',
+            description: 'Po prostu powód warna. Możesz go pominąć ale nie polecam',
             type: { base: 'string', trailing: true },
-            optional: !cfg.commands.configuration.warn.reasonRequired,
+            optional: true,
         },
     ],
 
-    permissions: CommandPermissions.fromCommandConfig(cfg.commands.configuration.warn),
+    permissions: CommandPermissions.helperPlus(),
 
     async execute(api) {
         let targetUser = api.getTypedArg('user', 'user-mention')?.value as dsc.GuildMember | undefined;
@@ -64,13 +63,8 @@ const warnCmd: Command = {
             );
         }
 
-        if (!reason) {
-            if (cfg.commands.configuration.warn.reasonRequired) {
-                return api.log.replyError(api, 'Musisz podać powód!', "Bratku... dlaczego ty chcesz to zrobić? Możesz mi chociaż powiedzieć, a nie wysuwać pochopne wnioski i banować/warnować/mute'ować ludzi bez powodu?");
-            } else {
-                reason = 'Moderator nie poszczycił się znajomością komendy i nie podał powodu... Ale moze to i lepiej...';
-            }
-        }
+        if (!reason) 
+            reason = 'Moderator nie poszczycił się znajomością komendy i nie podał powodu... Ale moze to i lepiej...';
 
         if ([api.executor.id, ...(await api.executor.fetchAlternativeAccounts())].includes(targetUser.id)) {
             return api.log.replyError(
@@ -80,7 +74,7 @@ const warnCmd: Command = {
             );
         }
 
-        points = clamp(cfg.commands.configuration.warn.minPoints, points, cfg.commands.configuration.warn.maxPoints);
+        points = clamp(1, points, 30);
 
         if (targetUser.id === api.invoker.user.client.user?.id) {
             points = 2;

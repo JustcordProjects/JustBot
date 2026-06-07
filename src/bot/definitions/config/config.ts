@@ -1,5 +1,5 @@
 import * as dsc from 'discord.js';
-import { AnyCommandConfig, BlockCommandsRules, Emoji, PermissionDefinitionConfig } from './subtypes.ts';
+import { BlockCommandsRules, ConfigActivity, Emoji, PermissionDefinitionConfig } from './subtypes.ts';
 import { ConfigFeatures } from './features.ts';
 
 export interface Config {
@@ -24,15 +24,23 @@ export interface Config {
         confirmUnsafeCommands: boolean;
         confirmDeprecatedCommands: boolean;
 
+        restrictedCommands: {
+            targetUserID: string;
+            commandName: string;
+        }[];
+        disabledCommands: string[];
+        cooldownBypasses: {
+            targetType: 'role' | 'user',
+            targetID: string;
+            commandName: string;
+        }[]
+
         blocking: {
             full: BlockCommandsRules;
             fullExceptImportant: BlockCommandsRules;
             spammy: BlockCommandsRules;
             economy: BlockCommandsRules;
         };
-
-        configuration: Record<string, AnyCommandConfig>;
-        defaultConfiguration: AnyCommandConfig;
     };
 
     database: {
@@ -115,4 +123,9 @@ export interface Config {
         sadEmoji: Emoji;
         heartAttackEmoji: Emoji;
     };
+
+    bot: {
+        status: 'dnd' | 'online' | 'invisible' | 'brb';
+        activities: ConfigActivity[];
+    }
 }

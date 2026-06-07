@@ -4,15 +4,14 @@ import { Command } from '@/bot/command.ts';
 import { CommandFlags } from '@/bot/apis/commands/misc.ts';
 import { PredefinedColors } from '@/util/color.ts';
 import { output } from '@/bot/logging.ts';
-import { cfg } from '@/bot/cfg.ts';
 import { ReplyEmbed } from '@/bot/apis/translations/reply-embed.ts';
 
 import Money from '@/util/money.ts';
 
-const CrimeAmountMin = cfg.commands.configuration.crime.minimumCrimeAmount;
-const CrimeAmountMax = cfg.commands.configuration.crime.maximumCrimeAmount;
-const Percentage = cfg.commands.configuration.crime.successRatio;
-const Cooldown = cfg.commands.configuration.crime.cooldown;
+const CrimeAmountMin = 2500;
+const CrimeAmountMax = 8000;
+const Percentage = 0.4;
+const Cooldown = 900_000;
 
 type MessageCallback = (amount: Money) => string;
 const CrimeSuccessMessages: MessageCallback[] = [

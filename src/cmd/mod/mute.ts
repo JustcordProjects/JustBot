@@ -10,12 +10,11 @@ import mute from '@/bot/apis/mod/muting.ts';
 import { watchMute } from '@/bot/watchdog.ts';
 import { sendLog } from '@/bot/apis/log/send-log.ts';
 import { ReplyEmbed } from '@/bot/apis/translations/reply-embed.ts';
-
-const cmdCfg = cfg.commands.configuration.mute;
+import { CommandPermissions } from '@/bot/apis/commands/permissions.ts';
 
 const muteCmd: Command = {
     name: 'mute',
-    aliases: cmdCfg.aliases,
+    aliases: [],
     description: {
         main: 'Zamykam Ci buzię na czacie, żebyś mógł w ciszy przemyśleć swoje wybory życiowe. Jak chcesz pogadać, to poczekaj, aż Cię ktoś od muteuje.',
         short: 'Zamyka morde podanemu użytkownikowi',
@@ -39,13 +38,10 @@ const muteCmd: Command = {
             name: 'reason',
             description: 'Powód wyciszenia użytkownika',
             type: { base: 'string', trailing: true },
-            optional: !cmdCfg.reasonRequired,
+            optional: true
         },
     ],
-    permissions: {
-        allowedRoles: cmdCfg.allowedRoles,
-        allowedUsers: cmdCfg.allowedUsers,
-    },
+    permissions: CommandPermissions.modPlus(),
 
     async execute(api) {
         const targetUser = api.getTypedArg('user', 'user-mention')?.value as dsc.GuildMember;
@@ -65,11 +61,8 @@ const muteCmd: Command = {
             );
         }
 
-        if (!reason && cmdCfg.reasonRequired) {
-            return api.log.replyError(api, 'Musisz podać powód!', "Bratku... dlaczego ty chcesz to zrobić? Możesz mi chociaż powiedzieć, a nie wysuwać pochopne wnioski i banować/warnować/mute'ować ludzi bez powodu?");
-        } else if (!reason) {
+        if (!reason) 
             reason = 'Moderator nie poszczycił się znajomością komendy i nie podał powodu... Ale moze to i lepiej...';
-        }
 
         await mute(targetUser, { reason, duration: (duration ?? 1) * 1000 });
         if (api.invoker.member) watchMute(api.invoker.member!);

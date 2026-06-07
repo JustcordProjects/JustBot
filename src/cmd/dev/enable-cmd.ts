@@ -1,4 +1,4 @@
-import { cfg, overrideCfg, saveConfigurationChanges } from '@/bot/cfg.ts';
+import { cfg, Config, overrideCfg, saveConfigurationChanges } from '@/bot/cfg.ts';
 import { Command } from '@/bot/command.ts';
 import { CommandFlags } from '@/bot/apis/commands/misc.ts';
 
@@ -27,12 +27,15 @@ const enableCommandCmd: Command = {
         const cmd = api.getTypedArg('arg', 'command-ref').value;
         const name = cmd.name;
 
-        if (!overrideCfg.commands) (overrideCfg as Partial<{ commands: Record<PropertyKey, unknown> }>).commands = {};
-        if (!overrideCfg.commands?.configuration) overrideCfg.commands!.configuration = {};
+        if (!cfg.commands.disabledCommands.includes(name)) {
+            return api.log.replyError(api, 'Błąd', `Komenda **${name}** jest już włączona!`);
+        }
 
-        overrideCfg!.commands!.configuration! ??= {};
-        overrideCfg!.commands!.configuration![name] ??= cfg.commands.defaultConfiguration;
-        overrideCfg!.commands!.configuration![name].enabled = true;
+        cfg.commands.disabledCommands = cfg.commands.disabledCommands.filter((c) => c !== name);
+
+        overrideCfg.commands ??= {} as unknown as Config['commands'];
+        overrideCfg.commands.disabledCommands = cfg.commands.disabledCommands;
+
         saveConfigurationChanges();
 
         api.log.replySuccess(api, 'Udało się!', `Włączono komendę **${name}**!`);

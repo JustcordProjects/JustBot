@@ -3,16 +3,13 @@ import { Command } from '@/bot/command.ts';
 import { CommandFlags } from '@/bot/apis/commands/misc.ts';
 import { CommandPermissions } from '@/bot/apis/commands/permissions.ts';
 import { CommandAPI } from '@/bot/apis/commands/api.ts';
-import { cfg } from '@/bot/cfg.ts';
 import { db } from '@/bot/apis/db/bot-db.ts';
 import { output } from '@/bot/logging.ts';
 import { getErrorEmbed, getSuccessEmbed, getWarnEmbed } from '@/util/log.ts';
 
-const cmdCfg = cfg.commands.configuration.reset;
-
 const resetCmd: Command = {
     name: 'reset',
-    aliases: cmdCfg.aliases,
+    aliases: [],
     description: {
         main: 'Pozwala zresetować dane tabelay bazy danych (ekonomia, levele, cooldowny, warny, reputacja).',
         short: 'Resetuje dane bazy danych.',
@@ -33,7 +30,7 @@ const resetCmd: Command = {
             optional: true,
         },
     ],
-    permissions: CommandPermissions.fromCommandConfig(cmdCfg),
+    permissions: CommandPermissions.devOnly(),
 
     async execute(api: CommandAPI) {
         const table = api.getTypedArg('table', 'string')?.value?.toLowerCase();

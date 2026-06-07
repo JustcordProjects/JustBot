@@ -3,16 +3,14 @@ import { output } from '@/bot/logging.ts';
 
 import { Command } from '@/bot/command.ts';
 import { CommandFlags } from '@/bot/apis/commands/misc.ts';
-import { cfg } from '@/bot/cfg.ts';
 import { PredefinedColors } from '@/util/color.ts';
 import kick from '@/bot/apis/mod/kicks.ts';
 import { ReplyEmbed } from '@/bot/apis/translations/reply-embed.ts';
-
-const cmdCfg = cfg.commands.configuration.kick;
+import { CommandPermissions } from '@/bot/apis/commands/permissions.ts';
 
 const kickCmd: Command = {
     name: 'kick',
-    aliases: cmdCfg.aliases,
+    aliases: [],
     description: {
         main: 'Ta komenda istnieje po to by pozbyć się z serwera lekko wkurzających ludzi, tak żeby im nie dawać bana, a oni żeby myśleli że mają bana. A pospólstwo to ręce z daleka od moderacji!',
         short: 'Wywala danego użytkownika z serwera',
@@ -30,13 +28,10 @@ const kickCmd: Command = {
             name: 'reason',
             description: 'Powód wywalenia użytkownika',
             type: { base: 'string', trailing: true },
-            optional: !cmdCfg.reasonRequired,
+            optional: true,
         },
     ],
-    permissions: {
-        allowedRoles: cmdCfg.allowedRoles,
-        allowedUsers: cmdCfg.allowedUsers,
-    },
+    permissions: CommandPermissions.headModPlus(), 
 
     async execute(api) {
         const targetUser = api.getTypedArg('user', 'user-mention').value as dsc.GuildMember;
@@ -46,11 +41,8 @@ const kickCmd: Command = {
             return api.log.replyError(api, 'Nie podano celu', 'Kolego, myślisz że ja sie sam domyślę komu ty chcesz dać kopniaka? Użycie: odpowiedzi na wiadomość lub !kick <@user> <powód>');
         }
 
-        if (!reason && cmdCfg.reasonRequired) {
-            return api.log.replyError(api, 'Musisz podać powód!', "Bratku... dlaczego ty chcesz to zrobić? Możesz mi chociaż powiedzieć, a nie wysuwać pochopne wnioski i banować/warnować/mute'ować ludzi bez powodu?");
-        } else if (!reason) {
+        if (!reason) 
             reason = 'Moderator nie poszczycił się znajomością komendy i nie podał powodu... Ale moze to i lepiej...';
-        }
 
         try {
             try {

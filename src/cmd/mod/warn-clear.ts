@@ -2,12 +2,10 @@ import { Command } from '@/bot/command.ts';
 import { CommandFlags } from '@/bot/apis/commands/misc.ts';
 import { db } from '@/bot/apis/db/bot-db.ts';
 import { PredefinedColors } from '@/util/color.ts';
-import { cfg } from '@/bot/cfg.ts';
 import { output } from '@/bot/logging.ts';
 import { sendLog } from '@/bot/apis/log/send-log.ts';
 import { ReplyEmbed } from '@/bot/apis/translations/reply-embed.ts';
-
-const cmdCfg = cfg.commands.configuration.warn;
+import { CommandPermissions } from '@/bot/apis/commands/permissions.ts';
 
 const warnClearCmd: Command = {
     name: 'warn-clear',
@@ -26,10 +24,7 @@ const warnClearCmd: Command = {
             optional: false,
         },
     ],
-    permissions: {
-        allowedRoles: cmdCfg.allowedRoles,
-        allowedUsers: [],
-    },
+    permissions: CommandPermissions.modPlus(),
 
     async execute(api) {
         const warnIdArg = api.getTypedArg('id', 'float');

@@ -8,7 +8,6 @@ import capitalizeFirst from '@/util/capitalize-first.ts';
 import canExecuteCmd from '@/util/cmd/canExecuteCmd.ts';
 
 import * as dsc from 'discord.js';
-import { findCmdConfResolvable } from '@/util/cmd/findCmdConfigObj.ts';
 import { ReplyEmbed } from '@/bot/apis/translations/reply-embed.ts';
 import { Category } from '../../bot/categories.ts';
 
@@ -86,7 +85,6 @@ function getBlockedCommands(
 
         for (const cmd of cmds) {
             if (!canExecuteCmd(cmd, member)) blocked.push(cmd.name);
-            else if (!findCmdConfResolvable(cmd.name).enabled) blocked.push(cmd.name);
             else if (cmd.flags & CommandFlags.Deprecated) blocked.push(cmd.name);
         }
     }

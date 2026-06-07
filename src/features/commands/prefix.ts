@@ -82,7 +82,7 @@ async function prefixCommandsMessageHandler(msg: dsc.OmitPartialGroupDMChannel<d
         return await tempReaction(msg, '❌');
     }
 
-    const { command, config } = result;
+    const { command } = result;
 
     if (!canExecuteCmd(command, msg.member ?? msg.author)) {
         log.replyError(
@@ -139,19 +139,7 @@ async function prefixCommandsMessageHandler(msg: dsc.OmitPartialGroupDMChannel<d
         }
     }
 
-    let isDisallowed = false;
-
-    if (config.disallowedRoles) {
-        for (const role of config.disallowedRoles) {
-            if (isDisallowed) break;
-            isDisallowed ||= msg.member?.roles.cache.has(role) ?? false;
-        }
-    }
-    if (config.disallowedUsers && config.disallowedUsers.includes(msg.author.id)) {
-        isDisallowed = true;
-    }
-
-    if (isDisallowed) {
+    if (cfg.commands.restrictedCommands.find((r) => msg.author.id == r.targetUserID && command.name == r.commandName)) {
         return await log.replyWarn(msg, 'Nie dla psa kiełbasa...', 'Niestety ktoś mądry pomyślał, by specjalnie dla ciebie wyłączyć tę komendę.');
     }
 

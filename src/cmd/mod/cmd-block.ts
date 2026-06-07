@@ -1,20 +1,6 @@
-import { cfg, getCommandOverride, saveConfigurationChanges } from '@/bot/cfg.ts';
+import { cfg, Config, overrideCfg, saveConfigurationChanges } from '@/bot/cfg.ts';
 import { Command } from '@/bot/command.ts';
 import { CommandFlags } from '@/bot/apis/commands/misc.ts';
-import { findCmdConfCategory } from '@/util/cmd/findCmdConfigObj.ts';
-import { deepMerge } from '@/util/objects/objects.ts';
-
-import * as dsc from 'discord.js';
-
-function removeElement(arr: dsc.Snowflake[], target: dsc.Snowflake): dsc.Snowflake[] {
-    const result = [];
-    for (const elem of arr) {
-        if (elem != target) {
-            result.push(elem);
-        }
-    }
-    return result;
-}
 
 const cmdBlockCmd: Command = {
     name: 'cmd-block',
@@ -60,75 +46,37 @@ const cmdBlockCmd: Command = {
         const cmd = api.getTypedArg('cmd', 'command-ref')?.value;
         const target = api.getTypedArg('target', ['user-mention', 'role-mention']);
 
+        if (target.type.base === 'role-mention') {
+            return api.log.replyError(api, 'Błąd', 'Blokowanie komend dla ról nie jest wspierane w nowym API (restrictedCommands wspiera tylko użytkowników).');
+        }
+
         const cmdName = cmd.name;
-        const cat = findCmdConfCategory(cmdName);
+        const targetUserID = target.value.id;
 
-        if (!cat) return api.log.replyError(api, 'Błąd', `Nie znaleziono komendy **${cmdName}**!`);
+        const currentRestricted = cfg.commands.restrictedCommands;
+        const index = currentRestricted.findIndex((r) => r.commandName === cmdName && r.targetUserID === targetUserID);
 
-        const cmdOverride = getCommandOverride(cmdName);
-        const currentMerged = (cfg.commands.configuration && cfg.commands.configuration[cmdName]) ? cfg.commands.configuration[cmdName] : cfg.commands.defaultConfiguration;
-
-        let opText: string | undefined;
-        if (target.type.base == 'user-mention') {
-            const userId = target.value.id;
-            const currentList = currentMerged.disallowedUsers ?? [];
-            switch (op) {
-                case 'add':
-                    if (currentList.includes(userId)) {
-                        return api.log.replyError(api, 'Błąd', 'Ta komenda jest już zablokowana dla tego użytkownika');
-                    }
-                    cmdOverride.disallowedUsers = [...currentList, userId];
-                    opText = 'Zablokowano';
-                    break;
-                case 'rem':
-                    if (!currentList.includes(userId)) {
-                        return api.log.replyError(api, 'Błąd', 'Ta komenda nie jest nawet zablokowana dla tego użytkownika');
-                    }
-                    cmdOverride.disallowedUsers = removeElement(currentList, userId);
-                    opText = 'Odblokowano';
-                    break;
-                case 'toggle':
-                    if (currentList.includes(userId)) {
-                        cmdOverride.disallowedUsers = removeElement(currentList, userId);
-                        opText = 'Odblokowano';
-                    } else {
-                        cmdOverride.disallowedUsers = [...currentList, userId];
-                        opText = 'Zablokowano';
-                    }
-                    break;
-            }
-        } else if (target.type.base == 'role-mention') {
-            const roleId = target.value.id;
-            const currentList = currentMerged.disallowedRoles ?? [];
-            switch (op) {
-                case 'add':
-                    if (currentList.includes(roleId)) {
-                        return api.log.replyError(api, 'Błąd', 'Ta komenda jest już zablokowana dla tej roli');
-                    }
-                    cmdOverride.disallowedRoles = [...currentList, roleId];
-                    opText = 'Zablokowano';
-                    break;
-                case 'rem':
-                    if (!currentList.includes(roleId)) {
-                        return api.log.replyError(api, 'Błąd', 'Ta komenda nie jest nawet zablokowana dla tej roli');
-                    }
-                    cmdOverride.disallowedRoles = removeElement(currentList, roleId);
-                    opText = 'Odblokowano';
-                    break;
-                case 'toggle':
-                    if (currentList.includes(roleId)) {
-                        cmdOverride.disallowedRoles = removeElement(currentList, roleId);
-                        opText = 'Odblokowano';
-                    } else {
-                        cmdOverride.disallowedRoles = [...currentList, roleId];
-                        opText = 'Zablokowano';
-                    }
-                    break;
+        let opText: string;
+        if (op === 'add') {
+            if (index !== -1) return api.log.replyError(api, 'Błąd', 'Ta blokada już istnieje!');
+            currentRestricted.push({ commandName: cmdName, targetUserID });
+            opText = 'Zablokowano';
+        } else if (op === 'rem') {
+            if (index === -1) return api.log.replyError(api, 'Błąd', 'Ta blokada nie istnieje!');
+            currentRestricted.splice(index, 1);
+            opText = 'Odblokowano';
+        } else {
+            if (index !== -1) {
+                currentRestricted.splice(index, 1);
+                opText = 'Odblokowano';
+            } else {
+                currentRestricted.push({ commandName: cmdName, targetUserID });
+                opText = 'Zablokowano';
             }
         }
 
-        cfg.commands.configuration ??= {};
-        cfg.commands.configuration[cmdName] = deepMerge(currentMerged, cmdOverride);
+        overrideCfg.commands ??= {} as unknown as Config['commands'];
+        overrideCfg.commands.restrictedCommands = currentRestricted;
 
         saveConfigurationChanges();
         api.log.replySuccess(api, 'Udało się!', `**${opText}** dostęp do komendy **${cmdName}** dla podanego celu!`);

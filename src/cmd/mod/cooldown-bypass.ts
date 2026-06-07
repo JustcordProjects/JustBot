@@ -1,20 +1,6 @@
-import { cfg, getCommandOverride, saveConfigurationChanges } from '@/bot/cfg.ts';
+import { cfg, Config, overrideCfg, saveConfigurationChanges } from '@/bot/cfg.ts';
 import { Command } from '@/bot/command.ts';
 import { CommandFlags } from '@/bot/apis/commands/misc.ts';
-import { findCmdConfCategory } from '@/util/cmd/findCmdConfigObj.ts';
-import { deepMerge } from '@/util/objects/objects.ts';
-
-import * as dsc from 'discord.js';
-
-function removeElement(arr: dsc.Snowflake[], target: dsc.Snowflake): dsc.Snowflake[] {
-    const result = [];
-    for (const elem of arr) {
-        if (elem != target) {
-            result.push(elem);
-        }
-    }
-    return result;
-}
 
 const cooldownBypassCmd: Command = {
     name: 'cooldown-bypass',
@@ -61,76 +47,33 @@ const cooldownBypassCmd: Command = {
         const target = api.getTypedArg('target', ['user-mention', 'role-mention']);
 
         const cmdName = cmd.name;
-        const cat = findCmdConfCategory(cmdName);
+        const targetType = target.type.base === 'user-mention' ? 'user' : 'role';
+        const targetID = target.value.id;
 
-        if (!cat) return api.log.replyError(api, 'Błąd', `Nie znaleziono komendy **${cmdName}**!`);
+        const currentBypasses = cfg.commands.cooldownBypasses;
+        const index = currentBypasses.findIndex((b) => b.commandName === cmdName && b.targetID === targetID && b.targetType === targetType);
 
-        const cmdOverride = getCommandOverride(cmdName);
-        const currentMerged = (cfg.commands.configuration && cfg.commands.configuration[cmdName]) ? cfg.commands.configuration[cmdName] : cfg.commands.defaultConfiguration;
-
-        let opText: string | undefined;
-        if (target.type.base == 'user-mention') {
-            const userId = target.value.id;
-            const currentList = currentMerged.cooldownBypassUsers ?? [];
-
-            switch (op) {
-                case 'add':
-                    if (currentList.includes(userId)) {
-                        return api.log.replyError(api, 'Błąd', 'Ten użytkownik ma już bypass cooldownu dla tej komendy');
-                    }
-                    cmdOverride.cooldownBypassUsers = [...currentList, userId];
-                    opText = 'Dodano';
-                    break;
-                case 'rem':
-                    if (!currentList.includes(userId)) {
-                        return api.log.replyError(api, 'Błąd', 'Ten użytkownik nie ma nawet bypassa cooldownu dla tej komendy');
-                    }
-                    cmdOverride.cooldownBypassUsers = removeElement(currentList, userId);
-                    opText = 'Usunięto';
-                    break;
-                case 'toggle':
-                    if (currentList.includes(userId)) {
-                        cmdOverride.cooldownBypassUsers = removeElement(currentList, userId);
-                        opText = 'Usunięto';
-                    } else {
-                        cmdOverride.cooldownBypassUsers = [...currentList, userId];
-                        opText = 'Dodano';
-                    }
-                    break;
-            }
-        } else if (target.type.base == 'role-mention') {
-            const roleId = target.value.id;
-            const currentList = currentMerged.cooldownBypassRoles ?? [];
-
-            switch (op) {
-                case 'add':
-                    if (currentList.includes(roleId)) {
-                        return api.log.replyError(api, 'Błąd', 'Ta rola ma już bypass cooldownu dla tej komendy');
-                    }
-                    cmdOverride.cooldownBypassRoles = [...currentList, roleId];
-                    opText = 'Dodano';
-                    break;
-                case 'rem':
-                    if (!currentList.includes(roleId)) {
-                        return api.log.replyError(api, 'Błąd', 'Ta rola nie ma nawet bypassa cooldownu dla tej komendy');
-                    }
-                    cmdOverride.cooldownBypassRoles = removeElement(currentList, roleId);
-                    opText = 'Usunięto';
-                    break;
-                case 'toggle':
-                    if (currentList.includes(roleId)) {
-                        cmdOverride.cooldownBypassRoles = removeElement(currentList, roleId);
-                        opText = 'Usunięto';
-                    } else {
-                        cmdOverride.cooldownBypassRoles = [...currentList, roleId];
-                        opText = 'Dodano';
-                    }
-                    break;
+        let opText: string;
+        if (op === 'add') {
+            if (index !== -1) return api.log.replyError(api, 'Błąd', 'Ten bypass już istnieje!');
+            currentBypasses.push({ commandName: cmdName, targetID, targetType });
+            opText = 'Dodano';
+        } else if (op === 'rem') {
+            if (index === -1) return api.log.replyError(api, 'Błąd', 'Ten bypass nie istnieje!');
+            currentBypasses.splice(index, 1);
+            opText = 'Usunięto';
+        } else {
+            if (index !== -1) {
+                currentBypasses.splice(index, 1);
+                opText = 'Usunięto';
+            } else {
+                currentBypasses.push({ commandName: cmdName, targetID, targetType });
+                opText = 'Dodano';
             }
         }
 
-        cfg.commands.configuration ??= {};
-        cfg.commands.configuration[cmdName] = deepMerge(currentMerged, cmdOverride);
+        overrideCfg.commands ??= {} as unknown as Config['commands'];
+        overrideCfg.commands.cooldownBypasses = currentBypasses;
 
         saveConfigurationChanges();
         return api.log.replySuccess(
