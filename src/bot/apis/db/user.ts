@@ -425,11 +425,11 @@ export default class User {
 
     /** -------- WARNS -------- */
     readonly warns = {
-        add: async ({ moderatorId, reason, points, expiresAt }: Warn) => {
+        add: async (opts: { moderatorId: string, reason: string, points: number, expiresAt?: number }) => {
             return db.runSql(
                 `INSERT INTO warns (user_id, moderator_id, reason_string, points, expires_at)
                  VALUES (?, ?, ?, ?, ?)`,
-                [this.id, moderatorId, reason, points, expiresAt ?? null],
+                [this.id, opts.moderatorId, opts.reason, opts.points, opts.expiresAt ?? null],
             );
         },
 

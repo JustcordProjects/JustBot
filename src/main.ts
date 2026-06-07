@@ -30,7 +30,7 @@ import { lastLetterChannelAction } from '@/features/actions/4fun/last-letter-cha
 import { mediaChannelAction } from '@/features/actions/4fun/media-channel-action.ts';
 import { basicMsgCreateActions } from '@/features/actions/others/basic-msg-create-actions.ts';
 import { registerTemplateChannels } from '@/features/actions/channels/register-template-channels.ts';
-import { channelAddWatcher, channelDeleteWatcher, onMuteGivenWatcher, onWarnGivenWatcher, setUpWatchdog } from '@/bot/watchdog.ts';
+import { channelAddWatcher, channelDeleteWatcher, onMuteGivenWatcher, setUpWatchdog } from '@/bot/watchdog.ts';
 import { actionPing } from '@/features/actions/4fun/ping-death-chat.ts';
 import { onReceivedEmailAction } from '@/features/actions/others/on-new-email.ts';
 
@@ -58,7 +58,6 @@ import { db } from '@/bot/apis/db/bot-db.ts';
 
 import { initEmailActionsIntegration } from '@/bot/apis/email/actions.ts';
 import { getChannel } from '@/features/actions/channels/template-channels.ts';
-import { warnGivenLogAction } from '@/features/actions/mod/warn-given.ts';
 import { initStatusGenerator } from '@/util/generate-status-quote.ts';
 
 import { initAskCmdModel, initWikiModel } from '@/features/init-ai-models.ts';
@@ -139,7 +138,6 @@ function setUpActions() {
         // watchdog security features
         channelAddWatcher,
         channelDeleteWatcher,
-        onWarnGivenWatcher,
         onMuteGivenWatcher,
         // lobby & users watchdog
         welcomeNewUserAction,
@@ -157,7 +155,6 @@ function setUpActions() {
         reactionRemoveHandler,
         // additional features
         actionPing,
-        warnGivenLogAction,
         onReceivedEmailAction,
         addMusicAction,
         autoUpdateAction,

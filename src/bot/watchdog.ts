@@ -4,7 +4,6 @@ import { cfg } from './cfg.ts';
 import { client } from '@/client.ts';
 import { output } from '@/bot/logging.ts';
 import { Action, PredefinedActionEventTypes, UserEventCtx } from '@/features/actions/index.ts';
-import { OnWarnGiven, WarnEventCtx } from '@/events/actions/warnEvents.ts';
 
 export async function watchNewMember(mem: dsc.GuildMember): Promise<'kicked' | void> {
     if (cfg.features.watchdog.kickNewMembers) {
@@ -120,29 +119,15 @@ const channelDeleteWatcher: Action<{ guild: dsc.Guild }> = {
     ],
 };
 
-const onWarnGivenWatcher: Action<WarnEventCtx> = {
-    name: 'watchdog/watchers/user-warn',
-    activatesOn: OnWarnGiven,
-    constraints: [
-        () => {
-            return cfg.features.watchdog.shallAutoDegrade;
-        },
-    ],
-    callbacks: [
-        async (ctx) => {
-            output.log('Watchdog: Warn given');
-            if (!ctx.moderator) {
-                return;
-            }
-            const member = await client.guilds.cache.first()?.members.fetch(ctx.moderator);
-            if (!member) return;
-            if (addAction(ctx.moderator, 'warn')) {
-                output.log(`Watchdog: About to downgrade role for ${member.user.username} [warning too many times per minute]`);
-                await downgradeRole(member);
-            }
-        },
-    ],
-};
+export async function registerWarnInWatchdog(moderator: string) {
+    output.log('Watchdog: Warn given');
+    const member = await client.guilds.cache.first()?.members.fetch(moderator);
+    if (!member) return;
+    if (addAction(moderator, 'warn')) {
+        output.log(`Watchdog: About to downgrade role for ${member.user.username} [warning too many times per minute]`);
+        await downgradeRole(member);
+    }
+}
 
 const onMuteGivenWatcher: Action<UserEventCtx> = {
     name: 'watchdog/watchers/user-mute',
@@ -229,4 +214,4 @@ export function setUpWatchdog() {
     });
 }
 
-export { channelAddWatcher, channelDeleteWatcher, onMuteGivenWatcher, onWarnGivenWatcher };
+export { channelAddWatcher, channelDeleteWatcher, onMuteGivenWatcher };

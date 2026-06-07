@@ -5,6 +5,7 @@ import * as dsc from 'discord.js';
 import { PredefinedColors } from '@/util/color.ts';
 import { client as cl } from '../../client.ts';
 import { CommandPermissions } from '@/bot/apis/commands/permissions.ts';
+import User from '@/bot/apis/db/user.ts';
 
 const warnlistCmd: Command = {
     name: 'warnlist',
@@ -34,13 +35,15 @@ const warnlistCmd: Command = {
         const limit = 5;
         let currentPage = 1;
 
+        const targetUserID: string | null = targetUser ? (new User(targetUser.id)).id : null;
+
         async function fetchWarns(page: number) {
             let query = 'SELECT * FROM warns';
             const params: unknown[] = [];
 
             if (targetUser) {
                 query += ' WHERE user_id = ?';
-                params.push(targetUser.id);
+                params.push(targetUserID);
             }
 
             query += ' ORDER BY id DESC LIMIT ? OFFSET ?';
