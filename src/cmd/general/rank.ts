@@ -31,16 +31,17 @@ export const rankCmd: Command = {
         const userArg = api.getTypedArg('user', 'user-mention')?.value;
         const user = userArg?.user ?? api.invoker.user;
 
-        await (new User(user.id)).ensureExists();
+        const db_user = new User(user.id);
+        db_user.ensureExists();
 
         const top_lvl = await db.leveling.getTop();
-        const index_lvl = top_lvl.findIndex((value) => value.id == user.id);
+        const index_lvl = top_lvl.findIndex((value) => value.id == db_user.id);
 
         const top_rep = await db.prestige.getTop();
-        const index_rep = top_rep.findIndex((value) => value.id == user.id);
+        const index_rep = top_rep.findIndex((value) => value.id == db_user.id);
 
         const top_eco = await db.economy.getTopTotal();
-        const index_eco = top_eco.findIndex((value) => value.id == user.id);
+        const index_eco = top_eco.findIndex((value) => value.id == db_user.id);
 
         api.reply({
             embeds: [
