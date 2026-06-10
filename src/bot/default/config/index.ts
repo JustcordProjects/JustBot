@@ -36,7 +36,7 @@ export const defaultCfg: Config = {
     commands: {
         prefix: 'sudo ',
         alternativePrefixes: [
-            '.',
+            '.', 'justbot, '
         ],
         confirmUnsafeCommands: false,
         confirmDeprecatedCommands: false,
