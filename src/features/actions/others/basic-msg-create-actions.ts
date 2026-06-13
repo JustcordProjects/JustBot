@@ -34,13 +34,17 @@ export const basicMsgCreateActions: Action<MessageEventCtx> = {
             // quote bot
             await (async function () {
                 if (msg.author.bot) return;
+                if (
+                    [cfg.commands.prefix, ...cfg.commands.alternativePrefixes]
+                        .some((p) => msg.content.startsWith(p))
+                ) return;
 
                 const regex = /https?:\/\/(?:canary\.|ptb\.)?discord(?:app)?\.com\/channels\/(\d+)\/(\d+)\/(\d+)/;
                 const match = msg.content.match(regex);
                 if (!match) return;
                 const [, , channelId, messageId] = match;
 
-                await msg.reply({ embeds: [await mkMessageReferenceEmbed({channelId, messageId}, { color: PredefinedColors.Fuchsia })] });
+                await msg.reply({ embeds: [(await mkMessageReferenceEmbed({channelId, messageId}, { color: PredefinedColors.Fuchsia })).embed] });
             })();
 
             await (async function () {

@@ -123,7 +123,7 @@ export class PredefinedActionCallbacks {
         msg.guild?.channels.fetch(cfg.channels.mod.automod).then(async (c) => {
             if (c?.isSendable()) c.send({
                 content: 'wiadomość została przez automoda usunięta',
-                embeds: [ await mkMessageReferenceEmbed(msg, { color: PredefinedColors.Red }) ]
+                embeds: [ (await mkMessageReferenceEmbed(msg, { color: PredefinedColors.Red })).embed ]
             }).then(() => {
                 msg.delete()
             });

@@ -23,10 +23,10 @@ export const deleteMessageAction: Action<MessageEventCtx> = {
             const logs_channel = await msg.client.channels.fetch(cfg.channels.mod.logs) as GuildTextBasedChannel;
             logs_channel.send({
                 embeds: [
-                    await mkMessageReferenceEmbed(msg, { 
+                    (await mkMessageReferenceEmbed(msg, { 
                         title: "Wiadomość została usunięta", 
                         color: PredefinedColors.Red 
-                    })
+                    })).embed
                 ]
             });
         }

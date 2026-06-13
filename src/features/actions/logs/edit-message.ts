@@ -10,14 +10,14 @@ export function registerMsgEditDscEvents(client: dsc.Client) {
 
         const logs_channel = await msg.client.channels.fetch(cfg.channels.mod.logs) as dsc.GuildTextBasedChannel;   
         logs_channel.send({ embeds: [
-            await mkMessageReferenceEmbed(oldMsg, {
+            (await mkMessageReferenceEmbed(oldMsg, {
                 color: PredefinedColors.Blue,
                 title: "Edycja wiadomości: stara wiadomość"
-            }),
-            await mkMessageReferenceEmbed(msg, {
+            })).embed,
+            (await mkMessageReferenceEmbed(msg, {
                 color: PredefinedColors.Blue,
                 title: "Nowa wiadomość"
-            })
+            })).embed
         ] });
     });
 }

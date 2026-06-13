@@ -88,5 +88,5 @@ export async function mkMessageReferenceEmbed(
         }
     }
 
-    return embed;
+    return { embed, quotedMsg };
 }
