@@ -31,6 +31,10 @@ export const basicMsgCreateActions: Action<MessageEventCtx> = {
                 msg.channel.send('https://i.iplsc.com/000AA4EQC5P4FTX6-C0.jpeg');
             }
 
+            // pin polls 
+            if (cfg.channels.other.polls == msg.channelId && msg.poll)
+                msg.pin('wiadomość jest ankietą');
+
             // quote bot
             await (async function () {
                 if (msg.author.bot) return;

@@ -91,6 +91,7 @@ export interface Config {
         other: {
             music: dsc.Snowflake;
             economy: dsc.Snowflake;
+            polls: dsc.Snowflake;
         };
         forfun: {
             counting: dsc.Snowflake;

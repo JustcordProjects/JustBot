@@ -31,6 +31,7 @@ export const channelsCfg: Config['channels'] = {
     other: {
         music: '1510644230119493772',
         economy: '1510644297555247115',
+        polls: '1511073178355765249'
     },
     forfun: {
         counting: '1510639404618879177',
