@@ -70,6 +70,7 @@ import { registerMsgEditDscEvents } from '@/features/actions/logs/edit-message.t
 import { deleteMessageAction } from '@/features/actions/logs/delete-message.ts';
 import { reminderHandler } from '@/features/reminders.ts';
 import { autoUpdateAction } from './features/actions/others/auto-update.ts';
+import { pollsModerator } from '@/features/actions/mod/polls-mod.ts';
 
 // --------------- INIT ---------------
 client.once('clientReady', async () => {
@@ -77,11 +78,11 @@ client.once('clientReady', async () => {
     output.log(`${ft.CYAN}Logged in.`);
     if (process.env.JB_DEVELOPMENT == 'true') {
         output.verbose(
-            '------------------------------------------------\n' + 
+            '------------------------------------------------\n' +
             'Verbose logging enabled.\n' +
             'JustBOT will log more detailed output.\n' +
             'To disable this behaviour, please set\n' +
-            'JB_DEVELOPMENT to false or unset this variable.\n' + 
+            'JB_DEVELOPMENT to false or unset this variable.\n' +
             '------------------------------------------------'
         );
     }
@@ -144,13 +145,14 @@ function setUpActions() {
         sayGoodbyeAction,
         // automod
         ...AutoModRules.all(),
-        // msg-specific actions 
+        pollsModerator,
+        // msg-specific actions
         mediaChannelAction,
         countingChannelAction,
         lastLetterChannelAction,
         basicMsgCreateActions,
         askAction,
-        // reaction handlers 
+        // reaction handlers
         reactionAddHandler,
         reactionRemoveHandler,
         // additional features
@@ -158,8 +160,8 @@ function setUpActions() {
         onReceivedEmailAction,
         addMusicAction,
         autoUpdateAction,
-        // logging 
-        deleteMessageAction 
+        // logging
+        deleteMessageAction
     );
     registerTemplateChannels(client);
     slashCommands.init();
@@ -216,7 +218,7 @@ async function main() {
                 embeds: [
                     log.getSuccessEmbed('Restart zakończony', 'Istota wyższa pomyślnie i wreszcie się zrestartowała i powinna już działać poprawnie!')
                 ]
-            }); 
+            });
         }
     } catch {}
 
@@ -242,7 +244,7 @@ async function main() {
                     files: [{ attachment: dbPath, name: backupName }],
                 });
             } catch (e) {
-                logError('stdwarn', e, "Database backups"); 
+                logError('stdwarn', e, "Database backups");
             }
         }, cfg.database.backups.interval);
     }
