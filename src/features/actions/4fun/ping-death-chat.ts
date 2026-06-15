@@ -1,6 +1,7 @@
 import { Action, MessageEventCtx, PredefinedActionEventTypes } from '@/features/actions/index.ts';
 import capitalizeFirst from '@/util/capitalize-first.ts';
 import { cfg } from '@/bot/cfg.ts';
+import randomElement from '@/util/random-element.ts';
 
 let deathChatTimeout: ReturnType<typeof setTimeout>;
 
@@ -76,7 +77,7 @@ export const actionPing: Action<MessageEventCtx> = {
                 if (hour >= 10 && hour < 20) {
                     const pingConfig = pings['death-chat'];
                     if (pingConfig?.questions && msg.channel.isSendable()) {
-                        const question = pingConfig.questions[Math.floor(Math.random() * pingConfig.questions.length)];
+                        const question = randomElement(pingConfig.questions);
                         msg.channel.send(`<@&${pingConfig.roleId}> ${capitalizeFirst(question)}${question.endsWith('?') ? '' : '?'}`);
                     }
                 }

@@ -7,6 +7,7 @@ import { output } from '@/bot/logging.ts';
 import { ReplyEmbed } from '@/bot/apis/translations/reply-embed.ts';
 
 import Money from '@/util/money.ts';
+import randomElement from '@/util/random-element.ts';
 
 const CrimeAmountMin = 2500;
 const CrimeAmountMax = 8000;
@@ -109,7 +110,7 @@ const crimeCmd: Command = {
 
             let embed: ReplyEmbed;
             if (win) {
-                const genMessage = CrimeSuccessMessages[getRandomInt(0, CrimeSuccessMessages.length - 1)];
+                const genMessage = randomElement(CrimeSuccessMessages);
                 embed = new ReplyEmbed()
                     .setColor(PredefinedColors.Blue)
                     .setTitle('Yay')
