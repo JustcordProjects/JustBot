@@ -20,8 +20,8 @@ export default {
 
     expectedArgs: [
         {
-            name: 'message-link', description: "Link do wiadomości",
-            type: { base: 'string', trailing: true, allowCodeBlock: false },
+            name: 'message', description: 'Link do wiadomości',
+            type: { base: 'message-ref', includeRefMessage: true },
             optional: false
         }
     ],
@@ -31,17 +31,8 @@ export default {
         const TIME = 60_000;
         const EXPIRES_AT = Date.now() + TIME;
 
-        async function getMsgReferenceEmbed(): Promise<Awaited<ReturnType<typeof mkMessageReferenceEmbed>> | null> {
-            const message_link = api.getTypedArg('message-link', 'string').value;
-            const match = message_link.match(/https?:\/\/(?:canary\.|ptb\.)?discord(?:app)?\.com\/channels\/(\d+)\/(\d+)\/(\d+)/);
-            if (!match) return null;
-            try {
-                const [ ,, channelId, messageId  ] = match;
-                return await mkMessageReferenceEmbed({ channelId, messageId }, { color: PredefinedColors.DarkRed });
-            } catch {
-                return null;
-            }
-        }
+        const quotedMsg = api.getTypedArg('message', 'message-ref').value;
+        const msg = await mkMessageReferenceEmbed(quotedMsg, { color: PredefinedColors.DarkRed });
 
         function buildVoteUI(quoted: Message, embed: ReplyEmbed, expiresAt: number, votes: number) {
             return {
@@ -66,13 +57,10 @@ export default {
                                 .setCustomId('pin-signal')
                         )
                 ]
-            }; 
+            };
         }
 
-        const msg = await getMsgReferenceEmbed();
-        if (!msg) 
-            return await api.log.replyError(api, 'Masz problem', 'Skąd mam wiedzieć którą wiadomość przypiąć? Podałeś zły link. Musisz kliknąć prawym lub przytrzymać dłużej na wiadomość i "Kopiuj link z wiadomością".');
-        if (msg.quotedMsg.pinned) 
+        if (msg.quotedMsg.pinned)
             return await api.log.replyInfo(api, 'Nie tym razem', 'Ta wiadomość już została przez kogoś przypięta. Nie możesz jej przypiąć ponownie');
 
         const votes: string[] = [ api.executor.id ];
@@ -84,7 +72,7 @@ export default {
         });
         collector.on('collect', async (interaction) => {
             if (interaction.customId !== 'pin-signal') return;
-            await interaction.deferReply({ flags: ["Ephemeral"] });
+            await interaction.deferReply({ flags: ['Ephemeral'] });
 
             const voter = new User(interaction.user.id);
             if (votes.includes(voter.id)) {
@@ -95,7 +83,7 @@ export default {
                 });
             }
             votes.push(voter.id);
-            
+
             await interaction.editReply({
                 embeds: [
                     api.log.getSuccessEmbed('Zagłosowałeś!', 'Pomyślnie zagłosowałeś w tej ankiecie!')
@@ -104,7 +92,7 @@ export default {
 
             if (votes.length == MIN_VOTES) {
                 finished = true;
-                
+
                 await msg.quotedMsg.fetch(true);
                 if (msg.quotedMsg.pinned) {
                     return await reply.edit({

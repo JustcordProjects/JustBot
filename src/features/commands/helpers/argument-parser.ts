@@ -37,15 +37,43 @@ async function parseUser(raw: string, name: string, context?: ParserContext): Pr
 }
 
 async function tryParseUserMentionOrRef(_decl: CommandArgument, context?: ParserContext): Promise<dsc.GuildMember | null> {
+    const refMessage = await tryParseMessageRef(context);
+    if (refMessage && context?.msg?.guild) {
+        return await context.msg.guild.members.fetch(refMessage.author.id).catch(() => null);
+    }
+
+    return null;
+}
+
+async function parseMessage(raw: string, context?: ParserContext): Promise<dsc.Message | null> {
+    try {
+        const match = raw.match(/https?:\/\/(?:ptb\.|canary\.)?discord(?:app)?\.com\/channels\/(\d+)\/(\d+)\/(\d+)/);
+        if (!match) return null;
+
+        const [_url, _guildId, channelId, messageId] = match;
+
+        const guild = context?.guild ?? context?.msg?.guild;
+        if (!guild) return null;
+
+        const channel = await guild.channels.fetch(channelId);
+        if (!channel || !channel.isTextBased()) return null;
+
+        return await (channel as dsc.TextChannel | dsc.ThreadChannel).messages.fetch(messageId);
+    } catch {
+        return null;
+    }
+}
+
+async function tryParseMessageRef(context?: ParserContext): Promise<dsc.Message | null> {
     if (context?.msg && context.msg.reference) {
         try {
             const refMessageId = context.msg.reference.messageId;
+            if (!refMessageId) return null;
             const refChannelId = context.msg.reference.channelId;
 
             const channel = await context.msg.guild!.channels.fetch(refChannelId);
             if (channel && channel.isTextBased()) {
-                const refMessage = await (channel as dsc.TextChannel).messages.fetch({ message: refMessageId ?? '', force: false });
-                return await context.msg.guild!.members.fetch(refMessage.author.id).catch(() => null);
+                return await (channel as dsc.TextChannel | dsc.ThreadChannel).messages.fetch({ message: refMessageId, force: false });
             }
         } catch {
             return null;
@@ -192,6 +220,12 @@ async function tryParseArg(
             return { ...decl, type, value: res.command } as CommandValuableArgument;
         }
 
+        case 'message-ref': {
+            const msg = await parseMessage(raw.value, context);
+            if (!msg) return null;
+            return { ...decl, type, value: msg } as CommandValuableArgument;
+        }
+
         default:
             return null;
     }
@@ -215,24 +249,33 @@ export async function parseArgs(
         let consumedRaw = false;
 
         for (const typeObj of types) {
-            if (typeObj.base == 'user-mention' && typeObj.includeRefMessageAuthor) {
-                let user: dsc.GuildMember | null = null;
-                if (raw) {
-                    user = await parseUser(raw.value, decl.name, context);
-                }
+            const handleParsed = (value: unknown, consumed: boolean) => {
+                parsedArgs.push({
+                    ...decl,
+                    type: typeObj,
+                    value,
+                } as CommandValuableArgument);
+
+                success = true;
+                consumedRaw = consumed;
+            };
+
+            if (typeObj.base === 'user-mention' && typeObj.includeRefMessageAuthor) {
+                const user =
+                    (raw && await parseUser(raw.value, decl.name, context))
+                    ?? await tryParseUserMentionOrRef(decl, context);
 
                 if (user) {
-                    parsedArgs.push({ ...decl, type: typeObj, value: user } as CommandValuableArgument);
-                    success = true;
-                    consumedRaw = true;
+                    handleParsed(user, !!raw);
                     break;
                 }
+            } else if (typeObj.base === 'message-ref' && typeObj.includeRefMessage) {
+                const msg =
+                    (raw && await parseMessage(raw.value, context))
+                    ?? await tryParseMessageRef(context);
 
-                const refMember = await tryParseUserMentionOrRef(decl, context);
-                if (refMember) {
-                    parsedArgs.push({ ...decl, type: typeObj, value: refMember } as CommandValuableArgument);
-                    success = true;
-                    consumedRaw = false;
+                if (msg) {
+                    handleParsed(msg, !!raw);
                     break;
                 }
             } else {

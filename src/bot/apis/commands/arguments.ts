@@ -4,24 +4,14 @@ import Money from '@/util/money.ts';
 
 import type { Command } from './cmd.ts';
 
-export type CommandArgBaseType =
-    | 'string'
-    | 'user-mention'
-    | 'channel-mention'
-    | 'role-mention'
-    | 'timestamp'
-    | 'int'
-    | 'float'
-    | 'money'
-    | 'command-ref'
-    | 'code'
-    | 'enum';
+export type CommandArgBaseType = Exclude<CommandArgType['base'], 'union'>;
 
 export type CommandArgType =
     | { base: 'string'; trailing?: boolean; allowCodeBlock?: boolean }
     | { base: 'user-mention'; includeRefMessageAuthor?: boolean }
     | { base: 'role-mention' }
     | { base: 'channel-mention' }
+    | { base: 'message-ref'; includeRefMessage?: boolean }
     | { base: 'timestamp' }
     | { base: 'int' }
     | { base: 'float' }
@@ -48,6 +38,7 @@ export type CommandArgValueMap = {
     'user-mention': dsc.GuildMember;
     'role-mention': dsc.Role;
     'channel-mention': dsc.GuildChannel;
+    'message-ref': dsc.Message;
     'timestamp': Timestamp;
     'int': bigint;
     'float': number;
