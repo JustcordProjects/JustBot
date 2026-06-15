@@ -71,6 +71,7 @@ import { deleteMessageAction } from '@/features/actions/logs/delete-message.ts';
 import { reminderHandler } from '@/features/reminders.ts';
 import { autoUpdateAction } from './features/actions/others/auto-update.ts';
 import { pollsModerator } from '@/features/actions/mod/polls-mod.ts';
+import { registerGuildUpdateDscEvents } from '@/events/client/guildUpdate.ts';
 
 // --------------- INIT ---------------
 client.once('clientReady', async () => {
@@ -173,6 +174,7 @@ function setUpEvents() {
     registerChannelCreateDscEvents(client);
     registerChannelDeleteDscEvents(client);
     registerMsgEditDscEvents(client);
+    registerGuildUpdateDscEvents(client);
     setUpWatchdog();
 }
 
