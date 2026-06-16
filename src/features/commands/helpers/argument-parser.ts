@@ -133,8 +133,11 @@ async function tryParseArg(
         case 'int': {
             const isInt = /^-?\d+$/.test(raw.value);
             if (!isInt) return null;
+            
+            const val = parseInt(raw.value);
+            if (!Number.isSafeInteger(val)) return null;
 
-            return { ...decl, type, value: BigInt(raw.value) } as CommandValuableArgument;
+            return { ...decl, type, value: BigInt(val) } as CommandValuableArgument;
         }
         case 'float': {
             const isFloat = /^-?\d+(\.\d+)?$/.test(raw.value);
