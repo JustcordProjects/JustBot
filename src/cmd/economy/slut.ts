@@ -2,8 +2,6 @@ import { getRandomInt } from '@/util/math/rand.ts';
 
 import { Command } from '@/bot/command.ts';
 import { CommandFlags } from '@/bot/apis/commands/misc.ts';
-import { PredefinedColors } from '@/util/color.ts';
-import { output } from '@/bot/logging.ts';
 import { ReplyEmbed } from '@/bot/apis/translations/reply-embed.ts';
 
 import Money from '@/util/money.ts';
@@ -85,56 +83,33 @@ const slutCmd: Command = {
     },
 
     async execute(api) {
-        try {
-            const result = await api.checkCooldown('slut', CooldownMs);
-            if (!result.can) {
-                const embed = new ReplyEmbed()
-                    .setColor(PredefinedColors.Yellow)
-                    .setTitle('Chwila przerwy!')
-                    .setDescription(`Ktoś tam Ci każe czekać ${result.discordTime} sekund zanim znowu popr*cujesz dorywczo, żebyś nie naspamił komendami w chuja hajsu...`);
-
-                return api.reply({ embeds: [embed] });
-            }
-
-            const amount = getRandomInt(SlutAmountMin, SlutAmountMax);
-            const win = Math.random() < Percentage;
-
-            const multiplier = api.economy.getMultiplier('slut');
-            const total = win ? (amount * multiplier) : amount;
-            const totalMoney = Money.fromDollarsFloat(total);
-
-            if (win) await api.executor.economy.addWalletMoney(totalMoney);
-            else await api.executor.economy.deductWalletMoney(totalMoney);
-
-            await api.executor.cooldowns.set('slut', Date.now());
-
-            let embed: ReplyEmbed;
-            if (win) {
-                const genMessage = SlutSuccessMessages[getRandomInt(0, SlutSuccessMessages.length - 1)];
-                embed = new ReplyEmbed()
-                    .setColor(PredefinedColors.Blue)
-                    .setTitle('Sukces!')
-                    .setDescription(genMessage(totalMoney));
-            } else {
-                const genMessage = SlutFailMessages[getRandomInt(0, SlutFailMessages.length - 1)];
-                embed = new ReplyEmbed()
-                    .setColor(PredefinedColors.Red)
-                    .setTitle('Niestety, nie tym razem...')
-                    .setDescription(genMessage(totalMoney));
-            }
-
-            return api.reply({ embeds: [embed] });
-        } catch (error) {
-            output.err(error);
-
-            const embed = new ReplyEmbed()
-                .setColor(PredefinedColors.Red)
-                .setTitle('Błąd')
-                .setDescription('Coś się złego odwaliło z tą ekonomią...')
-                .setTimestamp();
-
-            return api.reply({ embeds: [embed] });
+        const result = await api.checkCooldown('slut', CooldownMs);
+        if (!result.can) {
+            return api.log.replyWarn(api, 'Nie możesz jeszcze!', `Dopiero ${result.discordTime} odblokuje się możliwość ponownego spamienia sobie hajsu do portfela.`);
         }
+
+        const amount = getRandomInt(SlutAmountMin, SlutAmountMax);
+        const win = Math.random() < Percentage;
+
+        const multiplier = api.economy.getMultiplier('slut');
+        const total = win ? (amount * multiplier) : amount;
+        const totalMoney = Money.fromDollarsFloat(total);
+
+        if (win) await api.executor.economy.addWalletMoney(totalMoney);
+        else await api.executor.economy.deductWalletMoney(totalMoney);
+
+        await api.executor.cooldowns.set('slut', Date.now());
+
+        let embed: ReplyEmbed;
+        if (win) {
+            const genMessage = SlutSuccessMessages[getRandomInt(0, SlutSuccessMessages.length - 1)];
+            embed = api.log.getSuccessEmbed('Sukces!', genMessage(totalMoney));
+        } else {
+            const genMessage = SlutFailMessages[getRandomInt(0, SlutFailMessages.length - 1)];
+            embed = api.log.getErrorEmbed('Niestety nie udało się!', genMessage(totalMoney))
+        }
+
+        return api.reply({ embeds: [embed] });
     },
 };
 

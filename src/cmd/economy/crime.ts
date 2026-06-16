@@ -2,8 +2,6 @@ import { getRandomInt } from '@/util/math/rand.ts';
 
 import { Command } from '@/bot/command.ts';
 import { CommandFlags } from '@/bot/apis/commands/misc.ts';
-import { PredefinedColors } from '@/util/color.ts';
-import { output } from '@/bot/logging.ts';
 import { ReplyEmbed } from '@/bot/apis/translations/reply-embed.ts';
 
 import Money from '@/util/money.ts';
@@ -80,59 +78,39 @@ const crimeCmd: Command = {
         const minBalance = Money.fromDollars(100);
 
         if (balance.wallet.lessThanOrEqual(minBalance)) {
-            const embed = new ReplyEmbed()
-                .setColor(PredefinedColors.DarkBlue)
-                .setTitle('Ta możliwość jest zablokowana!')
-                .setDescription(`Z racji, iż mógłbyś się zadłużyć i nie móc z tego wyjść potem bez resetu ekonomii, dokonywanie przestępstw jest dozwolone tylko, jeżeli masz więcej niż ${minBalance.format()}.`);
-            return api.reply({ embeds: [embed] });
+            return api.log.replyError(
+                api, 
+                'Ta możliwość jest zablokowana!', 
+                `Z racji, iż mógłbyś się zadłużyć i nie móc z tego wyjść potem bez resetu ekonomii, dokonywanie przestępstw jest dozwolone tylko, jeżeli masz więcej niż ${minBalance.format()}.`
+            );
         }
 
-        try {
-            const result = await api.checkCooldown('crime', Cooldown);
-            if (!result.can) {
-                const embed = new ReplyEmbed()
-                    .setColor(PredefinedColors.Yellow)
-                    .setTitle('Chwila przerwy!')
-                    .setDescription(`Musisz odczekać **${result.discordTime}** zanim znowu popełnisz przestępstwo.`);
-                return api.reply({ embeds: [embed] });
-            }
-
-            const baseAmount = getRandomInt(CrimeAmountMin, CrimeAmountMax);
-            const win = Math.random() < Percentage;
-
-            const multiplier = api.economy.getMultiplier('crime');
-            const totalMoney = Money.fromDollarsFloat(win ? (baseAmount * multiplier) : baseAmount);
-
-            if (win) await api.executor.economy.addWalletMoney(totalMoney);
-            else await api.executor.economy.deductWalletMoney(totalMoney);
-
-            await api.executor.cooldowns.set('crime', Date.now());
-
-            let embed: ReplyEmbed;
-            if (win) {
-                const genMessage = randomElement(CrimeSuccessMessages);
-                embed = new ReplyEmbed()
-                    .setColor(PredefinedColors.Blue)
-                    .setTitle('Yay')
-                    .setDescription(genMessage(totalMoney));
-            } else {
-                const genMessage = CrimeFailMessages[getRandomInt(0, CrimeFailMessages.length - 1)];
-                embed = new ReplyEmbed()
-                    .setColor(PredefinedColors.Red)
-                    .setTitle('Przestępstwo nie zawsze się opłaca...')
-                    .setDescription(genMessage(totalMoney));
-            }
-
-            return api.reply({ embeds: [embed] });
-        } catch (error) {
-            output.err(error);
-            const embed = new ReplyEmbed()
-                .setColor(PredefinedColors.Red)
-                .setTitle('Błąd')
-                .setDescription('Coś się złego odwaliło z tą ekonomią...')
-                .setTimestamp();
-            return api.reply({ embeds: [embed] });
+        const result = await api.checkCooldown('crime', Cooldown);
+        if (!result.can) {
+            return api.log.replyWarn(api, 'Nie możesz jeszcze!', `Dopiero ${result.discordTime} odblokuje się możliwość ponownego spamienia sobie hajsu do portfela.`);
         }
+
+        const baseAmount = getRandomInt(CrimeAmountMin, CrimeAmountMax);
+        const win = Math.random() < Percentage;
+
+        const multiplier = api.economy.getMultiplier('crime');
+        const totalMoney = Money.fromDollarsFloat(win ? (baseAmount * multiplier) : baseAmount);
+
+        if (win) await api.executor.economy.addWalletMoney(totalMoney);
+        else await api.executor.economy.deductWalletMoney(totalMoney);
+
+        await api.executor.cooldowns.set('crime', Date.now());
+
+        let embed: ReplyEmbed;
+        if (win) {
+            const genMessage = randomElement(CrimeSuccessMessages);
+            embed = api.log.getSuccessEmbed('W końcu udało się złamać prawo!', genMessage(totalMoney));
+        } else {
+            const genMessage = CrimeFailMessages[getRandomInt(0, CrimeFailMessages.length - 1)];
+            embed = api.log.getErrorEmbed('Przestępstwo nie zawsze się opłaca!', genMessage(totalMoney))
+        }
+
+        return api.reply({ embeds: [embed] });
     },
 };
 

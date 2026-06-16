@@ -1,11 +1,8 @@
 import { getRandomInt } from '@/util/math/rand.ts';
 
-import { PredefinedColors } from '@/util/color.ts';
 import { Command } from '@/bot/command.ts';
 import { CommandFlags } from '@/bot/apis/commands/misc.ts';
 import { CommandAPI } from '@/bot/apis/commands/api.ts';
-import { output } from '@/bot/logging.ts';
-import { ReplyEmbed } from '@/bot/apis/translations/reply-embed.ts';
 
 import Money from '@/util/money.ts';
 
@@ -85,42 +82,20 @@ const workCmd: Command = {
     expectedArgs: [],
 
     async execute(api: CommandAPI) {
-        try {
-            const result = await api.checkCooldown('work', CooldownMs);
-            if (!result.can) {
-                const embed = new ReplyEmbed()
-                    .setColor(PredefinedColors.Yellow)
-                    .setTitle('Chwila przerwy!')
-                    .setDescription(`Ktoś tam Ci każe czekać ${result.discordTime} sekund zanim znowu popr*cujesz, żebyś nie naspamił komendami w chuja hajsu...`);
-
-                return api.reply({ embeds: [embed] });
-            }
-
-            const baseAmount = getRandomInt(WorkAmountMin, WorkAmountMax);
-            const multiplier = api.economy.getMultiplier('work');
-            const totalMoney = Money.fromDollarsFloat(baseAmount * multiplier);
-
-            await api.executor.economy.addWalletMoney(totalMoney);
-            await api.executor.cooldowns.set('work', Date.now());
-
-            const genMessage = WorkMessages[getRandomInt(0, WorkMessages.length - 1)];
-            const embed = new ReplyEmbed()
-                .setColor(PredefinedColors.Blue)
-                .setTitle('Ciężka praca popłaca! ')
-                .setDescription(genMessage(totalMoney));
-
-            return api.reply({ embeds: [embed] });
-        } catch (err) {
-            output.err(err);
-
-            const embed = new ReplyEmbed()
-                .setColor(PredefinedColors.Red)
-                .setTitle('Błąd')
-                .setDescription('Coś się złego odwaliło z tą ekonomią...')
-                .setTimestamp();
-
-            return api.reply({ embeds: [embed] });
+        const result = await api.checkCooldown('work', CooldownMs);
+        if (!result.can) { 
+            return api.log.replyWarn(api, 'Nie możesz jeszcze!', `Dopiero ${result.discordTime} odblokuje się możliwość ponownego spamienia sobie hajsu do portfela.`);
         }
+
+        const baseAmount = getRandomInt(WorkAmountMin, WorkAmountMax);
+        const multiplier = api.economy.getMultiplier('work');
+        const totalMoney = Money.fromDollarsFloat(baseAmount * multiplier);
+
+        await api.executor.economy.addWalletMoney(totalMoney);
+        await api.executor.cooldowns.set('work', Date.now());
+
+        const genMessage = WorkMessages[getRandomInt(0, WorkMessages.length - 1)];
+        return api.log.replySuccess(api, 'Ciężka praca popłaca', genMessage(totalMoney));
     },
 };
 
