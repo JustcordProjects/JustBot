@@ -50,7 +50,7 @@ const topecoCmd: Command = {
                         name: `${i} » ${member.user.username}`,
                         value: [
                             `${userEcoRole ? `<@&${userEcoRole}>` : `<@&${cfg.features.welcomer.freeRolesForEveryone[0]}>`}`,
-                            `**${balance.wallet.add(balance.bank).format()}$**`,
+                            `**${balance.wallet.add(balance.bank).format()}**`,
                         ].join('\n'),
                         inline: true,
                     });
