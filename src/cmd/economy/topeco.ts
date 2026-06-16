@@ -8,9 +8,7 @@ import { output } from '@/bot/logging.ts';
 import { ReplyEmbed } from '@/bot/apis/translations/reply-embed.ts';
 import { cfg } from '@/bot/cfg.ts';
 
-const ecoRoles = [
-    '1235548306550161451',
-];
+const ecoRoles = cfg.features.economy.roles.filter((x) => x.id.includes('vip')).map((x) => x.discordRoleId);
 
 const topecoCmd: Command = {
     name: 'topeco',
