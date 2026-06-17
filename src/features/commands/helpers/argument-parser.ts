@@ -264,21 +264,19 @@ export async function parseArgs(
             };
 
             if (typeObj.base === 'user-mention' && typeObj.includeRefMessageAuthor) {
-                const user =
-                    (raw && await parseUser(raw.value, decl.name, context))
-                    ?? await tryParseUserMentionOrRef(decl, context);
+                const userFromRaw = raw ? await parseUser(raw.value, decl.name, context) : null;
+                const user = userFromRaw ?? await tryParseUserMentionOrRef(decl, context);
 
                 if (user) {
-                    handleParsed(user, !!raw);
+                    handleParsed(user, !!userFromRaw);
                     break;
                 }
             } else if (typeObj.base === 'message-ref' && typeObj.includeRefMessage) {
-                const msg =
-                    (raw && await parseMessage(raw.value, context))
-                    ?? await tryParseMessageRef(context);
+                const msgFromRaw = raw ? await parseMessage(raw.value, context) : null;
+                const msg = msgFromRaw ?? await tryParseMessageRef(context);
 
                 if (msg) {
-                    handleParsed(msg, !!raw);
+                    handleParsed(msg, !!msgFromRaw);
                     break;
                 }
             } else {
