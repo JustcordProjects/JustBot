@@ -31,7 +31,12 @@ export const economyCfg: EconomyConfig = {
                         amount: 500
                     }
                 ], 
-                multipliers: []
+                multipliers: [
+                    {
+                        multiplier: 1.1,
+                        filter: "*"
+                    }
+                ]
             },
             refund: 3000
         },
@@ -47,7 +52,12 @@ export const economyCfg: EconomyConfig = {
                         amount: 1500
                     }
                 ], 
-                multipliers: []
+                multipliers: [
+                    {
+                        multiplier: 1.3,
+                        filter: "*"
+                    }
+                ]
             },
             refund: 9000
         },
