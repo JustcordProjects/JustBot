@@ -255,5 +255,7 @@ async function main() {
 }
 
 (async function () {
-    await client.login(process.env.TOKEN);
+    if (!process.env.JB_TOKEN && process.env.TOKEN)
+        Deno.env.set("JB_TOKEN", process.env.TOKEN);
+    await client.login(process.env.JB_TOKEN);
 })();

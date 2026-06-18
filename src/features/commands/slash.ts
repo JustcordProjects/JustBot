@@ -196,7 +196,7 @@ function fixType(type: CommandArgType): CommandArgType {
 
 export async function init() {
     const commandsArray: dsc.RESTPostAPIApplicationCommandsJSONBody[] = [];
-    const rest = new dsc.REST({ version: '10' }).setToken(process.env.TOKEN!);
+    const rest = new dsc.REST({ version: '10' }).setToken(process.env.JB_TOKEN!);
 
     for (const [, cmds] of commands) {
         for (const cmd of cmds) {
