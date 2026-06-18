@@ -2,9 +2,6 @@ import { cfg } from '@/bot/cfg.ts';
 import { db } from '@/bot/apis/db/bot-db.ts';
 import { Command } from '@/bot/command.ts';
 import { CommandFlags } from '@/bot/apis/commands/misc.ts';
-import { PredefinedColors } from '@/util/color.ts';
-import { output } from '@/bot/logging.ts';
-import { ReplyEmbed } from '@/bot/apis/translations/reply-embed.ts';
 
 import User from '@/bot/apis/db/user.ts';
 import Money from '@/util/money.ts';
@@ -50,6 +47,17 @@ const ecomodCmd: Command = {
     },
 
     async execute(api) {
+        function actionToString() {
+            switch (action) {
+                case 'add':
+                    return `dodałeś mu ${after!.format()} do ${location == 'wallet' ? 'portfela' : 'banku'}`;
+                case 'set':
+                    return `ustawiłeś mu ${after!.format()} pieniądzy w ${location == 'wallet' ? 'portfelu' : 'banku'}`;
+                case 'remove':
+                    return `usunąłeś mu ${after!.format()} ${after!.format} z ${location == 'wallet' ? 'portfela' : 'banku'}`;
+            }
+        }
+
         const action = api.getEnumArg('action', ['add', 'set', 'remove'])?.value!;
         const amount = api.getTypedArg('amount', 'money')?.value!;
         const location = (api.getEnumArg('location', ['wallet', 'bank'])?.value) || 'wallet';
@@ -60,45 +68,27 @@ const ecomodCmd: Command = {
         const targetId = targetMember.id;
         const targetUser = new User(targetId);
 
-        try {
-            let before: Money, after: Money;
+        let before: Money, after: Money;
 
-            await db.transaction(async () => {
-                const bal = await targetUser.economy.getBalance();
-                const current = bal[location];
-                before = current.clone();
+        await db.transaction(async () => {
+            const bal = await targetUser.economy.getBalance();
+            const current = bal[location];
+            before = current.clone();
 
-                if (action == 'add') {
-                    after = current.add(amount);
-                } else if (action == 'set') {
-                    after = amount.clone();
-                } else if (action == 'remove') {
-                    after = current.sub(amount);
-                    if (after.isNegative()) after = Money.zero();
-                }
+            if (action == 'add') {
+                after = current.add(amount);
+            } else if (action == 'set') {
+                after = amount.clone();
+            } else if (action == 'remove') {
+                after = current.sub(amount);
+                if (after.isNegative()) after = Money.zero();
+            }
 
-                bal[location] = after;
-                await targetUser.economy.setBalance(bal);
-            });
+            bal[location] = after;
+            await targetUser.economy.setBalance(bal);
+        });
 
-            return api.reply({
-                embeds: [
-                    new ReplyEmbed()
-                        .setColor(PredefinedColors.Green)
-                        .setTitle('Operacja zakończona!')
-                        .setDescription([
-                            `Użytkownik: <@${targetId}>`,
-                            `Typ: ${location == 'wallet' ? 'Portfel' : 'Bank'}`,
-                            `Akcja: ${action}`,
-                            `Przed: **${before!.format()}**`,
-                            `Po: **${after!.format()}**`,
-                        ].join('\n')),
-                ],
-            });
-        } catch (err) {
-            output.err(err);
-            return api.log.replyError(api, 'Błąd bazy danych', 'Operacja nie mogła zostać zakończona.');
-        }
+        return api.log.replySuccess(api, 'Operacja zakończona!', `Pomyślnie zmodyfikowałeś balans użytkownika <@${targetId}>, tak że ${actionToString()}. Przed tą operacją w teh lokalizacji miał ${before!.format()}.`)
     },
 };
 
