@@ -6,11 +6,10 @@ import { Command } from '@/bot/command.ts';
 import { CommandFlags } from '@/bot/apis/commands/misc.ts';
 import { CommandAPI } from '@/bot/apis/commands/api.ts';
 import { levelToXp, OnSetXpEvent } from '@/bot/level.ts';
-import { output } from '@/bot/logging.ts';
 
 const xpCmd: Command = {
-    name: 'xp',
-    aliases: [],
+    name: 'xpmod',
+    aliases: ['lvlmod'],
     description: {
         main: 'Dodaj komuś levela... Jak nadużyjesz, no to, chyba nie wiesz z jaką siłą igrasz! Pospólstwo jak pomyśli, że sobie za darmoszkę doda poziomów, no to nie! Do widzenia.',
         short: 'Komenda dla adminów, by bawić się levelem...',
@@ -26,10 +25,10 @@ const xpCmd: Command = {
             type: { base: 'user-mention' },
             optional: false,
             name: 'user',
-            description: 'Użytkownik, którego chcesz zjeść... lub mu delikatnie pomóc z levelem...',
+            description: 'Użytkownik, którego chcesz zjeść... lub mu delikatnie pomóc z levelem.',
         },
         {
-            type: { base: 'string' },
+            type: { base: 'enum', options: [ 'add', 'set', 'delete' ] },
             optional: false,
             name: 'action',
             description: 'Co chcesz zrobić z levelem? `add`, `set` lub `delete`',
@@ -41,7 +40,7 @@ const xpCmd: Command = {
             description: 'Ile levela lub XP chcesz dodać/ustawić/usunąć',
         },
         {
-            type: { base: 'string' },
+            type: { base: 'enum', options: [ 'xp', 'levels' ] },
             optional: true,
             name: 'affect',
             description: 'Czy dotyczy `levels` czy `xp` (domyślnie levels)',
@@ -50,38 +49,24 @@ const xpCmd: Command = {
 
     async execute(api: CommandAPI) {
         const targetUser = api.getTypedArg('user', 'user-mention')?.value as dsc.GuildMember ?? api.invoker.member;
-        const actionStr = api.getTypedArg('action', 'string')?.value as string;
+        const action = api.getEnumArg('action', ['add', 'set', 'delete'])?.value as string;
         let amount = api.getTypedArg('amount', 'float')?.value as number;
-        const affect = api.getTypedArg('affect', 'string')?.value as string ?? 'levels';
-
-        if (!targetUser || !actionStr || amount === undefined) {
-            return api.log.replyError(api, 'Niepoprawne argumenty', 'Sprawdź składnię komendy i spróbuj ponownie.');
-        }
+        const affect = api.getEnumArg('affect', ['xp', 'levels'])?.value ?? ('levels' as const);
 
         const shouldLeveler = affect === 'levels';
         if (shouldLeveler) {
             amount = levelToXp(amount, cfg.features.leveling.levelDivider);
         }
 
-        if (actionStr != 'set' && actionStr != 'add' && actionStr != 'delete') {
-            return api.log.replyError(api, 'Nie poprawna akcja', 'Argument `action` powinien być `set`, `add` lub `delete`!');
-        }
-        const action = actionStr as 'set' | 'add' | 'delete';
+        await actionsManager.emit(OnSetXpEvent, {
+            userID: targetUser.id,
+            user: targetUser,
+            guild: api.guild,
+            action: action,
+            amount: amount,
+        });
 
-        try {
-            await actionsManager.emit(OnSetXpEvent, {
-                userID: targetUser.id,
-                user: targetUser,
-                guild: api.guild,
-                action: action,
-                amount: amount,
-            });
-
-            api.log.replySuccess(api, 'Udało się!', `Wykonałem akcję na użytkowniku **${targetUser.user.tag}**`);
-        } catch (err) {
-            output.err(err);
-            api.log.replyError(api, 'Błąd wykonania', 'Coś poszło nie tak podczas modyfikacji XP/levela.');
-        }
+        api.log.replySuccess(api, 'Udało się!', `Wykonałem akcję na użytkowniku **${targetUser.user.tag}**`);
     },
 };
 

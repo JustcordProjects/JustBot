@@ -88,7 +88,7 @@ const ecomodCmd: Command = {
             await targetUser.economy.setBalance(bal);
         });
 
-        return api.log.replySuccess(api, 'Operacja zakończona!', `Pomyślnie zmodyfikowałeś balans użytkownika <@${targetId}>, tak że ${actionToString()}. Przed tą operacją w teh lokalizacji miał ${before!.format()}.`)
+        return api.log.replySuccess(api, 'Operacja zakończona!', `Pomyślnie zmodyfikowałeś balans użytkownika <@${targetId}>, tak że ${actionToString()}. Przed tą operacją w tej lokalizacji miał ${before!.format()}.`)
     },
 };
 
