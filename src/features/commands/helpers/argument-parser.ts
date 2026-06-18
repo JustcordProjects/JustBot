@@ -136,6 +136,7 @@ async function tryParseArg(
             
             const val = parseInt(raw.value);
             if (!Number.isSafeInteger(val)) return null;
+            if (val < 0) return null;
 
             return { ...decl, type, value: BigInt(val) } as CommandValuableArgument;
         }
@@ -143,7 +144,10 @@ async function tryParseArg(
             const isFloat = /^-?\d+(\.\d+)?$/.test(raw.value);
             if (!isFloat) return null;
 
-            return { ...decl, type, value: Number(raw.value) } as CommandValuableArgument;
+            const val = parseInt(raw.value);
+            if (val < 0) return null;
+
+            return { ...decl, type, value: val } as CommandValuableArgument;
         }
 
         case 'money': {
