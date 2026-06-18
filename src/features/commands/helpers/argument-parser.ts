@@ -144,7 +144,7 @@ async function tryParseArg(
             const isFloat = /^-?\d+(\.\d+)?$/.test(raw.value);
             if (!isFloat) return null;
 
-            const val = parseInt(raw.value);
+            const val = parseFloat(raw.value);
             if (val < 0) return null;
 
             return { ...decl, type, value: val } as CommandValuableArgument;
@@ -171,6 +171,8 @@ async function tryParseArg(
             }
 
             try {
+                const parsedMoney = parseFloat(raw.value);
+                if (parsedMoney < 0) return null;
                 const parsed = Money.parse(raw.value);
                 return { ...decl, type, value: parsed } as CommandValuableArgument;
             } catch (e) {
