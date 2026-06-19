@@ -3,9 +3,9 @@ import * as dsc from 'discord.js';
 import { Command } from '@/bot/command.ts';
 import { CommandFlags } from '@/bot/command/misc.ts';
 
-import { db } from '@/bot/apis/db/bot-db.ts';
+import { db } from '@/apis/db/bot-db.ts';
 import { output } from '@/bot/logging.ts';
-import { ReplyEmbed } from '@/bot/apis/translations/reply-embed.ts';
+import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
 import { cfg } from '@/bot/cfg.ts';
 
 const ecoRoles = cfg.features.economy.roles.filter((x) => x.id.includes('vip')).map((x) => x.discordRoleId);

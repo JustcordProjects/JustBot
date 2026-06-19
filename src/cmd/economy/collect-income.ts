@@ -1,7 +1,7 @@
 import { Command } from '@/bot/command.ts';
 import { CommandFlags } from '@/bot/command/misc.ts';
 import { PredefinedColors } from '@/util/color.ts';
-import { ReplyEmbed } from '@/bot/apis/translations/reply-embed.ts';
+import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
 import { output } from '@/bot/logging.ts';
 
 const collectIncomeCmd: Command = {

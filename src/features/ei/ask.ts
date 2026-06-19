@@ -1,17 +1,17 @@
-import * as github from '@/bot/apis/github/github.ts';
-import * as gemini from '@/bot/apis/gemini/model.ts';
-import * as reddit from '@/bot/apis/reddit/reddit.ts';
+import * as github from '@/apis/github/github.ts';
+import * as gemini from '@/apis/gemini/model.ts';
+import * as reddit from '@/apis/reddit/reddit.ts';
 import * as log from '@/util/log.ts';
 import * as dsc from 'discord.js';
 
 import { SystemPrompt } from '@/features/ei/models.ts';
-import { toolDeclarations } from '@/bot/apis/gemini/ask.ts';
+import { toolDeclarations } from '@/apis/gemini/ask.ts';
 
 import { commands } from '@/cmd/list.ts';
 import { output } from '@/bot/logging.ts';
 import { cfg } from '@/bot/cfg.ts';
 import { client } from '@/client.ts';
-import { db } from '@/bot/apis/db/bot-db.ts';
+import { db } from '@/apis/db/bot-db.ts';
 import process from 'node:process';
 import logError from '@/util/log-error.ts';
 

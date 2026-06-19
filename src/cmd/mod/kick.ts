@@ -4,8 +4,8 @@ import { output } from '@/bot/logging.ts';
 import { Command } from '@/bot/command.ts';
 import { CommandFlags } from '@/bot/command/misc.ts';
 import { PredefinedColors } from '@/util/color.ts';
-import kick from '@/bot/apis/mod/kicks.ts';
-import { ReplyEmbed } from '@/bot/apis/translations/reply-embed.ts';
+import kick from '@/apis/mod/kicks.ts';
+import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
 import { CommandPermissions } from '@/bot/command/permissions.ts';
 
 const kickCmd: Command = {

@@ -1,7 +1,7 @@
 import type { Snowflake } from '@/defs.ts';
 import type { PredefinedColors } from '@/util/color.ts';
 import { GuildTextBasedChannel, HexColorString, Message, Poll } from 'discord.js';
-import { ReplyEmbed } from '@/bot/apis/translations/reply-embed.ts';
+import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
 import { client } from '@/client.ts';
 
 async function mkFormattedPoll(poll: Poll): Promise<string> {
@@ -28,7 +28,7 @@ export async function mkMessageReferenceEmbed(
         title?: string
     }
 ) {
-    const channel = !(source instanceof Message) 
+    const channel = !(source instanceof Message)
         ? await client.channels.fetch(source.channelId) as GuildTextBasedChannel
         : source.channel as GuildTextBasedChannel;
     let quotedMsg = !(source instanceof Message)
@@ -47,9 +47,9 @@ export async function mkMessageReferenceEmbed(
         })
         .setDescription(
             quotedMsg.content ||
-                (quotedMsg.poll 
-                    ? await mkFormattedPoll(quotedMsg.poll) 
-                    : (quotedMsg.embeds.length > 0 
+                (quotedMsg.poll
+                    ? await mkFormattedPoll(quotedMsg.poll)
+                    : (quotedMsg.embeds.length > 0
                         ? '*niestety cytowanie embedów nie jest jeszcze wspierane*'
                         : '*brak treści*'
                       )

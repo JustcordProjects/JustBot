@@ -7,7 +7,7 @@ import findCommand from '@/util/cmd/find-command.ts';
 import canExecuteCmd from '@/util/cmd/can-execute.ts';
 
 import { Category } from '@/bot/command.ts';
-import { ReplyEmbed } from '@/bot/apis/translations/reply-embed.ts';
+import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
 import { CommandPermissions } from '@/bot/command/permissions.ts';
 
 const manCmd: Command = {

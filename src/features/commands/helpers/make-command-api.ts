@@ -1,14 +1,14 @@
 import * as dsc from 'discord.js';
 import * as log from '@/util/log.ts';
 
-import User from '@/bot/apis/db/user.ts';
+import User from '@/apis/db/user.ts';
 
 import { Command, CommandAPI, CommandArgType } from '@/bot/command.ts';
 import { parseArgs, ParsedRawArgument } from './argument-parser.ts';
-import { t } from '@/bot/apis/translations/translate.ts';
+import { t } from '@/apis/translations/translate.ts';
 import { deepMerge } from '@/util/objects/objects.ts';
 import { commands } from '@/cmd/list.ts';
-import { EconomyExecutor } from '@/bot/apis/economy/action.ts';
+import { EconomyExecutor } from '@/apis/economy/action.ts';
 import { flatTypesToUnion } from './flat-types.ts';
 import { cfg } from '@/bot/cfg.ts';
 

@@ -1,4 +1,4 @@
-import { db } from '@/bot/apis/db/bot-db.ts';
+import { db } from '@/apis/db/bot-db.ts';
 import { output } from '@/bot/logging.ts';
 
 const EXPIRED_WARNS_CHECK_INTERVAL = 10 * 60 * 1000; // 10m in ms

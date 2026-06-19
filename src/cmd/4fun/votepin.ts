@@ -4,8 +4,8 @@ import { CommandPermissions } from '@/bot/command/permissions.ts';
 import { mkMessageReferenceEmbed } from '@/bot/templates/message-reference.ts';
 import { PredefinedColors } from '@/util/color.ts';
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType, Message } from 'discord.js';
-import { ReplyEmbed } from '@/bot/apis/translations/reply-embed.ts';
-import User from '@/bot/apis/db/user.ts';
+import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
+import User from '@/apis/db/user.ts';
 
 export default {
     name: 'votepin',

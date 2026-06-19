@@ -4,7 +4,7 @@ import { CommandFlags } from '@/bot/command/misc.ts';
 import { CommandPermissions } from '@/bot/command/permissions.ts';
 import { client } from '@/client.ts';
 import { output } from '@/bot/logging.ts';
-import { db } from '@/bot/apis/db/bot-db.ts';
+import { db } from '@/apis/db/bot-db.ts';
 
 import JSON5 from 'json5';
 import process from 'node:process';

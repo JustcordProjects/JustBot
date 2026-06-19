@@ -3,8 +3,8 @@ import { CommandFlags } from '@/bot/command/misc.ts';
 import { CommandPermissions } from '@/bot/command/permissions.ts';
 import { PredefinedColors } from '@/util/color.ts';
 import * as dsc from 'discord.js';
-import getWikiArticle from '@/bot/apis/wiki/wiki.ts';
-import { ReplyEmbed } from '@/bot/apis/translations/reply-embed.ts';
+import getWikiArticle from '@/apis/wiki/wiki.ts';
+import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
 
 async function replyAIModelErr(err: string, msg: dsc.Message) {
     return await msg.edit({

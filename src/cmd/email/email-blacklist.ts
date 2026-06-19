@@ -1,4 +1,4 @@
-import { db } from '@/bot/apis/db/bot-db.ts';
+import { db } from '@/apis/db/bot-db.ts';
 import { Command } from '@/bot/command.ts';
 import { CommandFlags } from '@/bot/command/misc.ts';
 import { CommandPermissions } from '@/bot/command/permissions.ts';

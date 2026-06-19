@@ -19,7 +19,7 @@ import canExecuteCmd from '@/util/cmd/can-execute.ts';
 import isCommandBlockedOnChannel from '@/util/cmd/is-blocked.ts';
 
 import { ParsedRawArgument } from './helpers/argument-parser.ts';
-import { ReplyEmbed } from '@/bot/apis/translations/reply-embed.ts';
+import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
 import { PredefinedColors } from '@/util/color.ts';
 import { CommandArgType } from '@/bot/command.ts';
 

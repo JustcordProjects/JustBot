@@ -1,4 +1,4 @@
-import { db } from '@/bot/apis/db/bot-db.ts';
+import { db } from '@/apis/db/bot-db.ts';
 
 import { Balance, UserDataRaw, Warn, WarnRaw } from './db-defs.ts';
 import { Cooldowns } from './db-defs.ts';
@@ -295,7 +295,7 @@ export default class User {
         getPoints: async () => {
             await this.ensureExists();
             const result = await db.selectOne("SELECT * FROM users WHERE user_id = ?", [this.id]) as UserDataRaw;
-            return result.prestige_points ?? 0; 
+            return result.prestige_points ?? 0;
         },
         addPoints: async (amount: number) => {
             await this.ensureExists();

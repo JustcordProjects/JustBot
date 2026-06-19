@@ -3,7 +3,7 @@ import { CommandFlags } from '@/bot/command/misc.ts';
 import { CommandPermissions } from '@/bot/command/permissions.ts';
 import { output } from '@/bot/logging.ts';
 
-import * as cache from '@/bot/apis/cache/cache.ts';
+import * as cache from '@/apis/cache/cache.ts';
 import process from 'node:process';
 
 const restartCmd: Command = {

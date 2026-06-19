@@ -8,7 +8,7 @@ import actionsManager, { OnForceReloadTemplates } from '@/events/actions/templat
 import { scanChannelForMusic } from '@/features/scan-for-music.ts';
 import { addLvlRole, xpToLevel } from '@/bot/level.ts';
 import { cfg } from '@/bot/cfg.ts';
-import { db } from '@/bot/apis/db/bot-db.ts';
+import { db } from '@/apis/db/bot-db.ts';
 
 const refreshCmd: Command = {
     name: 'refresh',

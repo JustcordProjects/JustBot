@@ -9,9 +9,9 @@ import capitalizeFirst from '@/util/capitalize-first.ts';
 import * as dsc from 'discord.js';
 import Money from '@/util/money.ts';
 
-import { ReplyEmbed } from '@/bot/apis/translations/reply-embed.ts';
+import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
 import { ConfigEconomyShopCategory, ConfigEconomyShopOffer } from '@/bot/definitions/config/economy.ts';
-import { MinimalActionsFormatter } from '@/bot/apis/economy/format.ts';
+import { MinimalActionsFormatter } from '@/apis/economy/format.ts';
 
 function buildSelectMenu(categories: ConfigEconomyShopCategory[]): dsc.StringSelectMenuBuilder {
     return new dsc.StringSelectMenuBuilder()

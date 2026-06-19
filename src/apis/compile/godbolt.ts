@@ -1,4 +1,4 @@
-import * as compile from '@/bot/apis/compile/driver.ts';
+import * as compile from '@/apis/compile/driver.ts';
 
 interface GodBoltLanguageListEntry {
     id: string;

@@ -8,7 +8,7 @@ import capitalizeFirst from '@/util/capitalize-first.ts';
 import canExecuteCmd from '@/util/cmd/can-execute.ts';
 
 import * as dsc from 'discord.js';
-import { ReplyEmbed } from '@/bot/apis/translations/reply-embed.ts';
+import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
 import { Category } from '@/bot/categories.ts';
 
 function buildSelectMenu(commands: Map<Category, Command[]>): dsc.StringSelectMenuBuilder {

@@ -1,10 +1,10 @@
 import * as dsc from 'discord.js';
 
 import { scheduleWarnDeletion } from '@/features/delete-expired-warns.ts';
-import User from '@/bot/apis/db/user.ts';
+import User from '@/apis/db/user.ts';
 import { client } from '@/client.ts';
 import { PredefinedColors } from '@/util/color.ts';
-import { sendLog } from '@/bot/apis/log/send-log.ts';
+import { sendLog } from '@/apis/log/send-log.ts';
 import { cfg } from '@/bot/cfg.ts';
 import { registerWarnInWatchdog } from '@/bot/watchdog.ts';
 
@@ -17,14 +17,14 @@ export default async function warn(
         moderatorId: data.mod ?? client.user!.id,
         reason: data.reason, points: data.points,
         expiresAt: data.expiresAt ?? undefined
-    }); 
+    });
 
     const warnId = result.lastID!;
 
     if (data.expiresAt) {
         scheduleWarnDeletion(warnId, data.expiresAt);
     }
-    
+
     sendLog({
         title: 'Użytkownik dostał warna',
         color: PredefinedColors.Orange,

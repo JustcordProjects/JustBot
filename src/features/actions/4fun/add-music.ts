@@ -4,7 +4,7 @@ export default actionsManager;
 
 import * as dsc from 'discord.js';
 import { extractMediaLinks } from '@/features/scan-for-music.ts';
-import { db } from '@/bot/apis/db/bot-db.ts';
+import { db } from '@/apis/db/bot-db.ts';
 
 export const addMusicAction: Action<MessageEventCtx> = {
     name: '4fun/add-music',

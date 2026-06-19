@@ -1,6 +1,6 @@
 import * as dsc from 'discord.js';
 
-import User from './apis/db/user.ts';
+import User from '@/apis/db/user.ts';
 
 import actionsManager, { Action } from '@/features/actions/index.ts';
 import { mkProgressBar } from '@/util/progressbar.ts';

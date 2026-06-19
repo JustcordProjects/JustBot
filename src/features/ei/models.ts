@@ -1,4 +1,4 @@
-import * as gemini from '@/bot/apis/gemini/model.ts';
+import * as gemini from '@/apis/gemini/model.ts';
 import { cfg } from '@/bot/cfg.ts';
 
 export const SystemPrompt: string = [

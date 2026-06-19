@@ -1,7 +1,7 @@
 import { Command } from '@/bot/command.ts';
 import { CommandFlags } from '@/bot/command/misc.ts';
 
-import cdecl from '@/bot/apis/cdecl/cdecl.ts';
+import cdecl from '@/apis/cdecl/cdecl.ts';
 
 const cdeclCmd: Command = {
     name: 'cdecl',

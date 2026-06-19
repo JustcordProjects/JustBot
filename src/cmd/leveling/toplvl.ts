@@ -6,7 +6,7 @@ import { lvlRoles } from '@/bot/level.ts';
 import { Command } from '@/bot/command.ts';
 import { CommandFlags } from '@/bot/command/misc.ts';
 import { output } from '@/bot/logging.ts';
-import { ReplyEmbed } from '@/bot/apis/translations/reply-embed.ts';
+import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
 
 function calculateLevel(xp: number, levelDivider: number): number {
     return Math.floor(

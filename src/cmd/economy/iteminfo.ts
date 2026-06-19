@@ -1,8 +1,8 @@
 import { Command } from '@/bot/command.ts';
 import { CommandFlags } from '@/bot/command/misc.ts';
 import { PredefinedColors } from '@/util/color.ts';
-import { ReplyEmbed } from '@/bot/apis/translations/reply-embed.ts';
-import { MinimalActionsFormatter } from '@/bot/apis/economy/format.ts';
+import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
+import { MinimalActionsFormatter } from '@/apis/economy/format.ts';
 import { cfg } from '@/bot/cfg.ts';
 
 const itemInfoCmd: Command = {

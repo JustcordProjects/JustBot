@@ -4,7 +4,7 @@ import * as dsc from 'discord.js';
 
 import parseTimestamp from '@/util/parse-timestamp.ts';
 import findCommand from '@/util/cmd/find-command.ts';
-import User from '@/bot/apis/db/user.ts';
+import User from '@/apis/db/user.ts';
 import Money from '@/util/money.ts';
 import { NumberParseError } from '@/util/math/parse.ts';
 
@@ -133,7 +133,7 @@ async function tryParseArg(
         case 'int': {
             const isInt = /^-?\d+$/.test(raw.value);
             if (!isInt) return null;
-            
+
             const val = parseInt(raw.value);
             if (!Number.isSafeInteger(val)) return null;
             if (val < 0) return null;

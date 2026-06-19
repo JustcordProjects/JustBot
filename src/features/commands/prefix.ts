@@ -16,7 +16,7 @@ import { PredefinedColors } from '@/util/color.ts';
 
 import { handleError } from './helpers/error-handler.ts';
 import { makeCommandApi } from './helpers/make-command-api.ts';
-import { ReplyEmbed } from '@/bot/apis/translations/reply-embed.ts';
+import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
 import { CommandTokenizer } from './helpers/tokenizer.ts';
 
 import sleep from '@/util/sleep.ts';

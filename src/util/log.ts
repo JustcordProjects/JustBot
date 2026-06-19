@@ -2,8 +2,8 @@ import { PredefinedColors } from '@/util/color.ts';
 import { SendableChannel } from '../defs.ts';
 
 import * as dsc from 'discord.js';
-import { ReplyEmbed } from '@/bot/apis/translations/reply-embed.ts';
-import { t } from '@/bot/apis/translations/translate.ts';
+import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
+import { t } from '@/apis/translations/translate.ts';
 
 export interface Replyable {
     // deno-lint-ignore no-explicit-any

@@ -44,20 +44,20 @@ import * as slashCommands from '@/features/commands/slash.ts';
 import * as prefixCommands from '@/features/commands/prefix.ts';
 
 // integrations
-import * as zapbox from '@/bot/apis/compile/zapbox.ts';
-import * as pokedex from '@/bot/apis/pokedex/pokedex.ts';
-import * as github from '@/bot/apis/github/github.ts';
-import * as gemini from '@/bot/apis/gemini/model.ts';
-import * as email from '@/bot/apis/email/mail.ts';
-import * as cache from '@/bot/apis/cache/cache.ts';
+import * as zapbox from '@/apis/compile/zapbox.ts';
+import * as pokedex from '@/apis/pokedex/pokedex.ts';
+import * as github from '@/apis/github/github.ts';
+import * as gemini from '@/apis/gemini/model.ts';
+import * as email from '@/apis/email/mail.ts';
+import * as cache from '@/apis/cache/cache.ts';
 
 // misc
 import * as log from '@/util/log.ts';
 
 import actionsManager from '@/features/actions/index.ts';
-import { db } from '@/bot/apis/db/bot-db.ts';
+import { db } from '@/apis/db/bot-db.ts';
 
-import { initEmailActionsIntegration } from '@/bot/apis/email/actions.ts';
+import { initEmailActionsIntegration } from '@/apis/email/actions.ts';
 import { getChannel } from '@/features/actions/channels/template-channels.ts';
 import { initStatusGenerator } from '@/util/generate-status-quote.ts';
 

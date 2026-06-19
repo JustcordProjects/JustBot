@@ -1,12 +1,12 @@
 import { Command } from '@/bot/command.ts';
 import { CommandFlags } from '@/bot/command/misc.ts';
 
-import pokedex from '@/bot/apis/pokedex/pokedex.ts';
+import pokedex from '@/apis/pokedex/pokedex.ts';
 
 import * as dsc from 'discord.js';
 
 import capitalizeFirst from '@/util/capitalize-first.ts';
-import { ReplyEmbed } from '@/bot/apis/translations/reply-embed.ts';
+import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
 import { PredefinedColors } from '@/util/color.ts';
 
 const pokedexSpeciesColorMap: Record<string, dsc.ColorResolvable> = {

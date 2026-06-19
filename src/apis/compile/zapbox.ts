@@ -1,4 +1,4 @@
-import * as compile from '@/bot/apis/compile/driver.ts';
+import * as compile from '@/apis/compile/driver.ts';
 import { output } from '@/bot/logging.ts';
 
 export function isAvailable(): boolean {
@@ -29,22 +29,22 @@ export async function init() {
 
 namespace Zapbox {
     export type MessageKind = 'stdout' | 'stderr';
-    
+
     export interface Message {
         kind:    MessageKind;
         content: string;
     }
-    
+
     export interface ExecResult {
         messages: Message[];
         exitcode: number;
     }
-    
+
     export interface Input {
         src:    string;
         stdin?: string;
     }
-    
+
     export enum Status {
         Success = 'success',
         UnknownError = 'error',
@@ -144,7 +144,7 @@ export class ZapCompilerDriver implements compile.Driver {
             src: input.source,
             stdin: input.stdin,
         };
-        
+
         const zapboxOutput = await this.runZapbox(zapboxInput);
         output.log('zapbox compile() result:');
         output.log(zapboxOutput);

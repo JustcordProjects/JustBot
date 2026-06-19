@@ -1,14 +1,14 @@
 import { Command } from '@/bot/command.ts';
 import { CommandFlags } from '@/bot/command/misc.ts';
 import { CommandPermissions } from '@/bot/command/permissions.ts';
-import { ReplyEmbed } from '@/bot/apis/translations/reply-embed.ts';
+import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
 import { PredefinedColors } from '@/util/color.ts';
 import { client } from '@/client.ts';
 import logError from '@/util/log-error.ts';
 import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, ComponentType, StringSelectMenuBuilder, StringSelectMenuInteraction } from 'discord.js';
-import { db } from '@/bot/apis/db/bot-db.ts';
+import { db } from '@/apis/db/bot-db.ts';
 import { addLvlRole, xpToLevel } from '@/bot/level.ts';
-import User from '@/bot/apis/db/user.ts';
+import User from '@/apis/db/user.ts';
 
 function getMainAccount(id: string) {
     try {

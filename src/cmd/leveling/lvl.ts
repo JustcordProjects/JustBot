@@ -8,9 +8,9 @@ import { CommandFlags } from '@/bot/command/misc.ts';
 import { CommandAPI } from '@/bot/command/api.ts';
 import { levelToXp, mkLvlProgressBar, xpToLevel } from '@/bot/level.ts';
 import { output } from '@/bot/logging.ts';
-import { ReplyEmbed } from '@/bot/apis/translations/reply-embed.ts';
+import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
 
-import User from '@/bot/apis/db/user.ts';
+import User from '@/apis/db/user.ts';
 
 const lvlCmd: Command = {
     name: 'lvl',

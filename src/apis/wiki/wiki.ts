@@ -1,4 +1,4 @@
-import * as gemini from '@/bot/apis/gemini/model.ts';
+import * as gemini from '@/apis/gemini/model.ts';
 
 interface WikiSummaryResponse {
     type: string;
@@ -78,7 +78,7 @@ async function downloadFromWikipedia(
 
     for (const lang of languageVersions) {
         const results = await searchWikipedia(lang, query);
-        
+
         for (const res of results) {
             const lowerTitle = res.title.toLowerCase();
             const firstParagraph = res.extract
@@ -154,7 +154,7 @@ export default async function getWikiArticle(rawQuery: string): Promise<WikiErro
         return {
             success: true, usedAi: true, isDisamiguition: false,
             title: ai_has_title ? ai_fl.replace('# ', '') : 'Definicja od AI',
-            description: ai_description, url: `https://google.com/search?q=${encodeURIComponent(query)}` 
+            description: ai_description, url: `https://google.com/search?q=${encodeURIComponent(query)}`
         };
     }
 
@@ -170,7 +170,7 @@ export default async function getWikiArticle(rawQuery: string): Promise<WikiErro
             queries: titles
         };
     }
-    
+
     return {
         success: true, usedAi: false,
         isDisamiguition: false,
@@ -179,5 +179,4 @@ export default async function getWikiArticle(rawQuery: string): Promise<WikiErro
         url: json.content_urls.desktop.page,
         thumbnail: json.thumbnail
     }
-} 
-
+}

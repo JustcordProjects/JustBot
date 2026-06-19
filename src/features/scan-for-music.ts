@@ -1,6 +1,6 @@
 import * as dsc from 'discord.js';
 
-import { MusicEntry } from '@/bot/apis/db/db-defs.ts';
+import { MusicEntry } from '@/apis/db/db-defs.ts';
 
 export function extractMediaLinks(text: string): string[] {
     const pattern = /https?:\/\/(?:www\.)?(?:youtube\.com|youtu\.be|music\.youtube\.com|open\.spotify\.com)\/[^\s]+/g;

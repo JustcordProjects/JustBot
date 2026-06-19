@@ -3,8 +3,8 @@ import * as dsc from 'discord.js';
 import { Command } from '@/bot/command.ts';
 import { CommandFlags } from '@/bot/command/misc.ts';
 import { output } from '@/bot/logging.ts';
-import { ReplyEmbed } from '@/bot/apis/translations/reply-embed.ts';
-import { db } from '@/bot/apis/db/bot-db.ts';
+import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
+import { db } from '@/apis/db/bot-db.ts';
 
 const topprestigeCmd: Command = {
     name: 'topprestige',

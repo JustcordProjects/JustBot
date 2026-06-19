@@ -6,10 +6,10 @@ import { cfg } from '@/bot/cfg.ts';
 import { PredefinedColors } from '@/util/color.ts';
 import { Hour, Timestamp } from '@/util/parse-timestamp.ts';
 
-import mute from '@/bot/apis/mod/muting.ts';
+import mute from '@/apis/mod/muting.ts';
 import { watchMute } from '@/bot/watchdog.ts';
-import { sendLog } from '@/bot/apis/log/send-log.ts';
-import { ReplyEmbed } from '@/bot/apis/translations/reply-embed.ts';
+import { sendLog } from '@/apis/log/send-log.ts';
+import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
 import { CommandPermissions } from '@/bot/command/permissions.ts';
 
 const muteCmd: Command = {

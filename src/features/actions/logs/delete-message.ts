@@ -3,19 +3,19 @@ import { cfg } from '@/bot/cfg.ts';
 import { GuildTextBasedChannel } from 'discord.js';
 import { mkMessageReferenceEmbed } from '@/bot/templates/message-reference.ts';
 import { PredefinedColors } from '@/util/color.ts';
-import User from '@/bot/apis/db/user.ts';
+import User from '@/apis/db/user.ts';
 import { computeLevelForMessage } from '@/bot/level.ts';
 
 export const deleteMessageAction: Action<MessageEventCtx> = {
     name: "logs/delete-messages",
     activatesOn: PredefinedActionEventTypes.OnMessageDelete,
-    
+
     constraints: [ () => true ],
     callbacks: [
         async (msg) => {
             if (
                 msg.author &&
-                !msg.author.bot && 
+                !msg.author.bot &&
                 ![cfg.commands.prefix, ...cfg.commands.alternativePrefixes]
                     .some((p) => msg.content.startsWith(p))
             ) await new User(msg.author.id).leveling.removeXP(computeLevelForMessage(msg));
@@ -23,9 +23,9 @@ export const deleteMessageAction: Action<MessageEventCtx> = {
             const logs_channel = await msg.client.channels.fetch(cfg.channels.mod.logs) as GuildTextBasedChannel;
             logs_channel.send({
                 embeds: [
-                    (await mkMessageReferenceEmbed(msg, { 
-                        title: "Wiadomość została usunięta", 
-                        color: PredefinedColors.Red 
+                    (await mkMessageReferenceEmbed(msg, {
+                        title: "Wiadomość została usunięta",
+                        color: PredefinedColors.Red
                     })).embed
                 ]
             });

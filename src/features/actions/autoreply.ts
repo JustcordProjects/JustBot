@@ -1,4 +1,4 @@
-import { ReplyEmbed } from '@/bot/apis/translations/reply-embed.ts';
+import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
 import { Action, ActionCallback, ConstraintCallback, MagicSkipAllActions, PredefinedActionEventTypes } from './index.ts';
 import { MessageEventCtx } from './index.ts';
 

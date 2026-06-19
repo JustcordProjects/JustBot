@@ -1,9 +1,9 @@
-import { ReceivedNewEmail, ReceivedNewEmailEvent } from '@/bot/apis/email/actions.ts';
+import { ReceivedNewEmail, ReceivedNewEmailEvent } from '@/apis/email/actions.ts';
 import { cfg } from '@/bot/cfg.ts';
 import { client } from '@/client.ts';
 import { Action } from '@/features/actions/index.ts';
-import { sendLog } from '@/bot/apis/log/send-log.ts';
-import { db } from '@/bot/apis/db/bot-db.ts';
+import { sendLog } from '@/apis/log/send-log.ts';
+import { db } from '@/apis/db/bot-db.ts';
 import { AddressObject } from 'mailparser';
 import { PredefinedColors } from '@/util/color.ts';
 import process from 'node:process';

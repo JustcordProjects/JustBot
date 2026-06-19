@@ -1,4 +1,4 @@
-import { t } from '@/bot/apis/translations/translate.ts';
+import { t } from '@/apis/translations/translate.ts';
 import { Command, CommandArgument } from '@/bot/command.ts';
 
 export function makeSlashCommandOptionDesc(arg: CommandArgument, alternativeTitle: string) {

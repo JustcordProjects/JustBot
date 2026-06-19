@@ -3,8 +3,8 @@ import { CommandFlags } from '@/bot/command/misc.ts';
 import { CommandPermissions } from '@/bot/command/permissions.ts';
 
 import * as dsc from 'discord.js';
-import { db } from '@/bot/apis/db/bot-db.ts';
-import User from '@/bot/apis/db/user.ts';
+import { db } from '@/apis/db/bot-db.ts';
+import User from '@/apis/db/user.ts';
 import { addLvlRole, xpToLevel } from '@/bot/level.ts';
 
 const addAltAccountCommand: Command = {

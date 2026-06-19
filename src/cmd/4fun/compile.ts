@@ -1,8 +1,8 @@
 import { Command } from '@/bot/command.ts';
 import { CommandFlags } from '@/bot/command/misc.ts';
 import { CommandPermissions } from '@/bot/command/permissions.ts';
-import { getCompilerForLang } from '@/bot/apis/compile/auto.ts';
-import * as compile from '@/bot/apis/compile/driver.ts';
+import { getCompilerForLang } from '@/apis/compile/auto.ts';
+import * as compile from '@/apis/compile/driver.ts';
 
 const compileCmd: Command = {
     name: 'compile',

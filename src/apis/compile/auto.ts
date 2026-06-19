@@ -1,5 +1,5 @@
 import * as compile from './driver.ts';
-import { GodBoltCompilerDriver } from '@/bot/apis/compile/godbolt.ts';
+import { GodBoltCompilerDriver } from '@/apis/compile/godbolt.ts';
 import { WandboxCompilerDriver } from './wandbox.ts';
 import { ZapCompilerDriver } from './zapbox.ts';
 

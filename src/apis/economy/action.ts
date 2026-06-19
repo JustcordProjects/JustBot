@@ -3,7 +3,7 @@ import { cfg } from '@/bot/cfg.ts';
 
 import * as dsc from 'discord.js';
 
-import User from '@/bot/apis/db/user.ts';
+import User from '@/apis/db/user.ts';
 import Money from '@/util/money.ts';
 
 export interface EconomyExecutorContext {

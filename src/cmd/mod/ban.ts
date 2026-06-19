@@ -6,9 +6,9 @@ import { CommandFlags } from '@/bot/command/misc.ts';
 import { CommandPermissions } from '@/bot/command/permissions.ts';
 import { CommandAPI } from '@/bot/command/api.ts';
 import { PredefinedColors } from '@/util/color.ts';
-import { ReplyEmbed } from '@/bot/apis/translations/reply-embed.ts';
+import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
 
-import ban from '@/bot/apis/mod/bans.ts';
+import ban from '@/apis/mod/bans.ts';
 
 const banCmd: Command = {
     name: 'ban',

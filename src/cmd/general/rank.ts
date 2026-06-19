@@ -1,8 +1,8 @@
 import { Command } from '@/bot/command.ts';
 import { CommandFlags } from '@/bot/command/misc.ts';
 
-import { db } from '@/bot/apis/db/bot-db.ts';
-import User from '@/bot/apis/db/user.ts';
+import { db } from '@/apis/db/bot-db.ts';
+import User from '@/apis/db/user.ts';
 
 export const rankCmd: Command = {
     name: 'rank',

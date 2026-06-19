@@ -1,9 +1,9 @@
 import logError from '@/util/log-error.ts';
 import { client } from '@/client.ts';
 import { cfg } from '@/bot/cfg.ts';
-import { db } from '@/bot/apis/db/bot-db.ts';
+import { db } from '@/apis/db/bot-db.ts';
 import { GuildTextBasedChannel } from 'discord.js';
-import { ReplyEmbed } from '@/bot/apis/translations/reply-embed.ts';
+import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
 import { PredefinedColors } from '@/util/color.ts';
 
 export async function reminderHandler() {
