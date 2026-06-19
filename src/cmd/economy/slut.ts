@@ -1,7 +1,7 @@
 import { getRandomInt } from '@/util/math/rand.ts';
 
 import { Command } from '@/bot/command.ts';
-import { CommandFlags } from '@/bot/apis/commands/misc.ts';
+import { CommandFlags } from '@/bot/command/misc.ts';
 import { ReplyEmbed } from '@/bot/apis/translations/reply-embed.ts';
 
 import Money from '@/util/money.ts';

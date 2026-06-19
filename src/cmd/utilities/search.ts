@@ -1,6 +1,6 @@
 import { Command } from '@/bot/command.ts';
-import { CommandPermissions } from '@/bot/apis/commands/permissions.ts';
-import { CommandFlags } from '@/bot/apis/commands/misc.ts';
+import { CommandPermissions } from '@/bot/command/permissions.ts';
+import { CommandFlags } from '@/bot/command/misc.ts';
 
 const searxng_instances = [
     'https://searx.projectlounge.pw',

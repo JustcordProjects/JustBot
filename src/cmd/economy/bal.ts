@@ -2,8 +2,8 @@ import User from '@/bot/apis/db/user.ts';
 
 import * as dsc from 'discord.js';
 import { Command } from '@/bot/command.ts';
-import { CommandFlags } from '@/bot/apis/commands/misc.ts';
-import { CommandAPI } from '@/bot/apis/commands/api.ts';
+import { CommandFlags } from '@/bot/command/misc.ts';
+import { CommandAPI } from '@/bot/command/api.ts';
 import { PredefinedColors } from '@/util/color.ts';
 import { output } from '@/bot/logging.ts';
 import { ReplyEmbed } from '@/bot/apis/translations/reply-embed.ts';

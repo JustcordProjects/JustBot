@@ -1,6 +1,6 @@
 import { Command } from '@/bot/command.ts';
-import { CommandFlags } from '@/bot/apis/commands/misc.ts';
-import { CommandPermissions } from '@/bot/apis/commands/permissions.ts';
+import { CommandFlags } from '@/bot/command/misc.ts';
+import { CommandPermissions } from '@/bot/command/permissions.ts';
 import { output } from '@/bot/logging.ts';
 
 import * as cache from '@/bot/apis/cache/cache.ts';
@@ -25,7 +25,7 @@ const restartCmd: Command = {
         } else {
             await api.log.replySuccess(api, 'Wysłano sygnał restartu!', 'JustBOT za chwilę powinien wstać ponownie. Niestety komenda nie została wywołana używając prefix commands, więc nie mogę Ci wyświetlić kiedy dokładnie powrócę do życia (sprawdź to sam).')
         }
-        
+
         output.log('Shutting down... (reason: restart command)');
         process.exit(1);
     },

@@ -1,8 +1,8 @@
 import { getRandomInt } from '@/util/math/rand.ts';
 
 import { Command } from '@/bot/command.ts';
-import { CommandFlags } from '@/bot/apis/commands/misc.ts';
-import { CommandAPI } from '@/bot/apis/commands/api.ts';
+import { CommandFlags } from '@/bot/command/misc.ts';
+import { CommandAPI } from '@/bot/command/api.ts';
 
 import Money from '@/util/money.ts';
 
@@ -83,7 +83,7 @@ const workCmd: Command = {
 
     async execute(api: CommandAPI) {
         const result = await api.checkCooldown('work', CooldownMs);
-        if (!result.can) { 
+        if (!result.can) {
             return api.log.replyWarn(api, 'Nie możesz jeszcze!', `Dopiero ${result.discordTime} odblokuje się możliwość ponownego spamienia sobie hajsu do portfela.`);
         }
 

@@ -7,7 +7,7 @@ import canExecuteCmd from '@/util/cmd/can-execute.ts';
 
 import * as dsc from 'discord.js';
 import { ReplyEmbed } from '@/bot/apis/translations/reply-embed.ts';
-import { CommandFlags } from '@/bot/apis/commands/misc.ts';
+import { CommandFlags } from '@/bot/command/misc.ts';
 
 const commandsCmd: Command = {
     name: 'commands',

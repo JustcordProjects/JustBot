@@ -1,7 +1,7 @@
 import { cfg } from '@/bot/cfg.ts';
 import { Command, CommandAPI } from '@/bot/command.ts';
-import { CommandFlags } from '@/bot/apis/commands/misc.ts';
-import { CommandPermissions } from '@/bot/apis/commands/permissions.ts';
+import { CommandFlags } from '@/bot/command/misc.ts';
+import { CommandPermissions } from '@/bot/command/permissions.ts';
 import { client } from '@/client.ts';
 import { output } from '@/bot/logging.ts';
 import { db } from '@/bot/apis/db/bot-db.ts';

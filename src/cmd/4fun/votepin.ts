@@ -1,6 +1,6 @@
 import { Command } from '@/bot/command.ts';
-import { CommandFlags } from '@/bot/apis/commands/misc.ts';
-import { CommandPermissions } from '@/bot/apis/commands/permissions.ts';
+import { CommandFlags } from '@/bot/command/misc.ts';
+import { CommandPermissions } from '@/bot/command/permissions.ts';
 import { mkMessageReferenceEmbed } from '@/bot/templates/message-reference.ts';
 import { PredefinedColors } from '@/util/color.ts';
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType, Message } from 'discord.js';

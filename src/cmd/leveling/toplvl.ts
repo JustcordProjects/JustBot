@@ -4,7 +4,7 @@ import { cfg } from '@/bot/cfg.ts';
 import { lvlRoles } from '@/bot/level.ts';
 
 import { Command } from '@/bot/command.ts';
-import { CommandFlags } from '@/bot/apis/commands/misc.ts';
+import { CommandFlags } from '@/bot/command/misc.ts';
 import { output } from '@/bot/logging.ts';
 import { ReplyEmbed } from '@/bot/apis/translations/reply-embed.ts';
 

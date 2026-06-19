@@ -4,8 +4,8 @@ import { cfg } from '@/bot/cfg.ts';
 
 import { PredefinedColors } from '@/util/color.ts';
 import { Command } from '@/bot/command.ts';
-import { CommandFlags } from '@/bot/apis/commands/misc.ts';
-import { CommandAPI } from '@/bot/apis/commands/api.ts';
+import { CommandFlags } from '@/bot/command/misc.ts';
+import { CommandAPI } from '@/bot/command/api.ts';
 import { levelToXp, mkLvlProgressBar, xpToLevel } from '@/bot/level.ts';
 import { output } from '@/bot/logging.ts';
 import { ReplyEmbed } from '@/bot/apis/translations/reply-embed.ts';

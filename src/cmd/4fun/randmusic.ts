@@ -1,5 +1,5 @@
 import { Command } from '@/bot/command.ts';
-import { CommandFlags } from '@/bot/apis/commands/misc.ts';
+import { CommandFlags } from '@/bot/command/misc.ts';
 import { db, MusicEntry } from '@/bot/apis/db/bot-db.ts';
 
 const randmusicCmd: Command = {

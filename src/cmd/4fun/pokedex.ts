@@ -1,5 +1,5 @@
 import { Command } from '@/bot/command.ts';
-import { CommandFlags } from '@/bot/apis/commands/misc.ts';
+import { CommandFlags } from '@/bot/command/misc.ts';
 
 import pokedex from '@/bot/apis/pokedex/pokedex.ts';
 
@@ -64,18 +64,18 @@ const pokedexCmd: Command = {
                 .setDescription(`Typ: **${types}**`)
                 .setThumbnail(pokemon.sprites.front_default ?? '')
                 .addFields([
-                    { 
-                        name: 'Wymiary', 
+                    {
+                        name: 'Wymiary',
                         value: [
                             `**Wzrost:** ${pokemon.height * 10}cm`,
                             `**Waga:**   ${pokemon.weight / 10}kg`,
                         ].join('\n'),
-                        inline: true 
+                        inline: true
                     },
-                    { 
-                        name: 'Statystyki', 
-                        value: stats, 
-                        inline: true 
+                    {
+                        name: 'Statystyki',
+                        value: stats,
+                        inline: true
                     }
                 ])
                 .setColor(color);
@@ -93,4 +93,3 @@ const pokedexCmd: Command = {
 };
 
 export default pokedexCmd;
-

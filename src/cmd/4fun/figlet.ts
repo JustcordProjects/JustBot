@@ -1,7 +1,7 @@
 import * as chars from '@/util/chars.ts';
 
 import { Command } from '@/bot/command.ts';
-import { CommandFlags } from '@/bot/apis/commands/misc.ts';
+import { CommandFlags } from '@/bot/command/misc.ts';
 
 import figlet from 'figlet';
 import { ReplyEmbed } from '@/bot/apis/translations/reply-embed.ts';

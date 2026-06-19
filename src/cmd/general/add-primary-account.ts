@@ -1,6 +1,6 @@
 import { Command } from '@/bot/command.ts';
-import { CommandFlags } from '@/bot/apis/commands/misc.ts';
-import { CommandPermissions } from '@/bot/apis/commands/permissions.ts';
+import { CommandFlags } from '@/bot/command/misc.ts';
+import { CommandPermissions } from '@/bot/command/permissions.ts';
 
 import * as dsc from 'discord.js';
 import { db } from '@/bot/apis/db/bot-db.ts';

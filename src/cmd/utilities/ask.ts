@@ -1,5 +1,5 @@
-import { CommandFlags } from '@/bot/apis/commands/misc.ts';
-import { CommandPermissions } from '@/bot/apis/commands/permissions.ts';
+import { CommandFlags } from '@/bot/command/misc.ts';
+import { CommandPermissions } from '@/bot/command/permissions.ts';
 import { cfg } from '@/bot/cfg.ts';
 import { Command } from '@/bot/command.ts';
 import { executeAsk } from '../../features/ei/ask.ts';

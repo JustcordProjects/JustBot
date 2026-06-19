@@ -1,5 +1,5 @@
 import { Command } from '@/bot/command.ts';
-import { CommandFlags } from '@/bot/apis/commands/misc.ts';
+import { CommandFlags } from '@/bot/command/misc.ts';
 import { PredefinedColors } from '@/util/color.ts';
 import { ReplyEmbed } from '@/bot/apis/translations/reply-embed.ts';
 import { MinimalActionsFormatter } from '@/bot/apis/economy/format.ts';

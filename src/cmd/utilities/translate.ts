@@ -1,6 +1,6 @@
 import { Command } from '@/bot/command.ts';
-import { CommandFlags } from '@/bot/apis/commands/misc.ts';
-import { CommandPermissions } from '@/bot/apis/commands/permissions.ts';
+import { CommandFlags } from '@/bot/command/misc.ts';
+import { CommandPermissions } from '@/bot/command/permissions.ts';
 
 import { translate } from '@vitalets/google-translate-api';
 import logError from '@/util/log-error.ts';
@@ -50,7 +50,7 @@ const translateCmd: Command = {
         const optsString = api.getTypedArg('opts', 'string').value;
         const text = api.getTypedArg('text', 'string').value;
         const opts = parseOpts(optsString);
-        
+
         if (opts.to && opts.to == opts.from) {
             return api.log.replyError(api, 'Co to ma być?', 'Wydaje się że tłumaczysz z języka x na język x? To nie ma sensu? Dlaczego tłumaczysz z jednego języka na ten sam?');
         }
@@ -68,7 +68,7 @@ const translateCmd: Command = {
 
         try {
             const result = await translate(text, { to: opts.to, from: opts.from });
-            
+
             if (result.text.trim() == text.trim()) {
                 return api.log.replyWarn(api, 'Ten sam tekst', 'Po tłumaczeniu wyszedł ten sam tekst co wkleiłeś. Prawdopodobnie w języku do którego tłumaczysz ma on takie sao odzwierciedlenie.');
             }
@@ -88,4 +88,3 @@ const translateCmd: Command = {
 };
 
 export default translateCmd;
-

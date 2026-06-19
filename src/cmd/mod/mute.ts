@@ -1,7 +1,7 @@
 import * as dsc from 'discord.js';
 
 import { Command } from '@/bot/command.ts';
-import { CommandFlags } from '@/bot/apis/commands/misc.ts';
+import { CommandFlags } from '@/bot/command/misc.ts';
 import { cfg } from '@/bot/cfg.ts';
 import { PredefinedColors } from '@/util/color.ts';
 import { Hour, Timestamp } from '@/util/parse-timestamp.ts';
@@ -10,7 +10,7 @@ import mute from '@/bot/apis/mod/muting.ts';
 import { watchMute } from '@/bot/watchdog.ts';
 import { sendLog } from '@/bot/apis/log/send-log.ts';
 import { ReplyEmbed } from '@/bot/apis/translations/reply-embed.ts';
-import { CommandPermissions } from '@/bot/apis/commands/permissions.ts';
+import { CommandPermissions } from '@/bot/command/permissions.ts';
 
 const muteCmd: Command = {
     name: 'mute',
@@ -61,7 +61,7 @@ const muteCmd: Command = {
             );
         }
 
-        if (!reason) 
+        if (!reason)
             reason = 'Moderator nie poszczycił się znajomością komendy i nie podał powodu... Ale moze to i lepiej...';
 
         await mute(targetUser, { reason, duration: (duration ?? 1) * 1000 });

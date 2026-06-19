@@ -1,7 +1,7 @@
 import { getRandomInt } from '@/util/math/rand.ts';
 
 import { Command } from '@/bot/command.ts';
-import { CommandFlags } from '@/bot/apis/commands/misc.ts';
+import { CommandFlags } from '@/bot/command/misc.ts';
 import { ReplyEmbed } from '@/bot/apis/translations/reply-embed.ts';
 
 import Money from '@/util/money.ts';
@@ -79,8 +79,8 @@ const crimeCmd: Command = {
 
         if (balance.wallet.lessThanOrEqual(minBalance)) {
             return api.log.replyError(
-                api, 
-                'Ta możliwość jest zablokowana!', 
+                api,
+                'Ta możliwość jest zablokowana!',
                 `Z racji, iż mógłbyś się zadłużyć i nie móc z tego wyjść potem bez resetu ekonomii, dokonywanie przestępstw jest dozwolone tylko, jeżeli masz więcej niż ${minBalance.format()}.`
             );
         }

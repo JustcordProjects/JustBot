@@ -6,7 +6,7 @@ import * as dsc from 'discord.js';
 import * as log from '@/util/log.ts';
 
 import { cfg } from '@/bot/cfg.ts';
-import { CommandFlags } from '@/bot/apis/commands/misc.ts';
+import { CommandFlags } from '@/bot/command/misc.ts';
 import { client } from '../../client.ts';
 import { commands } from '../../cmd/list.ts';
 import { handleError } from './helpers/error-handler.ts';

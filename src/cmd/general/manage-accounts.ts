@@ -1,6 +1,6 @@
 import { Command } from '@/bot/command.ts';
-import { CommandFlags } from '@/bot/apis/commands/misc.ts';
-import { CommandPermissions } from '@/bot/apis/commands/permissions.ts';
+import { CommandFlags } from '@/bot/command/misc.ts';
+import { CommandPermissions } from '@/bot/command/permissions.ts';
 import { ReplyEmbed } from '@/bot/apis/translations/reply-embed.ts';
 import { PredefinedColors } from '@/util/color.ts';
 import { client } from '@/client.ts';
@@ -13,7 +13,7 @@ import User from '@/bot/apis/db/user.ts';
 function getMainAccount(id: string) {
     try {
         return client.users.fetch(id);
-    } catch { 
+    } catch {
         return null;
     }
 }
@@ -47,7 +47,7 @@ const manageAccountsCmd: Command = {
                         'Oto wszystkie konta, które połączyłeś w naszym rewolucyjnym bocie. Współdzielisz pomiędzy nimi pieniądze na ekonomii, poziom i dużo różnego rodzaju stanu.',
                         '',
                         `**Główne konto:** \`${main_account?.username ?? 'nieznane'}\``,
-                        alternative_accounts.length > 0 
+                        alternative_accounts.length > 0
                             ? `**Twoje multikonta:** \`${alternative_accounts.map((a) => a.username).join('`, `')}\``
                             : '**Nie posiadasz multikont.** Możesz je dodać za pomocą komendy `add-primary-account`.'
                     ].join('\n'))
@@ -66,11 +66,11 @@ const manageAccountsCmd: Command = {
                             .setLabel('Opuść grupę')
                     ])
             ]
-        }); 
+        });
 
         const filter = (i: ButtonInteraction | StringSelectMenuInteraction) => [...alternative_accounts, main_account].filter(Boolean).map(u => u!.id).includes(i.user.id);
         const collector = msg.createMessageComponentCollector<ComponentType.Button | ComponentType.StringSelect>({ filter, time: 90000 });
-        
+
         collector.on('collect', async (i) => {
             if (i.customId !== 'add-external-account-user-sel') i.deferUpdate();
 
@@ -85,8 +85,8 @@ const manageAccountsCmd: Command = {
 
             if (i.customId == 'leave-group' && i.isButton()) {
                 if (api.executor.id == i.user.id) {
-                    return await msg.edit({ embeds: [ 
-                        api.log.getErrorEmbed('Masz problem', 'Jako główne konto nie możesz opuścić grupy multikont. Najpierw musisz przenieść tę pozycję na inne konto.') 
+                    return await msg.edit({ embeds: [
+                        api.log.getErrorEmbed('Masz problem', 'Jako główne konto nie możesz opuścić grupy multikont. Najpierw musisz przenieść tę pozycję na inne konto.')
                     ], components: [] })
                 }
 
@@ -107,7 +107,7 @@ const manageAccountsCmd: Command = {
                                     .setLabel('Anuluj')
                             ])
                     ]
-                }) 
+                })
             } else if (i.customId == 'leave-group-final' && i.isButton()) {
                 db.runSql("DELETE FROM alternative_accounts WHERE alternative_account = ?", [i.user.id]);
 
@@ -130,33 +130,33 @@ const manageAccountsCmd: Command = {
                                 new StringSelectMenuBuilder()
                                     .setPlaceholder('Wybierz konto')
                                     .setCustomId('move-primary-selected')
-                                    .setOptions(alternative_accounts.map((ac) => { return { label: ac.displayName, description: `${ac.username} (id: ${ac.id})`, value: ac.id }; }))       
+                                    .setOptions(alternative_accounts.map((ac) => { return { label: ac.displayName, description: `${ac.username} (id: ${ac.id})`, value: ac.id }; }))
                             ])
                     ]
-                });                
+                });
             } else if (i.customId == 'cancel' && i.isButton()) {
                 return await msg.edit({
                     embeds: [ api.log.getWarnEmbed('Anulowano', 'Operacja nie została zfinalizowana.') ],
                     components: []
                 });
-            } else if (i.customId == 'move-primary-selected' && i.isStringSelectMenu()) { 
+            } else if (i.customId == 'move-primary-selected' && i.isStringSelectMenu()) {
                 db.transaction(async () => {
                     const old_primary = api.executor;
-                    
+
                     // removing records
                     db.runSql("UPDATE alternative_accounts SET primary_account = ? WHERE primary_account = ?", [ i.values[0], old_primary.id ]);
                     db.runSql("UPDATE alternative_accounts SET alternative_account = ? WHERE primary_account = ? AND alternative_account = ?", [ old_primary.id, i.values[0], i.values[0] ]);
 
                     const new_primary = new User(i.values[0]);
 
-                    // updating data 
+                    // updating data
                     await new_primary.leveling.addXP(await old_primary.leveling.getXP());
                     await addLvlRole(api.guild!, xpToLevel(await new_primary.leveling.getXP()), i.user.id);
                     const economy_balance = await old_primary.economy.getBalance();
                     new_primary.economy.addBankMoney(economy_balance.bank.add(economy_balance.wallet));
                     new_primary.prestige.addPoints(await old_primary.prestige.getPoints());
 
-                    // very scary 
+                    // very scary
                     await db.reset.all(old_primary.id);
                 });
 

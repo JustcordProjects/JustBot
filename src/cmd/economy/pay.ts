@@ -1,6 +1,6 @@
 import { Command } from '@/bot/command.ts';
-import { CommandFlags } from '@/bot/apis/commands/misc.ts';
-import { CommandPermissions } from '@/bot/apis/commands/permissions.ts';
+import { CommandFlags } from '@/bot/command/misc.ts';
+import { CommandPermissions } from '@/bot/command/permissions.ts';
 import { db } from '@/bot/apis/db/bot-db.ts';
 import User from '@/bot/apis/db/user.ts';
 
@@ -32,7 +32,7 @@ export default {
 
         if ((await api.executor.economy.getBalance()).wallet.lessThan(toPay)) {
             return api.log.replyError(api, 'Za mało kasy masz!', "Nie możesz wysłać tylu pieniędzy ponieważ jesteś biedakiem i nie masz.")
-        } 
+        }
 
         await db.transaction(async () => {
             await api.executor.economy.deductWalletMoney(toPay);

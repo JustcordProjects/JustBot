@@ -1,6 +1,6 @@
 import { Command } from '@/bot/command.ts';
-import { CommandFlags } from '@/bot/apis/commands/misc.ts';
-import { CommandPermissions } from '@/bot/apis/commands/permissions.ts';
+import { CommandFlags } from '@/bot/command/misc.ts';
+import { CommandPermissions } from '@/bot/command/permissions.ts';
 import { ReplyEmbed } from '@/bot/apis/translations/reply-embed.ts';
 import { PredefinedColors } from '@/util/color.ts';
 
@@ -47,13 +47,13 @@ const weatherCmd: Command = {
             }
         ).then((r) => r.text())
 
-        if (data.toLowerCase().startsWith('location not found')) 
+        if (data.toLowerCase().startsWith('location not found'))
             return await api.log.replyError(api, 'Zła ta lokalizacja', 'Mogę wiedzieć coś Ty podał? Wiesz że taka lokalizacja nie istnieje? Nie? No to teraz się dowiedziałeś...')
         else if (data.toLowerCase().includes('error'))
             return await api.log.replyError(api, 'Masz problem', 'Niestety pojawił się jakiś błąd i nie możemy Ci teraz wyświetlić pogody. To prawdopodobnie nie jest moja wina, więc idź krytykować za to twórcę API czy coś.')
 
         const result: typeof schema = JSON.parse(data);
-        
+
         await api.reply({ embeds: [
             new ReplyEmbed()
                 .setTitle(result.condition)

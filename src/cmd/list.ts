@@ -1,7 +1,7 @@
 import { Category, Command } from '@/bot/command.ts';
 import { output } from '@/bot/logging.ts';
 import logError from '@/util/log-error.ts';
-import { CommandPermissions } from '@/bot/apis/commands/permissions.ts';
+import { CommandPermissions } from '@/bot/command/permissions.ts';
 import { deepEqual } from '@/util/objects/objects.ts';
 import { cfg } from '@/bot/cfg.ts';
 

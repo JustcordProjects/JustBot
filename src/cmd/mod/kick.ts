@@ -2,11 +2,11 @@ import * as dsc from 'discord.js';
 import { output } from '@/bot/logging.ts';
 
 import { Command } from '@/bot/command.ts';
-import { CommandFlags } from '@/bot/apis/commands/misc.ts';
+import { CommandFlags } from '@/bot/command/misc.ts';
 import { PredefinedColors } from '@/util/color.ts';
 import kick from '@/bot/apis/mod/kicks.ts';
 import { ReplyEmbed } from '@/bot/apis/translations/reply-embed.ts';
-import { CommandPermissions } from '@/bot/apis/commands/permissions.ts';
+import { CommandPermissions } from '@/bot/command/permissions.ts';
 
 const kickCmd: Command = {
     name: 'kick',
@@ -31,7 +31,7 @@ const kickCmd: Command = {
             optional: true,
         },
     ],
-    permissions: CommandPermissions.headModPlus(), 
+    permissions: CommandPermissions.headModPlus(),
 
     async execute(api) {
         const targetUser = api.getTypedArg('user', 'user-mention').value as dsc.GuildMember;
@@ -41,7 +41,7 @@ const kickCmd: Command = {
             return api.log.replyError(api, 'Nie podano celu', 'Kolego, myślisz że ja sie sam domyślę komu ty chcesz dać kopniaka? Użycie: odpowiedzi na wiadomość lub !kick <@user> <powód>');
         }
 
-        if (!reason) 
+        if (!reason)
             reason = 'Moderator nie poszczycił się znajomością komendy i nie podał powodu... Ale moze to i lepiej...';
 
         try {

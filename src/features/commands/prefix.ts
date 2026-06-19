@@ -3,7 +3,7 @@ import * as dsc from 'discord.js';
 import { output } from '@/bot/logging.ts';
 
 import { cfg } from '@/bot/cfg.ts';
-import { CommandFlags } from '@/bot/apis/commands/misc.ts';
+import { CommandFlags } from '@/bot/command/misc.ts';
 import { commands } from '@/cmd/list.ts';
 
 import canExecuteCmd from '@/util/cmd/can-execute.ts';

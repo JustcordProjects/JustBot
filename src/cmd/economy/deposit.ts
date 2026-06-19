@@ -1,6 +1,6 @@
 import { Command, CommandAPI } from '@/bot/command.ts';
 import { output } from '@/bot/logging.ts';
-import { CommandFlags } from '@/bot/apis/commands/misc.ts';
+import { CommandFlags } from '@/bot/command/misc.ts';
 
 const depositCmd: Command = {
     name: 'deposit',

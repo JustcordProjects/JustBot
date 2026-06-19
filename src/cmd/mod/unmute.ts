@@ -1,6 +1,6 @@
 import { Command } from '@/bot/command.ts';
-import { CommandFlags } from '@/bot/apis/commands/misc.ts';
-import { CommandPermissions } from '@/bot/apis/commands/permissions.ts';
+import { CommandFlags } from '@/bot/command/misc.ts';
+import { CommandPermissions } from '@/bot/command/permissions.ts';
 import { PredefinedColors } from '@/util/color.ts';
 import { sendLog } from '@/bot/apis/log/send-log.ts';
 import { ReplyEmbed } from '@/bot/apis/translations/reply-embed.ts';
@@ -33,7 +33,7 @@ const unmuteCmd: Command = {
             return api.log.replyError(api, 'Nie podano celu', 'Kolego co ty myślisz że ja się sam domyślę, komu ty to chcesz zrobić? Zgadłeś - nie domyślę się. Więc bądź tak miły i podaj użytkownika, dla którego odpalasz tą komendę.');
         }
 
-        if (!reason) 
+        if (!reason)
             reason = 'Moderator nie poszczycił się znajomością komendy i nie podał powodu... Ale moze to i lepiej...';
 
         if (!targetUser.communicationDisabledUntilTimestamp || targetUser.communicationDisabledUntilTimestamp < Date.now()) {

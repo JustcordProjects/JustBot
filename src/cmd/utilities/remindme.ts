@@ -1,6 +1,6 @@
 import { Command } from '@/bot/command.ts';
-import { CommandFlags } from '@/bot/apis/commands/misc.ts';
-import { CommandPermissions } from '@/bot/apis/commands/permissions.ts';
+import { CommandFlags } from '@/bot/command/misc.ts';
+import { CommandPermissions } from '@/bot/command/permissions.ts';
 import { db } from '@/bot/apis/db/bot-db.ts';
 
 const remindMeCmd: Command = {
@@ -26,7 +26,7 @@ const remindMeCmd: Command = {
     ],
 
     async execute(api) {
-        const expires_at = api.getTypedArg('timestamp', 'timestamp').value * 1000 + Date.now(); 
+        const expires_at = api.getTypedArg('timestamp', 'timestamp').value * 1000 + Date.now();
         const reminder = api.getTypedArg('reminder', 'string').value;
 
         await db.reminders.addReminder(api.invoker.id, reminder, expires_at);

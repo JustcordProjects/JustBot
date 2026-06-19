@@ -1,11 +1,11 @@
 import { Command } from '@/bot/command.ts';
-import { CommandFlags } from '@/bot/apis/commands/misc.ts';
+import { CommandFlags } from '@/bot/command/misc.ts';
 import { db } from '@/bot/apis/db/bot-db.ts';
 import { PredefinedColors } from '@/util/color.ts';
 import { output } from '@/bot/logging.ts';
 import { sendLog } from '@/bot/apis/log/send-log.ts';
 import { ReplyEmbed } from '@/bot/apis/translations/reply-embed.ts';
-import { CommandPermissions } from '@/bot/apis/commands/permissions.ts';
+import { CommandPermissions } from '@/bot/command/permissions.ts';
 
 const warnClearCmd: Command = {
     name: 'warn-clear',

@@ -1,5 +1,5 @@
 import { Command } from '@/bot/command.ts';
-import { CommandFlags } from '@/bot/apis/commands/misc.ts';
+import { CommandFlags } from '@/bot/command/misc.ts';
 import { PredefinedColors } from '@/util/color.ts';
 import { cfg } from '@/bot/cfg.ts';
 
@@ -8,7 +8,7 @@ import canExecuteCmd from '@/util/cmd/can-execute.ts';
 
 import { Category } from '@/bot/command.ts';
 import { ReplyEmbed } from '@/bot/apis/translations/reply-embed.ts';
-import { CommandPermissions } from '@/bot/apis/commands/permissions.ts';
+import { CommandPermissions } from '@/bot/command/permissions.ts';
 
 const manCmd: Command = {
     name: 'man',

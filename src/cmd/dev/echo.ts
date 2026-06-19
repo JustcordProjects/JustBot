@@ -1,6 +1,6 @@
 import { cfg } from '@/bot/cfg.ts';
 import { Command } from '@/bot/command.ts';
-import { CommandFlags } from '@/bot/apis/commands/misc.ts';
+import { CommandFlags } from '@/bot/command/misc.ts';
 
 const echoCmd: Command = {
     name: 'echo',

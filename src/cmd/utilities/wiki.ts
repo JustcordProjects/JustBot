@@ -1,6 +1,6 @@
 import { Command, CommandAPI } from '@/bot/command.ts';
-import { CommandFlags } from '@/bot/apis/commands/misc.ts';
-import { CommandPermissions } from '@/bot/apis/commands/permissions.ts';
+import { CommandFlags } from '@/bot/command/misc.ts';
+import { CommandPermissions } from '@/bot/command/permissions.ts';
 import { PredefinedColors } from '@/util/color.ts';
 import * as dsc from 'discord.js';
 import getWikiArticle from '@/bot/apis/wiki/wiki.ts';
@@ -38,7 +38,7 @@ const wikiCmd: Command = {
     ],
 
     execute: async (api: CommandAPI) => {
-        const query = api.getTypedArg('query', 'string').value as string; 
+        const query = api.getTypedArg('query', 'string').value as string;
 
         const msg = await api.log.replyTip(
             api,
@@ -46,7 +46,7 @@ const wikiCmd: Command = {
             'Z powodu na powolność Wikipedii to może to chwilę potrwać byś dostał odpowiedź.',
         );
 
-        const result = await getWikiArticle(query); 
+        const result = await getWikiArticle(query);
         if (result.success == false) {
             return await replyAIModelErr(
                 result.reason == "ai-ignore"
@@ -77,7 +77,7 @@ const wikiCmd: Command = {
                         thumbnail: result.thumbnail
                             ? {
                                 height: result.thumbnail.height, width: result.thumbnail.width, url: result.thumbnail.source
-                            } 
+                            }
                             : undefined,
                         footer: result.usedAi ? { text: "Ponieważ na Wikipedii nie ma artykułu o tej nazwie, ta definicja pochodzi od AI. Sprawdź ważne fakty samodzielnie." } : undefined
                     }

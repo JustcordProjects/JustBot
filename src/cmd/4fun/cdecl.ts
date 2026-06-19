@@ -1,5 +1,5 @@
 import { Command } from '@/bot/command.ts';
-import { CommandFlags } from '@/bot/apis/commands/misc.ts';
+import { CommandFlags } from '@/bot/command/misc.ts';
 
 import cdecl from '@/bot/apis/cdecl/cdecl.ts';
 

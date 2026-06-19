@@ -1,9 +1,9 @@
 import * as dsc from 'discord.js';
 
 import { Command } from '@/bot/command.ts';
-import { CommandFlags } from '@/bot/apis/commands/misc.ts';
-import { CommandPermissions } from '@/bot/apis/commands/permissions.ts';
-import { CommandAPI } from '@/bot/apis/commands/api.ts';
+import { CommandFlags } from '@/bot/command/misc.ts';
+import { CommandPermissions } from '@/bot/command/permissions.ts';
+import { CommandAPI } from '@/bot/command/api.ts';
 
 const clearCmd: Command = {
     name: 'clear',
@@ -36,7 +36,7 @@ const clearCmd: Command = {
 
         if (amount > 98 || amount < 0) {
             return api.log.replyError(api, 'Zła ta liczba', 'Maksymalnie wolno usunąć 98 wiadomości, a minimalnie to musisz choć jedną dać.')
-        } 
+        }
 
         await api.log.replyInfo(api, 'Proszę', 'Aktualnie zaczynam się tym zajmować.');
 

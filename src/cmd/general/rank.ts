@@ -1,5 +1,5 @@
 import { Command } from '@/bot/command.ts';
-import { CommandFlags } from '@/bot/apis/commands/misc.ts';
+import { CommandFlags } from '@/bot/command/misc.ts';
 
 import { db } from '@/bot/apis/db/bot-db.ts';
 import User from '@/bot/apis/db/user.ts';
@@ -46,7 +46,7 @@ export const rankCmd: Command = {
         api.reply({
             embeds: [
                 (api.log.getInfoEmbed(
-                    'Twoje miejsce w rankingach', 
+                    'Twoje miejsce w rankingach',
                     `Aktualnie znajdujesz się:\n` +
                     `- na miejscu **${index_lvl + 1}** w rankingu poziomów\n` +
                     `- na miejscu **${index_rep + 1}** w rankingu prestiżu\n` +
