@@ -13,7 +13,7 @@ export default async function ban(
         await member.send({
             embeds: [
                 new ReplyEmbed()
-                    .setTitle('📢 Zostałeś zbanowany z serwera Piekarnia eklerki!')
+                    .setTitle('📢 Zostałeś zbanowany z serwera Justcord!')
                     .setDescription(`To straszne wiem. Powód bana brzmi: ${data.reason}\nAle jesteśmy mili. Możesz wysłać email do \`justcord3105@gmail.com\` by sie z nami skontaktować; emaile są forwardowane na kanał dla administracji, więc są czytane czy coś`)
                     .setColor(PredefinedColors.Orange),
             ],

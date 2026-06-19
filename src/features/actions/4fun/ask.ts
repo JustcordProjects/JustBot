@@ -30,7 +30,7 @@ export const askAction: Action<MessageEventCtx> = {
         },
         (ctx) =>
             !ctx.content.trim().startsWith('\\') &&
-            !ctx.content.trim().startsWith('eb-ignore '),
+            !ctx.content.trim().startsWith('jb-ignore '),
         (ctx) =>
             ![cfg.commands.prefix, ...cfg.commands.alternativePrefixes].some((p) => ctx.content.startsWith(p))
     ],
