@@ -1,4 +1,4 @@
-import EconomyConfig from '@/bot/definitions/config/economy.ts';
+import EconomyConfig from '@/bot/config/schema/economy.ts';
 import { PredefinedColors } from '@/util/color.ts';
 
 export const economyCfg: EconomyConfig = {
@@ -30,7 +30,7 @@ export const economyCfg: EconomyConfig = {
                         op: 'add-money',
                         amount: 500
                     }
-                ], 
+                ],
                 multipliers: [
                     {
                         multiplier: 1.1,
@@ -51,7 +51,7 @@ export const economyCfg: EconomyConfig = {
                         op: 'add-money',
                         amount: 1500
                     }
-                ], 
+                ],
                 multipliers: [
                     {
                         multiplier: 1.3,
@@ -99,7 +99,7 @@ export const economyCfg: EconomyConfig = {
             name: "Hall of Shame access",
             desc: "W końcu odblokujesz dostęp do Hall of Shame bez wydawania hajsu na boosty!",
             price: 400_000,
-            buyOnce: true, 
+            buyOnce: true,
             onBuy: [
                 {
                     op: 'add-role', roleId: 'cheat-hall-of-shame'

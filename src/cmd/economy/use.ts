@@ -5,7 +5,7 @@ import { PredefinedColors } from '@/util/color.ts';
 import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
 import { output } from '@/bot/logging.ts';
 
-import { ConfigEconomyAction } from '@/bot/definitions/config/economy.ts';
+import { ConfigEconomyAction } from '@/bot/config/schema/economy.ts';
 import Money from '@/util/money.ts';
 import { formatEmoji } from 'discord.js';
 import { cfg } from '@/bot/cfg.ts';

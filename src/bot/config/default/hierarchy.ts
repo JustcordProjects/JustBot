@@ -1,4 +1,4 @@
-import { Config } from '@/bot/definitions/config/config.ts';
+import { Config } from '@/bot/config/schema/config.ts';
 
 export const hierarchyCfg: Config['hierarchy'] = {
     developers: {

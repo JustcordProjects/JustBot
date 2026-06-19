@@ -2,7 +2,7 @@ import * as dsc from 'discord.js';
 
 import { Command } from '@/bot/command.ts';
 import { CommandFlags } from '@/bot/command/misc.ts';
-import { BlockCommandsRules } from '@/bot/definitions/config/subtypes.ts';
+import { BlockCommandsRules } from '@/bot/config/schema/subtypes.ts';
 import { cfg } from '@/bot/cfg.ts';
 
 function isBlockedByRules(id: dsc.Snowflake, rules: BlockCommandsRules): boolean {

@@ -1,4 +1,4 @@
-import { ConfigEconomyAction, ConfigEconomyCond } from '@/bot/definitions/config/economy.ts';
+import { ConfigEconomyAction, ConfigEconomyCond } from '@/bot/config/schema/economy.ts';
 import { EconomyExecutor } from './action.ts';
 
 import Money from '@/util/money.ts';

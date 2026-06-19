@@ -2,8 +2,8 @@ import JSON5 from 'json5';
 
 import { deepMerge } from '@/util/objects/objects.ts';
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
-import { Config } from './definitions/config/config.ts';
-import { defaultCfg } from './default/config/index.ts';
+import { Config } from './config/schema/config.ts';
+import { defaultCfg } from './config/default/index.ts';
 
 export let overrideCfg: Partial<Config> = {};
 

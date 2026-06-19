@@ -1,4 +1,4 @@
-import { ConfigEconomyAction, ConfigEconomyCond, ConfigEconomyMultiplierKind, ConfigEconomyRandomVariant, ConfigEconomyRole } from '@/bot/definitions/config/economy.ts';
+import { ConfigEconomyAction, ConfigEconomyCond, ConfigEconomyMultiplierKind, ConfigEconomyRandomVariant, ConfigEconomyRole } from '@/bot/config/schema/economy.ts';
 import { cfg } from '@/bot/cfg.ts';
 
 import * as dsc from 'discord.js';
