@@ -2,12 +2,13 @@ import * as dsc from 'discord.js';
 
 import User from './apis/db/user.ts';
 
-import { cfg } from '@/bot/cfg.ts';
 import actionsManager, { Action } from '@/features/actions/index.ts';
-import { client } from '@/client.ts';
 import { mkProgressBar } from '@/util/progressbar.ts';
+import { findLowerClosestKey } from '@/util/objects/lower-closest-key.ts';
+
+import { cfg } from '@/bot/cfg.ts';
+import { client } from '@/client.ts';
 import { output } from './logging.ts';
-import { findLowerClosestKey } from '@/util/objects/findLowerClosestKey.ts';
 
 export const OnSetXpEvent = actionsManager.mkEvent('OnSetXpEvent');
 export interface XpEventCtx {
@@ -117,7 +118,7 @@ export async function addExperiencePoints(msg: dsc.OmitPartialGroupDMChannel<dsc
         [cfg.commands.prefix, ...cfg.commands.alternativePrefixes]
             .some((p) => msg.content.startsWith(p))
     ) return;
-    
+
     // amount
     const amount = computeLevelForMessage(msg);
 
@@ -229,7 +230,7 @@ export async function addVoiceExperience() {
         // add experience
         for (const user of channel_users) {
             const xp = cfg.features.leveling.voice.xpPerMinute;
-            
+
             const all_user_accounts = [user.id, ...(await user.fetchAlternativeAccounts())];
             const member = channel_members.find((cm) => all_user_accounts.includes(cm.id))!;
             if (member.voice.selfMute || member.voice.selfDeaf) {

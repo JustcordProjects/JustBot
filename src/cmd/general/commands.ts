@@ -3,11 +3,11 @@ import { cfg } from '@/bot/cfg.ts';
 
 import { PredefinedColors } from '@/util/color.ts';
 import capitalizeFirst from '@/util/capitalize-first.ts';
-import canExecuteCmd from '@/util/cmd/canExecuteCmd.ts';
+import canExecuteCmd from '@/util/cmd/can-execute.ts';
 
 import * as dsc from 'discord.js';
 import { ReplyEmbed } from '@/bot/apis/translations/reply-embed.ts';
-import { CommandFlags } from '../../bot/apis/commands/misc.ts';
+import { CommandFlags } from '@/bot/apis/commands/misc.ts';
 
 const commandsCmd: Command = {
     name: 'commands',

@@ -1,10 +1,12 @@
 import { Command } from '@/bot/command.ts';
+import { CommandAPI } from '@/bot/apis/commands/api.ts';
 import { CommandFlags } from '@/bot/apis/commands/misc.ts';
 import { CommandPermissions } from '@/bot/apis/commands/permissions.ts';
-import { addLvlRole, xpToLevel } from '@/bot/level.ts';
-import actionsManager, { OnForceReloadTemplates } from '@/events/actions/templatesEvents.ts';
-import { CommandAPI } from '@/bot/apis/commands/api.ts';
+
+import actionsManager, { OnForceReloadTemplates } from '@/events/actions/templates-events.ts';
+
 import { scanChannelForMusic } from '@/features/scan-for-music.ts';
+import { addLvlRole, xpToLevel } from '@/bot/level.ts';
 import { cfg } from '@/bot/cfg.ts';
 import { db } from '@/bot/apis/db/bot-db.ts';
 

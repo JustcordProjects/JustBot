@@ -1,4 +1,5 @@
-import { output as debug } from '@/bot/logging.ts';
+import { output } from '@/bot/logging.ts';
+import process from 'node:process';
 
 import { Interaction } from 'discord.js';
 import * as dsc from 'discord.js';
@@ -14,14 +15,13 @@ import { makeSlashCommandDesc, makeSlashCommandOptionDesc } from './helpers/make
 import { formatArgType } from './helpers/fmt-arg-type.ts';
 
 import findCommand from '@/util/cmd/find-command.ts';
-import canExecuteCmd from '@/util/cmd/canExecuteCmd.ts';
-import isCommandBlockedOnChannel from '@/util/cmd/isCommandBlockedOnChannel.ts';
-import process from 'node:process';
+import canExecuteCmd from '@/util/cmd/can-execute.ts';
+import isCommandBlockedOnChannel from '@/util/cmd/is-blocked.ts';
 
 import { ParsedRawArgument } from './helpers/argument-parser.ts';
 import { ReplyEmbed } from '@/bot/apis/translations/reply-embed.ts';
 import { PredefinedColors } from '@/util/color.ts';
-import { CommandArgType } from '../../bot/command.ts';
+import { CommandArgType } from '@/bot/command.ts';
 
 function waitForButton(int: dsc.ChatInputCommandInteraction, buttonId: string, time = 15000) {
     return new Promise((resolve, reject) => {
@@ -305,8 +305,8 @@ export async function init() {
             dsc.Routes.applicationCommands(client.application!.id),
             { body: commandsArray },
         );
-        debug.verbose('Slash commands registered');
+        output.verbose('Slash commands registered');
     } catch (err) {
-        debug.err('Slash commands error: ' + err);
+        output.err('Slash commands error: ' + err);
     }
 }

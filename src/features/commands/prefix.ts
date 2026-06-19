@@ -6,10 +6,10 @@ import { cfg } from '@/bot/cfg.ts';
 import { CommandFlags } from '@/bot/apis/commands/misc.ts';
 import { commands } from '@/cmd/list.ts';
 
-import canExecuteCmd from '@/util/cmd/canExecuteCmd.ts';
+import canExecuteCmd from '@/util/cmd/can-execute.ts';
 import findCommand from '@/util/cmd/find-command.ts';
 
-import isCommandBlockedOnChannel from '@/util/cmd/isCommandBlockedOnChannel.ts';
+import isCommandBlockedOnChannel from '@/util/cmd/is-blocked.ts';
 import actionsManager, { PredefinedActionEventTypes } from '../actions/index.ts';
 
 import { PredefinedColors } from '@/util/color.ts';
@@ -48,7 +48,7 @@ async function tempReaction(msg: dsc.Message, reaction: string) {
     const react = await msg.react(reaction);
     await sleep(2000);
     try {
-        await react.remove(); 
+        await react.remove();
     } catch {}
 }
 

@@ -1,7 +1,7 @@
-import { CommandFlags } from '../../bot/apis/commands/misc.ts';
-import { CommandPermissions } from '../../bot/apis/commands/permissions.ts';
-import { cfg } from '../../bot/cfg.ts';
-import { Command } from '../../bot/command.ts';
+import { CommandFlags } from '@/bot/apis/commands/misc.ts';
+import { CommandPermissions } from '@/bot/apis/commands/permissions.ts';
+import { cfg } from '@/bot/cfg.ts';
+import { Command } from '@/bot/command.ts';
 import { executeAsk } from '../../features/ei/ask.ts';
 
 const askCmd: Command = {

@@ -4,9 +4,10 @@ import { PredefinedColors } from '@/util/color.ts';
 import { cfg } from '@/bot/cfg.ts';
 
 import findCommand from '@/util/cmd/find-command.ts';
+import canExecuteCmd from '@/util/cmd/can-execute.ts';
+
 import { Category } from '@/bot/command.ts';
 import { ReplyEmbed } from '@/bot/apis/translations/reply-embed.ts';
-import canExecuteCmd from '@/util/cmd/canExecuteCmd.ts';
 import { CommandPermissions } from '@/bot/apis/commands/permissions.ts';
 
 const manCmd: Command = {
@@ -89,7 +90,7 @@ const manCmd: Command = {
                     `- **Kategoria:** ${category.name} ${category.emoji}`,
                     `- **Opisy**:`,
                     `  - **długi**: ${command.description.main}`,
-                    `  - **krótki**: ${command.description.short}`, 
+                    `  - **krótki**: ${command.description.short}`,
                     `- **Argumenty**: ${formattedArgs.length === 0 ? 'brak' : `\n${formattedArgs.map((a) => `  - ${a}`).join('\n')}`}`,
                     `- **Uprawnienia**: ${canUseCommand ? ':thumbsup: możesz użyć tej komendy' : ':thumbsdown: nie masz wymaganych uprawnień, by użyć tej komendy'}`,
                     ...( formattedAllowedRoles.length == 0 ? [] : [`  - **dozwolone role**: ${formattedAllowedRoles.join(', ')}`]),

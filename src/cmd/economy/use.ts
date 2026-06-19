@@ -8,7 +8,7 @@ import { output } from '@/bot/logging.ts';
 import { ConfigEconomyAction } from '@/bot/definitions/config/economy.ts';
 import Money from '@/util/money.ts';
 import { formatEmoji } from 'discord.js';
-import { cfg } from '../../bot/cfg.ts';
+import { cfg } from '@/bot/cfg.ts';
 
 export function formatAction(api: CommandAPI, action: ConfigEconomyAction): ReplyEmbed | null {
     const SuccessColor = PredefinedColors.Green;

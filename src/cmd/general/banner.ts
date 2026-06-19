@@ -1,8 +1,8 @@
 import { Command } from '@/bot/command.ts';
 import { CommandFlags } from '@/bot/apis/commands/misc.ts';
 
-import { ReplyEmbed } from '../../bot/apis/translations/reply-embed.ts';
-import { PredefinedColors } from '../../util/color.ts';
+import { ReplyEmbed } from '@/bot/apis/translations/reply-embed.ts';
+import { PredefinedColors } from '@/util/color.ts';
 
 const bannerCmd: Command = {
     name: 'banner',

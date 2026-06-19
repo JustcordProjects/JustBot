@@ -5,11 +5,11 @@ import { cfg } from '@/bot/cfg.ts';
 
 import { PredefinedColors } from '@/util/color.ts';
 import capitalizeFirst from '@/util/capitalize-first.ts';
-import canExecuteCmd from '@/util/cmd/canExecuteCmd.ts';
+import canExecuteCmd from '@/util/cmd/can-execute.ts';
 
 import * as dsc from 'discord.js';
 import { ReplyEmbed } from '@/bot/apis/translations/reply-embed.ts';
-import { Category } from '../../bot/categories.ts';
+import { Category } from '@/bot/categories.ts';
 
 function buildSelectMenu(commands: Map<Category, Command[]>): dsc.StringSelectMenuBuilder {
     return new dsc.StringSelectMenuBuilder()
@@ -136,7 +136,7 @@ const helpCmd: Command = {
             collector.on('collect', async (interaction: dsc.StringSelectMenuInteraction) => {
                 const chosenCategory = [...commands.keys()].find((c) => c.name === interaction.values[0]);
 
-                if (!chosenCategory) 
+                if (!chosenCategory)
                     return;
 
                 const cmds = commands.get(chosenCategory) ?? [];
@@ -160,7 +160,7 @@ const helpCmd: Command = {
 
         const val = argCategory.value;
         const categoriesToShow: Set<Category> = new Set();
- 
+
         const category = Category.fromString(val);
 
         if (!category) {

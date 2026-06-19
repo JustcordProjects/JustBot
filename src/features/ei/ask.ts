@@ -4,7 +4,7 @@ import * as reddit from '@/bot/apis/reddit/reddit.ts';
 import * as log from '@/util/log.ts';
 import * as dsc from 'discord.js';
 
-import { SystemPrompt } from '@/features/init-ai-models.ts';
+import { SystemPrompt } from '@/features/ei/models.ts';
 import { toolDeclarations } from '@/bot/apis/gemini/ask.ts';
 
 import { commands } from '@/cmd/list.ts';
@@ -24,7 +24,7 @@ export async function executeAsk(msg: dsc.Message, question: string, contextMsgs
                 'A tak po ludzku to poprostu ktoś nie dał api key do .env',
         );
     }
-    
+
     const model = gemini.getModel('ask-cmd');
     if (!model) {
         return log.replyError(msg, 'Błąd', 'Model nie został zainicjowany.');
@@ -373,7 +373,7 @@ export async function executeAsk(msg: dsc.Message, question: string, contextMsgs
     }
 
     const toolExecutionHistoryFormatted = JSON.stringify(toolExecutionHistory, null, 4);
-    
+
     output.verbose(` === BEGIN JustInteligence debug data for input: ${question}`);
     output.verbose(`JustInteligence final system prompt:\n\n${finalSystemInstruction}`);
     output.verbose(`JustInteligence tool calls:\n\n${toolExecutionHistoryFormatted}`);

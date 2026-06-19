@@ -35,8 +35,9 @@ import { actionPing } from '@/features/actions/4fun/ping-death-chat.ts';
 import { onReceivedEmailAction } from '@/features/actions/others/on-new-email.ts';
 
 // events
-import { registerChannelCreateDscEvents } from '@/events/client/channelCreate.ts';
-import { registerChannelDeleteDscEvents } from '@/events/client/channelDelete.ts';
+import { registerChannelCreateDscEvents } from '@/events/client/channel-create.ts';
+import { registerChannelDeleteDscEvents } from '@/events/client/channel-delete.ts';
+import { registerGuildUpdateDscEvents }   from '@/events/client/guild-update.ts';
 
 // commands
 import * as slashCommands from '@/features/commands/slash.ts';
@@ -60,7 +61,7 @@ import { initEmailActionsIntegration } from '@/bot/apis/email/actions.ts';
 import { getChannel } from '@/features/actions/channels/template-channels.ts';
 import { initStatusGenerator } from '@/util/generate-status-quote.ts';
 
-import { initAskCmdModel, initWikiModel } from '@/features/init-ai-models.ts';
+import { initAskCmdModel, initWikiModel } from '@/features/ei/models.ts';
 import { askAction } from '@/features/actions/4fun/ask.ts';
 import { addVoiceExperience } from '@/bot/level.ts';
 import { addMusicAction } from '@/features/actions/4fun/add-music.ts';
@@ -71,7 +72,6 @@ import { deleteMessageAction } from '@/features/actions/logs/delete-message.ts';
 import { reminderHandler } from '@/features/reminders.ts';
 import { autoUpdateAction } from './features/actions/others/auto-update.ts';
 import { pollsModerator } from '@/features/actions/mod/polls-mod.ts';
-import { registerGuildUpdateDscEvents } from '@/events/client/guildUpdate.ts';
 
 // --------------- INIT ---------------
 client.once('clientReady', async () => {
