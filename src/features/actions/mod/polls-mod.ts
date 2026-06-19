@@ -38,7 +38,7 @@ export const pollsModerator: Action<MessageEventCtx> = {
 
             if (!msg.poll && !msg.content) return;
 
-            await msg.reply('<@&1320034068322324660>');
+            await msg.reply('<@&1511009438994141194>');
 
             const thread = await msg.startThread({
                 name: randomElement(ThreadNames),
