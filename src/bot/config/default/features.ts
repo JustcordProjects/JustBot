@@ -132,6 +132,27 @@ export const featuresConfig: Config['features'] = {
         contextDefaultMessages: 15,
         contextMaxMessages: 30,
     },
+    contentDatabases: [
+        {
+            id: 'music',
+            channel: channelsCfg.other.music,
+            domains: [
+                'youtube.com',
+                'youtu.be',
+                'music.youtube.com',
+                'open.spotify.com',
+            ],
+        },
+        {
+            id: 'video',
+            channel: channelsCfg.general.media,
+            domains: [
+                'youtube.com',
+                'youtu.be',
+                'netflix.com', // lmao
+            ],
+        }
+    ],
     actions: {
         disabled: [],
     },

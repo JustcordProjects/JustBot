@@ -6,6 +6,7 @@ import { CommandAPI } from '@/bot/command/api.ts';
 import { db } from '@/apis/db/bot-db.ts';
 import { output } from '@/bot/logging.ts';
 import { getErrorEmbed, getSuccessEmbed, getWarnEmbed } from '@/util/log.ts';
+import { cfg } from '@/bot/cfg.ts';
 
 const resetCmd: Command = {
     name: 'reset',
@@ -77,27 +78,29 @@ const resetCmd: Command = {
             if (interaction.customId == 'reset-confirm') {
                 try {
                     switch (table) {
-                        case 'economy':
-                            await db.reset.economy(userId);
-                            break;
-                        case 'leveling':
-                            await db.reset.leveling(userId);
-                            break;
-                        case 'cooldowns':
-                            await db.reset.cooldowns(userId);
-                            break;
-                        case 'warns':
-                            await db.reset.warns(userId);
-                            break;
-                        case 'music':
-                            await db.reset.music(userId);
-                            break;
-                        case 'prestige':
-                            await db.reset.prestige(userId);
-                            break;
-                        case 'all':
-                            await db.reset.all(userId);
-                            break;
+                    case 'economy':
+                        await db.reset.economy(userId);
+                        break;
+                    case 'leveling':
+                        await db.reset.leveling(userId);
+                        break;
+                    case 'cooldowns':
+                        await db.reset.cooldowns(userId);
+                        break;
+                    case 'warns':
+                        await db.reset.warns(userId);
+                        break;
+                    case 'content':
+                        for (const cdb of cfg.features.contentDatabases) {
+                            await db.reset.content(cdb.id, userId);
+                        }
+                        break;
+                    case 'prestige':
+                        await db.reset.prestige(userId);
+                        break;
+                    case 'all':
+                        await db.reset.all(userId);
+                        break;
                     }
 
                     const scopeText = userId ? `dla użytkownika <@${userId}>` : 'dla WSZYSTKICH użytkowników';

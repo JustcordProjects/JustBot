@@ -1,5 +1,5 @@
 import * as dsc from 'discord.js';
-import { ConfigTranslation } from './subtypes.ts';
+import { ConfigTranslation, ContentConfig } from './subtypes.ts';
 import EconomyConfig from './economy.ts';
 
 export interface ConfigFeatures {
@@ -82,6 +82,7 @@ export interface ConfigFeatures {
         contextDefaultMessages: number;
         contextMaxMessages: number;
     };
+    contentDatabases: ContentConfig[];
     actions: {
         disabled: string[];
     };

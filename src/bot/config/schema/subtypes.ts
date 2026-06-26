@@ -23,9 +23,15 @@ export interface RegexExpressionDefinition {
     flags: `i` | undefined;
 }
 
-export interface ConfigCommandARgumentRulesForNumbers {
+export interface ConfigCommandArgumentRulesForNumbers {
     allowInfinity: boolean;
     onlyIntegers: boolean;
+}
+
+export interface ContentConfig {
+    id: string;
+    channel: dsc.Snowflake;
+    domains: string[];
 }
 
 export interface ConfigActivity {

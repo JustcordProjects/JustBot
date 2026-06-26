@@ -5,7 +5,7 @@ import { CommandPermissions } from '@/bot/command/permissions.ts';
 
 import actionsManager, { OnForceReloadTemplates } from '@/events/actions/templates-events.ts';
 
-import { scanChannelForMusic } from '@/features/scan-for-music.ts';
+import { contentDatabaseScan } from '@/features/cdb-scan.ts';
 import { addLvlRole, xpToLevel } from '@/bot/level.ts';
 import { cfg } from '@/bot/cfg.ts';
 import { db } from '@/apis/db/bot-db.ts';
@@ -41,11 +41,6 @@ const refreshCmd: Command = {
             return api.log.replyTip(api, 'Flagi komendy', 'Możesz użyć tych flag: `--no-template-channels`, `--no-lvl-roles`. Możesz je ze soba łączyć, o ile rozdzielisz je spacją. Kolejność nie ma znaczenia.');
         }
 
-        // checks
-        if (!api.guild) {
-            return api.log.replyWarn(api, 'Ta komenda wymaga serwera', 'Coś się wychrzaniło i JustBOT nie może go znaleźć.');
-        }
-
         // base reply
         const baseReply = await api.reply('Poczekaj...');
 
@@ -58,24 +53,26 @@ const refreshCmd: Command = {
         // lvl roles
         if (!flags.includes('--no-lvl-roles')) {
             for (const userLvlObj of await user.leveling.getEveryoneXPNoLimit()) {
-                await addLvlRole(api.guild, xpToLevel(userLvlObj.xp), userLvlObj.user_id);
+                await addLvlRole(api.guild!, xpToLevel(userLvlObj.xp), userLvlObj.user_id);
             }
             reloadedThings.push('- role poziomów');
         }
 
         if (!flags.includes('--no-music-db')) {
             try {
-                const channel = await api.guild.channels.fetch(cfg.channels.other.music);
-                if (channel?.isTextBased()) {
-                    const scanResult = await scanChannelForMusic(channel);
-                    db.music.clear();
-                    db.music.batchAddEntries(scanResult);
-                    reloadedThings.push('- server music database');
-                } else {
-                    failedThingsToReload.push('- server music database');
+                for (const cdb of cfg.features.contentDatabases) {
+                    const channel = await api.guild!.channels.fetch(cdb.channel);
+                    if (channel?.isTextBased()) {
+                        const scanResult = await contentDatabaseScan(channel, cdb);
+                        db.content.clear(cdb.id);
+                        db.content.batchAddEntries(scanResult);
+                        reloadedThings.push(`- server ${cdb.id} database`);
+                    } else {
+                        failedThingsToReload.push(`- server ${cdb.id} database`);
+                    }
                 }
             } catch {
-                failedThingsToReload.push('- server music database');
+                failedThingsToReload.push('- server content database');
             }
         }
 

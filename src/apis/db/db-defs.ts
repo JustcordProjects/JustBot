@@ -56,20 +56,23 @@ export function warnFromRaw(raw: WarnRaw): Warn {
     };
 }
 
-export interface MusicEntryRaw {
+export interface ContentEntryRaw {
+    key: string;
     author_id: string;
-    music_url: string;
+    content_url: string;
 }
 
-export interface MusicEntry {
+export interface ContentEntry {
+    key: string;
     authorId: string;
-    musicUrl: string;
+    contentUrl: string;
 }
 
-export function musicFromRaw(raw: MusicEntryRaw): MusicEntry {
+export function contentFromRaw(raw: ContentEntryRaw): ContentEntry {
     return {
         authorId: raw.author_id,
-        musicUrl: raw.music_url,
+        contentUrl: raw.content_url,
+        key: raw.key,
     };
 }
 

@@ -1,13 +1,13 @@
 import { DB, QueryParameterSet } from 'sqlite';
 
-import type { AIMemory, MusicEntry, MusicEntryRaw, Reminder, UserDataRaw, Warn, WarnRaw } from './db-defs.ts';
+import type { AIMemory, ContentEntry, ContentEntryRaw, Reminder, UserDataRaw, Warn, WarnRaw } from './db-defs.ts';
 
 import type { Balance, Cooldown, Cooldowns } from './db-defs.ts';
-import { musicFromRaw, warnFromRaw } from './db-defs.ts';
+import { contentFromRaw, warnFromRaw } from './db-defs.ts';
 
-export type { MusicEntry, MusicEntryRaw, UserDataRaw, Warn, WarnRaw };
+export type { ContentEntry, ContentEntryRaw, UserDataRaw, Warn, WarnRaw };
 export type { Balance, Cooldown, Cooldowns };
-export { musicFromRaw, warnFromRaw };
+export { contentFromRaw, warnFromRaw };
 
 import User from './user.ts';
 import { output } from '@/bot/logging.ts';
@@ -29,14 +29,14 @@ export class BotDatabase {
             CREATE TABLE IF NOT EXISTS users (
                 user_id TEXT PRIMARY KEY,
                 xp INTEGER DEFAULT 0,
-                
+
                 last_worked INTEGER DEFAULT 0,
                 last_robbed INTEGER DEFAULT 0,
                 last_slutted INTEGER DEFAULT 0,
                 last_crimed INTEGER DEFAULT 0,
                 last_collect_income INTEGER DEFAULT 0,
                 last_email_sent INTEGER DEFAULT 0,
-                
+
                 signature TEXT,
                 default_email_title TEXT,
 
@@ -94,9 +94,10 @@ export class BotDatabase {
                 PRIMARY KEY (primary_account, alternative_account)
             );
 
-            CREATE TABLE IF NOT EXISTS music_database (
+            CREATE TABLE IF NOT EXISTS content_database (
+                key TEXT NOT NULL,
                 author_id TEXT NOT NULL REFERENCES users(user_id),
-                music_url TEXT NOT NULL
+                content_url TEXT NOT NULL
             );
 
             CREATE TABLE IF NOT EXISTS ai_memories (
@@ -110,7 +111,7 @@ export class BotDatabase {
                 external_account TEXT NOT NULL,
                 PRIMARY KEY (discord_account, platform, external_account)
             );
-            
+
             CREATE TABLE IF NOT EXISTS reminders (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 for_user TEXT NOT NULL REFERENCES users(user_id),
@@ -127,7 +128,7 @@ export class BotDatabase {
             if (typeof p != "bigint") return p;
 
             let result = Number(p);
-            if (!Number.isSafeInteger(result)) { 
+            if (!Number.isSafeInteger(result)) {
                 output.warn("Invalid BigInt passed to processParams, params: " + params.join(', '));
                 result = Number.MAX_SAFE_INTEGER;
             }
@@ -223,7 +224,7 @@ export class BotDatabase {
     ): Promise<string[]> {
         const sql = `
             SELECT user_id
-            FROM ${tableName} 
+            FROM ${tableName}
             ORDER BY ${column} DESC
             ${limit ? 'LIMIT ?' : ''}
         `;
@@ -309,34 +310,35 @@ export class BotDatabase {
         },
     };
 
-    readonly music = {
-        addEntry: async (authorId: string, musicUrl: string): Promise<void> => {
+    readonly content = {
+        addEntry: async (authorId: string, contentUrl: string, key: string): Promise<void> => {
             await this.ensureUserExists(authorId);
 
-            if (await this.selectOne("SELECT * FROM music_database WHERE music_url = ?"))
+            if (await this.selectOne("SELECT * FROM content_database WHERE content_url = ? AND key = ?", [contentUrl, key]))
                 return;
             await this.runSql(
-                `INSERT INTO music_database (author_id, music_url) VALUES (?, ?)`,
-                [authorId, musicUrl],
+                `INSERT INTO content_database (author_id, content_url, key) VALUES (?, ?, ?)`,
+                [authorId, contentUrl, key],
             );
         },
 
-        getRandomEntry: async (): Promise<MusicEntry | undefined> => {
-            const row = await this.selectOne<MusicEntryRaw>(
-                `SELECT * FROM music_database ORDER BY RANDOM() LIMIT 1`,
+        getRandomEntry: async (key: string): Promise<ContentEntry | undefined> => {
+            const row = await this.selectOne<ContentEntryRaw>(
+                `SELECT * FROM content_database WHERE key = ? ORDER BY RANDOM() LIMIT 1`,
+                [key],
             );
-            return row ? musicFromRaw(row) : undefined;
+            return row ? contentFromRaw(row) : undefined;
         },
 
-        getEntriesByUser: async (userId: string): Promise<MusicEntry[]> => {
-            const rows = await this.selectMany<MusicEntryRaw>(
-                `SELECT * FROM music_database WHERE author_id = ?`,
-                [userId],
+        getEntriesByUser: async (userId: string, key: string): Promise<ContentEntry[]> => {
+            const rows = await this.selectMany<ContentEntryRaw>(
+                `SELECT * FROM content_database WHERE author_id = ? AND key = ?`,
+                [userId, key],
             );
-            return rows.map(musicFromRaw);
+            return rows.map(contentFromRaw);
         },
 
-        batchAddEntries: async (entries: MusicEntry[]): Promise<void> => {
+        batchAddEntries: async (entries: ContentEntry[]): Promise<void> => {
             if (entries.length === 0) return;
 
             const userIds = [...new Set(entries.map((e) => e.authorId))];
@@ -347,18 +349,18 @@ export class BotDatabase {
             await this.transaction(async () => {
                 for (const entry of entries) {
                     await this.runSql(
-                        `INSERT INTO music_database (author_id, music_url) VALUES (?, ?)`,
-                        [entry.authorId, entry.musicUrl],
+                        `INSERT INTO content_database (author_id, content_url, key) VALUES (?, ?, ?)`,
+                        [entry.authorId, entry.contentUrl, entry.key],
                     );
                 }
                 return Promise.resolve();
             });
         },
-        clear: async (userId?: string): Promise<void> => {
-            await this.reset.music(userId);
+        clear: async (key: string, userId?: string): Promise<void> => {
+            await this.reset.content(key, userId);
         },
     };
-    
+
     readonly reminders = {
         getReminders: async (): Promise<Reminder[]> => {
             return db.selectMany<Reminder>("SELECT * FROM reminders");
@@ -372,11 +374,11 @@ export class BotDatabase {
     };
 
     readonly reset = {
-        music: async (userId?: string): Promise<void> => {
+        content: async (key: string, userId?: string): Promise<void> => {
             if (userId) {
-                await this.runSql(`DELETE FROM music_database WHERE author_id = ?`, [userId]);
+                await this.runSql(`DELETE FROM content_database WHERE author_id = ? AND key = ?`, [userId, key]);
             } else {
-                await this.runSql(`DELETE FROM music_database`);
+                await this.runSql(`DELETE FROM content_database WHERE key = ?`, [key]);
             }
         },
 
@@ -414,11 +416,11 @@ export class BotDatabase {
 
         cooldowns: async (userId?: string): Promise<void> => {
             const sql = `
-                UPDATE users SET 
-                last_worked = 0, 
-                last_robbed = 0, 
-                last_slutted = 0, 
-                last_crimed = 0, 
+                UPDATE users SET
+                last_worked = 0,
+                last_robbed = 0,
+                last_slutted = 0,
+                last_crimed = 0,
                 last_email_sent = 0
                 ${userId ? 'WHERE user_id = ?' : ''}
             `;

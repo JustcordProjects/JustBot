@@ -64,7 +64,7 @@ import { initStatusGenerator } from '@/util/generate-status-quote.ts';
 import { initAskCmdModel, initWikiModel } from '@/features/ei/models.ts';
 import { askAction } from '@/features/actions/4fun/ask.ts';
 import { addVoiceExperience } from '@/bot/level.ts';
-import { addMusicAction } from '@/features/actions/4fun/add-music.ts';
+import { addMusicAction } from '@/features/actions/4fun/add-content.ts';
 import { registerCommands } from '@/cmd/list.ts';
 import { reactionAddHandler, reactionRemoveHandler } from '@/features/actions/4fun/reaction-handler.ts';
 import { registerMsgEditDscEvents } from '@/features/actions/logs/edit-message.ts';
