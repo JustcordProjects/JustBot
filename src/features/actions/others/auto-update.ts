@@ -2,8 +2,8 @@ import { sendLog } from '@/apis/log/send-log.ts';
 import { PredefinedColors } from '@/util/color.ts';
 import { MessageEventCtx, PredefinedActionEventTypes } from '../index.ts';
 import { Action } from '../index.ts';
+
 import { cfg } from '@/bot/cfg.ts';
-import process from 'node:process';
 import { output } from '@/bot/logging.ts';
 
 export const autoUpdateAction: Action<MessageEventCtx> = {
@@ -14,7 +14,7 @@ export const autoUpdateAction: Action<MessageEventCtx> = {
     constraints: [
         (ctx) => ctx.channelId == cfg.channels.justbot.ghBridge,
         (ctx) => ctx.webhookId != null,
-        () => process.env.JB_AUTO_UPDATE == 'true',
+        () => Deno.env.get('JB_AUTO_UPDATE') == 'true',
     ],
 
     callbacks: [

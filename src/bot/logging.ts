@@ -1,45 +1,6 @@
-import util from 'node:util';
 import { GuildTextBasedChannel } from 'discord.js';
 import { cfg } from './cfg.ts';
 import { client } from '@/client.ts';
-import { TextDecoder, TextEncoder } from 'node:util';
-import process from 'node:process';
-
-const decoder = new TextDecoder();
-const encoder = new TextEncoder();
-
-const origWrite = process.stdout.write.bind(process.stdout);
-
-process.stdout.write = function (chunk: string | Uint8Array, encoding?: NodeJS.BufferEncoding, callback?: () => unknown): boolean {
-    let data: string | Uint8Array;
-    if (typeof chunk === 'string') {
-        output.forward(chunk.trimEnd());
-        data = chunk;
-    } else if (chunk instanceof Uint8Array) {
-        const str = decoder.decode(chunk);
-        output.forward(str.trimEnd());
-        data = encoder.encode(str);
-    } else {
-        data = chunk;
-    }
-    return origWrite(data, encoding, callback);
-} as typeof process.stdout.write;
-
-const origErrWrite = process.stderr.write.bind(process.stderr);
-process.stderr.write = function (chunk: string | Uint8Array, encoding?: NodeJS.BufferEncoding, callback?: () => unknown): boolean {
-    let data: string | Uint8Array;
-    if (typeof chunk === 'string') {
-        output.forward(chunk.trimEnd());
-        data = chunk;
-    } else if (chunk instanceof Uint8Array) {
-        const str = decoder.decode(chunk);
-        output.forward(str.trimEnd());
-        data = encoder.encode(str);
-    } else {
-        data = chunk;
-    }
-    return origErrWrite(data, encoding, callback);
-} as typeof process.stderr.write;
 
 export namespace output {
     export namespace colors {
@@ -54,10 +15,18 @@ export namespace output {
     let stderrChannel: GuildTextBasedChannel;
     let stdwarnChannel: GuildTextBasedChannel;
 
-    function format(raw: string | object | unknown, ...args: unknown[]): string {
-        let text = util.format(typeof raw === 'object' ? JSON.stringify(raw) : raw, ...args);
-        if (!text.endsWith('\n')) text += '\n';
-        return text.trimEnd();
+    function format(...args: unknown[]): string {
+        return args
+            .map((arg) => {
+                if (typeof arg == 'string')
+                    return arg.trim();
+
+                return Deno.inspect(arg, {
+                    colors: false,
+                    depth: 4,
+                    compact: true,
+                });
+            }).join(', ').trimEnd();
     }
 
     function decorate(level: 'LOG' | 'WARN' | 'ERR' | 'VERB', color: string, msg: string): string {
@@ -95,30 +64,30 @@ export namespace output {
         } catch {}
     }
 
-    export function log(msg: string | object | unknown, ...args: unknown[]) {
-        const data = format(msg, ...args);
+    export function log(...args: unknown[]) {
+        const data = format(args);
         const prefixed = decorate('LOG', colors.CYAN, data);
         console.log(prefixed);
         send('stdout', data);
     }
 
-    export function warn(msg: string | object | unknown, ...args: unknown[]) {
-        const data = format(msg, ...args);
+    export function warn(...args: unknown[]) {
+        const data = format(args);
         const prefixed = decorate('WARN', colors.YELLOW, data);
         console.warn(prefixed);
         send('stdwarn', data);
     }
 
-    export function err(msg: string | object | unknown, ...args: unknown[]) {
-        const data = format(msg, ...args);
+    export function err(...args: unknown[]) {
+        const data = format(args);
         const prefixed = decorate('ERR', colors.RED, data);
         console.error(prefixed);
         send('stderr', data);
     }
 
-    export function verbose(msg: string | object | unknown, ...args: unknown[]) {
-        if (process.env.JB_DEVELOPMENT !== 'true') return;
-        const data = format(msg, ...args);
+    export function verbose(...args: unknown[]) {
+        if (Deno.env.get('JB_DEVELOPMENT') != 'true') return;
+        const data = format(args);
         const prefixed = decorate('VERB', colors.GRAY, data);
         console.log(prefixed);
     }

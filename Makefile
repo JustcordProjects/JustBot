@@ -15,9 +15,9 @@ DENO_IO_PERMS_FLAGS   = --allow-read=$(CONFIG_FILE),.env,$(DATABASES),$(CACHE_DI
 DENO_PERMISSION_FLAGS = $(DENO_IO_PERMS_FLAGS) --allow-net --allow-sys --allow-ffi \
 						--allow-env --allow-run=cdecl,git,make,$(ZAPBOX_PATH)
 
-DENO_FLAGS            = --no-prompt $(DENO_PERMISSION_FLAGS)
+DENO_FLAGS            = --no-prompt --env-file $(DENO_PERMISSION_FLAGS)
 
-all: 
+all:
 	@deno compile $(DENO_FLAGS) --output justbot src/main.ts
 
 run:

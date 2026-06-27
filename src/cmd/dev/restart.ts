@@ -4,7 +4,6 @@ import { CommandPermissions } from '@/bot/command/permissions.ts';
 import { output } from '@/bot/logging.ts';
 
 import * as cache from '@/apis/cache/cache.ts';
-import process from 'node:process';
 
 const restartCmd: Command = {
     name: 'restart',
@@ -27,7 +26,7 @@ const restartCmd: Command = {
         }
 
         output.log('Shutting down... (reason: restart command)');
-        process.exit(1);
+        Deno.exit(1);
     },
 };
 

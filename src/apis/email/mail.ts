@@ -1,7 +1,6 @@
 import nm from 'nodemailer';
 import im from 'imapflow';
 import mp from 'mailparser';
-import process from 'node:process';
 
 let transporter: nm.Transporter | null = null;
 let imapClient: im.ImapFlow | null = null;
@@ -10,8 +9,8 @@ export async function init() {
     transporter = nm.createTransport({
         service: 'gmail',
         auth: {
-            user: process.env.JB_EMAIL_USER,
-            pass: process.env.JB_EMAIL_PASS,
+            user: Deno.env.get('JB_EMAIL_USER'),
+            pass: Deno.env.get('JB_EMAIL_PASS'),
         },
     });
 
@@ -20,8 +19,8 @@ export async function init() {
         port: 993,
         secure: true,
         auth: {
-            user: process.env.JB_EMAIL_USER!,
-            pass: process.env.JB_EMAIL_PASS!,
+            user: Deno.env.get('JB_EMAIL_USER')!,
+            pass: Deno.env.get('JB_EMAIL_PASS')!,
         },
         logger: false,
     });
@@ -41,7 +40,7 @@ export async function sendMessage({ receiver, subject, content }: SendEmail) {
     }
 
     return transporter.sendMail({
-        from: process.env.JB_EMAIL_USER,
+        from: Deno.env.get('JB_EMAIL_USER'),
         to: receiver,
         subject: subject,
         html: content,

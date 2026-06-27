@@ -1,5 +1,4 @@
 import { output } from '@/bot/logging.ts';
-import process from 'node:process';
 
 import { Interaction } from 'discord.js';
 import * as dsc from 'discord.js';
@@ -196,7 +195,8 @@ function fixType(type: CommandArgType): CommandArgType {
 
 export async function init() {
     const commandsArray: dsc.RESTPostAPIApplicationCommandsJSONBody[] = [];
-    const rest = new dsc.REST({ version: '10' }).setToken(process.env.JB_TOKEN!);
+    const rest = new dsc.REST({ version: '10' })
+        .setToken(Deno.env.get('JB_TOKEN')!);
 
     for (const [, cmds] of commands) {
         for (const cmd of cmds) {

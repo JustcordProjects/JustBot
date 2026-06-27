@@ -1,16 +1,27 @@
 import JSON5 from 'json5';
 
 import { deepMerge } from '@/util/objects/objects.ts';
-import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 
 import Config     from '@/bot/config/schema.ts';
 import defaultCfg from '@/bot/config/default.ts';
 
 export let overrideCfg: Partial<Config> = {};
 
+function existsSync(path: string): boolean {
+    try {
+        Deno.statSync(path);
+        return true;
+    } catch (error) {
+        if (error instanceof Deno.errors.NotFound) {
+            return false;
+        }
+        throw error;
+    }
+}
+
 function readConfigurationChanges() {
     if (!existsSync('bot/config.js')) return {};
-    let file = readFileSync('bot/config.js', 'utf-8');
+    let file = Deno.readTextFileSync('bot/config.js');
     file = file.trim();
     while (file.startsWith('(')) file = file.slice(1);
     while (file.endsWith(')')) file = file.slice(0, -1);
@@ -18,7 +29,10 @@ function readConfigurationChanges() {
 }
 
 export function saveConfigurationChanges() {
-    writeFileSync('bot/config.js', `(${JSON5.stringify(overrideCfg, null, 4)})`, 'utf-8');
+    Deno.writeTextFileSync(
+        'bot/config.js',
+        `(${JSON5.stringify(overrideCfg, null, 4)})`
+    );
 }
 
 function makeConfig(): Config {

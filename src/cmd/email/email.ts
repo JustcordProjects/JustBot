@@ -1,13 +1,13 @@
 import { cfg } from '@/bot/cfg.ts';
+import { db } from '@/apis/db/bot-db.ts';
+
 import { Command } from '@/bot/command.ts';
 import { CommandFlags } from '@/bot/command/misc.ts';
 import { CommandPermissions } from '@/bot/command/permissions.ts';
 
 import * as email from '@/apis/email/mail.ts';
-import { db } from '@/apis/db/bot-db.ts';
 
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
-import process from 'node:process';
 
 function parseEmailMessage(input: string): { subject: string; content: string } {
     let index = -1;
@@ -63,7 +63,7 @@ const sendEmailCmd: Command = {
         const COOLDOWN_MS = 10 * 60 * 1000;
         const check = await api.checkCooldown('email', COOLDOWN_MS);
 
-        if (!process.env.JB_EMAIL_USER || !process.env.JB_EMAIL_PASS) {
+        if (!Deno.env.get('JB_EMAIL_USER') || !Deno.env.get('JB_EMAIL_PASS')) {
             return api.log.replyWarn(
                 api,
                 'Brakuje czegoś!',

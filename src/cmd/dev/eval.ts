@@ -7,7 +7,6 @@ import { output } from '@/bot/logging.ts';
 import { db } from '@/apis/db/bot-db.ts';
 
 import JSON5 from 'json5';
-import process from 'node:process';
 
 type AsyncFunction = () => PromiseLike<unknown>;
 const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor satisfies AsyncFunction;
@@ -68,7 +67,7 @@ const evalCmd: Command = {
                 if (sanitized.length >= 4096 - 10) {
                     return api.log.replyWarn(api, 'Za długi output', 'Tak w skrócie, to twój kod wyprodukował za długi output jak na discorda.');
                 }
-                if (sanitized.includes(process.env.JB_TOKEN ?? 'ebtoken')) {
+                if (sanitized.includes(Deno.env.get('JB_TOKEN') ?? 'ebtoken')) {
                     return api.log.replyWarn(api, 'Błąd', 'Właśnie próbujesz zleakować token. Możesz sie bawić w obchodzenie tego ale błagam po prostu skopiuj z .env z hostingu.');
                 }
                 return api.log.replySuccess(api, 'Wynik twojej super komendy!', `\n\`\`\`js\n${sanitized}\`\`\``);

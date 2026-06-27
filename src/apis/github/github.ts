@@ -1,5 +1,5 @@
-import process from 'node:process';
 import logError from '@/util/log-error.ts';
+
 const BaseUrl = 'https://api.github.com';
 
 export class GithubError extends Error {}
@@ -13,7 +13,7 @@ export type Repo = {
 let token: string | null;
 
 export async function init(tok?: string) {
-    token = tok ?? process.env.JB_GITHUB_TOKEN ?? null;
+    token = tok ?? Deno.env.get('JB_GITHUB_TOKEN') ?? null;
 }
 
 async function request(url: string, method?: string) {
