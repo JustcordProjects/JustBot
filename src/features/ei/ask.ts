@@ -192,8 +192,6 @@ export async function executeAsk(msg: dsc.Message, question: string, contextMsgs
         },
         ocr_image: async (args: { file_url: string }) => {
             try {
-                console.log(args);
-
                 const formData = new FormData();
 
                 formData.append('file', await (await fetch(args.file_url)).blob(), 'image.png');

@@ -1,45 +1,8 @@
 import util from 'node:util';
+
 import { GuildTextBasedChannel } from 'discord.js';
 import { cfg } from './cfg.ts';
 import { client } from '@/client.ts';
-import { TextDecoder, TextEncoder } from 'node:util';
-import process from 'node:process';
-
-const decoder = new TextDecoder();
-const encoder = new TextEncoder();
-
-const origWrite = process.stdout.write.bind(process.stdout);
-
-process.stdout.write = function (chunk: string | Uint8Array, encoding?: NodeJS.BufferEncoding, callback?: () => unknown): boolean {
-    let data: string | Uint8Array;
-    if (typeof chunk === 'string') {
-        output.forward(chunk.trimEnd());
-        data = chunk;
-    } else if (chunk instanceof Uint8Array) {
-        const str = decoder.decode(chunk);
-        output.forward(str.trimEnd());
-        data = encoder.encode(str);
-    } else {
-        data = chunk;
-    }
-    return origWrite(data, encoding, callback);
-} as typeof process.stdout.write;
-
-const origErrWrite = process.stderr.write.bind(process.stderr);
-process.stderr.write = function (chunk: string | Uint8Array, encoding?: NodeJS.BufferEncoding, callback?: () => unknown): boolean {
-    let data: string | Uint8Array;
-    if (typeof chunk === 'string') {
-        output.forward(chunk.trimEnd());
-        data = chunk;
-    } else if (chunk instanceof Uint8Array) {
-        const str = decoder.decode(chunk);
-        output.forward(str.trimEnd());
-        data = encoder.encode(str);
-    } else {
-        data = chunk;
-    }
-    return origErrWrite(data, encoding, callback);
-} as typeof process.stderr.write;
 
 export namespace output {
     export namespace colors {

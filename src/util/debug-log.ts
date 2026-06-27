@@ -1,12 +1,15 @@
 import { prettyPrint } from '@/util/objects/objects.ts';
-import process from 'node:process';
 
 // deno-lint-ignore no-explicit-any
 export default function debugLog(...values: any[]) {
-    process.stderr.write('DEBUG: ');
+    const encoder = new TextEncoder();
+    Deno.stderr.writeSync(encoder.encode('DEBUG: '));
     for (let i = 0; i < values.length; ++i) {
-        process.stderr.write(prettyPrint(values[i]));
-        if (i != values.length - 1) process.stderr.write(', ');
+        const buf = encoder.encode(prettyPrint(values[i]));
+        Deno.stderr.writeSync(buf);
+        if (i != values.length - 1) {
+            Deno.stderr.writeSync(encoder.encode(', '));
+        }
     }
-    process.stderr.write('\n');
+    Deno.stderr.writeSync(encoder.encode('\n'));
 }
