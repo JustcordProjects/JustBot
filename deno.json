@@ -27,6 +27,9 @@
         }
     },
     "imports": {
+        "@std/path": "jsr:@std/path@^1.0.0",
+        "@std/fmt": "jsr:@std/fmt@^1.0.10",
+
         "@vitalets/google-translate-api": "npm:@vitalets/google-translate-api@^9.2.1",
         "discord.js": "npm:discord.js@^14.26.3",
         "figlet": "npm:figlet@^1.11.0",

@@ -4,13 +4,12 @@ console.log('Welcome to JustBOT!');
 import { client } from '@/client.ts';
 import { ft, output } from '@/bot/logging.ts';
 
-import process from 'node:process';
 import logError from '@/util/log-error.ts';
-process.on('uncaughtException', (e) => {
-    logError('stderr', e);
-    if (e.message.includes('An invalid token was provided.')) {
+globalThis.addEventListener("error", (event) => {
+    logError('stderr', event.error);
+    if (event.error.message?.includes('An invalid token was provided.')) {
         output.err('Automatic shutdown. Token is invalid.');
-        process.exit(2);
+        Deno.exit(2);
     }
 });
 
@@ -187,16 +186,16 @@ async function main() {
     let memoryIssuesTimes = 0;
 
     setInterval(() => {
-        if (!process.memoryUsage || !process.availableMemory) return;
-        const processHeap = process.memoryUsage().heapUsed;
-        const availableMemory = process.availableMemory();
+        const processHeap = Deno.memoryUsage().heapUsed;
+        const availableMemory = Deno.systemMemoryInfo().available;
+
         const treshold = 25 * 1024 * 1024; // 25MB
         if (processHeap > availableMemory - treshold) {
             output.warn(`Low on memory.\nUsing: ${processHeap} of ${availableMemory} available memory.\nJustBOT will attempt to restart if this situation occurs more than 6 times in the next 10 seconds.`);
             memoryIssuesTimes++;
             if (memoryIssuesTimes == 6) {
                 output.log(`Shutting down... (reason: out of memory)`);
-                process.exit(1); // start.hosting-only.js should catch this
+                Deno.exit(1); // start.hosting-only.js should catch this
             }
         }
     }, 500);
