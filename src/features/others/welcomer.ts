@@ -1,6 +1,6 @@
-import { client } from '../../../client.ts';
+import { client } from '@/client.ts';
 
-import actionsManager, { Action, MagicSkipAllActions, PredefinedActionEventTypes, UserEventCtx } from '../index.ts';
+import actionsManager, { Action, MagicSkipAllActions, PredefinedActionEventTypes, UserEventCtx } from '../actions.ts';
 export default actionsManager;
 
 import { cfg } from '@/bot/cfg.ts';

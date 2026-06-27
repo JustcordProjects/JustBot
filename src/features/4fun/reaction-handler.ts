@@ -1,4 +1,4 @@
-import { Action, PredefinedActionEventTypes, ReactionEventCtx } from '@/features/actions/index.ts';
+import { Action, PredefinedActionEventTypes, ReactionEventCtx } from '@/features/actions.ts';
 import User from '@/apis/db/user.ts';
 import { cfg } from '@/bot/cfg.ts';
 import { output } from '@/bot/logging.ts';

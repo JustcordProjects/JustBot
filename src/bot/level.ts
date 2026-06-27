@@ -2,7 +2,7 @@ import * as dsc from 'discord.js';
 
 import User from '@/apis/db/user.ts';
 
-import actionsManager, { Action } from '@/features/actions/index.ts';
+import actionsManager, { Action } from '@/features/actions.ts';
 import { mkProgressBar } from '@/util/progressbar.ts';
 import { findLowerClosestKey } from '@/util/objects/lower-closest-key.ts';
 

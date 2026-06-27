@@ -6,8 +6,8 @@ import * as log from '@/util/log.ts';
 
 import { cfg } from '@/bot/cfg.ts';
 import { CommandFlags } from '@/bot/command/misc.ts';
-import { client } from '../../client.ts';
-import { commands } from '../../cmd/list.ts';
+import { client } from '@/client.ts';
+import { commands } from '@/cmd/list.ts';
 import { handleError } from './helpers/error-handler.ts';
 import { makeCommandApi } from './helpers/make-command-api.ts';
 import { makeSlashCommandDesc, makeSlashCommandOptionDesc } from './helpers/make-slash-command-descs.ts';

@@ -1,7 +1,7 @@
 import { sendLog } from '@/apis/log/send-log.ts';
 import { PredefinedColors } from '@/util/color.ts';
-import { MessageEventCtx, PredefinedActionEventTypes } from '../index.ts';
-import { Action } from '../index.ts';
+import { MessageEventCtx, PredefinedActionEventTypes } from '../actions.ts';
+import { Action } from '../actions.ts';
 
 import { cfg } from '@/bot/cfg.ts';
 import { output } from '@/bot/logging.ts';

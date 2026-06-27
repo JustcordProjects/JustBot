@@ -1,4 +1,4 @@
-import { Action, MessageEventCtx, PredefinedActionEventTypes } from '@/features/actions/index.ts';
+import { Action, MessageEventCtx, PredefinedActionEventTypes } from '@/features/actions.ts';
 import capitalizeFirst from '@/util/capitalize-first.ts';
 import { cfg } from '@/bot/cfg.ts';
 import randomElement from '@/util/random-element.ts';

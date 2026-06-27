@@ -1,4 +1,4 @@
-import actionsManager from '@/features/actions/index.ts';
+import actionsManager from '@/features/actions.ts';
 import { EmptyObject } from '../../defs.ts';
 export default actionsManager;
 

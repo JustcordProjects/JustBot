@@ -20,17 +20,17 @@ import * as dsc from 'discord.js';
 import { cfg } from '@/bot/cfg.ts';
 
 // actions
-import AutoModRules from '@/features/actions/mod/automod.ts';
+import AutoModRules from '@/features/mod/automod.ts';
 import { initExpiredWarnsDeleter } from '@/features/delete-expired-warns.ts';
-import { sayGoodbyeAction, welcomeNewUserAction } from '@/features/actions/others/welcomer.ts';
-import { countingChannelAction } from '@/features/actions/4fun/counting-channel.ts';
-import { lastLetterChannelAction } from '@/features/actions/4fun/last-letter-channel.ts';
-import { mediaChannelAction } from '@/features/actions/4fun/media-channel-action.ts';
-import { basicMsgCreateActions } from '@/features/actions/others/basic-msg-create-actions.ts';
-import { registerTemplateChannels } from '@/features/actions/channels/register-template-channels.ts';
+import { sayGoodbyeAction, welcomeNewUserAction } from '@/features/others/welcomer.ts';
+import { countingChannelAction } from '@/features/4fun/counting-channel.ts';
+import { lastLetterChannelAction } from '@/features/4fun/last-letter-channel.ts';
+import { mediaChannelAction } from '@/features/4fun/media-channel-action.ts';
+import { basicMsgCreateActions } from '@/features/others/basic-msg-create-actions.ts';
+import { registerTemplateChannels } from '@/features/channels/register-template-channels.ts';
 import { channelAddWatcher, channelDeleteWatcher, onMuteGivenWatcher, setUpWatchdog } from '@/bot/watchdog.ts';
-import { actionPing } from '@/features/actions/4fun/ping-death-chat.ts';
-import { onReceivedEmailAction } from '@/features/actions/others/on-new-email.ts';
+import { actionPing } from '@/features/4fun/ping-death-chat.ts';
+import { onReceivedEmailAction } from '@/features/others/on-new-email.ts';
 
 // events
 import { registerChannelCreateDscEvents } from '@/events/client/channel-create.ts';
@@ -52,24 +52,24 @@ import * as cache from '@/apis/cache/cache.ts';
 // misc
 import * as log from '@/util/log.ts';
 
-import actionsManager from '@/features/actions/index.ts';
+import actionsManager from '@/features/actions.ts';
 import { db } from '@/apis/db/bot-db.ts';
 
 import { initEmailActionsIntegration } from '@/apis/email/actions.ts';
-import { getChannel } from '@/features/actions/channels/template-channels.ts';
+import { getChannel } from '@/features/channels/template-channels.ts';
 import { initStatusGenerator } from '@/util/generate-status-quote.ts';
 
 import { initAskCmdModel, initWikiModel } from '@/features/ei/models.ts';
-import { askAction } from '@/features/actions/4fun/ask.ts';
+import { askAction } from '@/features/4fun/ask.ts';
 import { addVoiceExperience } from '@/bot/level.ts';
-import { addMusicAction } from '@/features/actions/4fun/add-content.ts';
+import { addMusicAction } from '@/features/4fun/add-content.ts';
 import { registerCommands } from '@/cmd/list.ts';
-import { reactionAddHandler, reactionRemoveHandler } from '@/features/actions/4fun/reaction-handler.ts';
-import { registerMsgEditDscEvents } from '@/features/actions/logs/edit-message.ts';
-import { deleteMessageAction } from '@/features/actions/logs/delete-message.ts';
+import { reactionAddHandler, reactionRemoveHandler } from '@/features/4fun/reaction-handler.ts';
+import { registerMsgEditDscEvents } from '@/features/logs/edit-message.ts';
+import { deleteMessageAction } from '@/features/logs/delete-message.ts';
 import { reminderHandler } from '@/features/reminders.ts';
-import { autoUpdateAction } from './features/actions/others/auto-update.ts';
-import { pollsModerator } from '@/features/actions/mod/polls-mod.ts';
+import { autoUpdateAction } from './features/others/auto-update.ts';
+import { pollsModerator } from '@/features/mod/polls-mod.ts';
 
 // --------------- INIT ---------------
 client.once('clientReady', async () => {

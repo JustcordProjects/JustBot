@@ -1,6 +1,6 @@
 import sleep from '@/util/sleep.ts';
 
-import actionsManager, { Action, MagicSkipAllActions, MessageEventCtx, PredefinedActionEventTypes } from '../index.ts';
+import actionsManager, { Action, MagicSkipAllActions, MessageEventCtx, PredefinedActionEventTypes } from '../actions.ts';
 export default actionsManager;
 
 import * as dsc from 'discord.js';

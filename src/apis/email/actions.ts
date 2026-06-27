@@ -1,4 +1,4 @@
-import actionsManager from '@/features/actions/index.ts';
+import actionsManager from '@/features/actions.ts';
 
 import * as email from './mail.ts';
 

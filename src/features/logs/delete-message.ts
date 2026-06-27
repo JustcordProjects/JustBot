@@ -1,4 +1,4 @@
-import { Action, MessageEventCtx, PredefinedActionEventTypes } from '@/features/actions/index.ts';
+import { Action, MessageEventCtx, PredefinedActionEventTypes } from '@/features/actions.ts';
 import { cfg } from '@/bot/cfg.ts';
 import { GuildTextBasedChannel } from 'discord.js';
 import { mkMessageReferenceEmbed } from '@/bot/templates/message-reference.ts';

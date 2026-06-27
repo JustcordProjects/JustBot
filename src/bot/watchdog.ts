@@ -3,7 +3,7 @@ import * as dsc from 'discord.js';
 import { cfg } from './cfg.ts';
 import { client } from '@/client.ts';
 import { output } from '@/bot/logging.ts';
-import { Action, PredefinedActionEventTypes, UserEventCtx } from '@/features/actions/index.ts';
+import { Action, PredefinedActionEventTypes, UserEventCtx } from '@/features/actions.ts';
 
 export async function watchNewMember(mem: dsc.GuildMember): Promise<'kicked' | void> {
     if (cfg.features.watchdog.kickNewMembers) {

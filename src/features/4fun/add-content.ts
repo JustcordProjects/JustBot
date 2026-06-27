@@ -1,7 +1,7 @@
 import * as dsc from 'discord.js';
 
 import { cfg } from '@/bot/cfg.ts';
-import actionsManager, { Action, MessageEventCtx, PredefinedActionEventTypes } from '../index.ts';
+import actionsManager, { Action, MessageEventCtx, PredefinedActionEventTypes } from '../actions.ts';
 export default actionsManager;
 
 import { extractMediaLinks } from '@/features/cdb-scan.ts';

@@ -1,6 +1,6 @@
 import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
-import { Action, ActionCallback, ConstraintCallback, MagicSkipAllActions, PredefinedActionEventTypes } from './index.ts';
-import { MessageEventCtx } from './index.ts';
+import { Action, ActionCallback, ConstraintCallback, MagicSkipAllActions, PredefinedActionEventTypes } from './actions.ts';
+import { MessageEventCtx } from './actions.ts';
 
 import * as log from '@/util/log.ts';
 import * as dsc from 'discord.js';

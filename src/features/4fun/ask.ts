@@ -1,8 +1,8 @@
-import { MessageEventCtx, PredefinedActionEventTypes } from '../index.ts';
+import { MessageEventCtx, PredefinedActionEventTypes } from '../actions.ts';
 
 import { executeAsk } from '@/features/ei/ask.ts';
 
-import { Action } from '../index.ts';
+import { Action } from '../actions.ts';
 import { client } from '@/client.ts';
 import { cfg } from '@/bot/cfg.ts';
 

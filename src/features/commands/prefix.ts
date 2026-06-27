@@ -10,7 +10,7 @@ import canExecuteCmd from '@/util/cmd/can-execute.ts';
 import findCommand from '@/util/cmd/find-command.ts';
 
 import isCommandBlockedOnChannel from '@/util/cmd/is-blocked.ts';
-import actionsManager, { PredefinedActionEventTypes } from '../actions/index.ts';
+import actionsManager, { PredefinedActionEventTypes } from '../actions.ts';
 
 import { PredefinedColors } from '@/util/color.ts';
 

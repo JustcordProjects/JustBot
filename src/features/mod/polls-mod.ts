@@ -1,4 +1,4 @@
-import { type Action, MagicSkipAllActions, type MessageEventCtx, PredefinedActionEventTypes } from '@/features/actions/index.ts';
+import { type Action, MagicSkipAllActions, type MessageEventCtx, PredefinedActionEventTypes } from '@/features/actions.ts';
 import { cfg } from '@/bot/cfg.ts';
 import { replyWarn } from '@/util/log.ts';
 

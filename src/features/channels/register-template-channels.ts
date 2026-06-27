@@ -1,6 +1,6 @@
 import * as dsc from 'discord.js';
 
-import { PredefinedActionEventTypes } from '@/features/actions/index.ts';
+import { PredefinedActionEventTypes } from '@/features/actions.ts';
 import { OnForceReloadTemplates } from '@/events/actions/templates-events.ts';
 import { addTemplateChannel, getChannel } from './template-channels.ts';
 import { makeChannelName } from '@/util/make-channel-name.ts';

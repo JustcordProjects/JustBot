@@ -1,5 +1,5 @@
 import * as dsc from 'discord.js';
-import actionsManager from '@/features/actions/index.ts';
+import actionsManager from '@/features/actions.ts';
 
 import { cfg } from '@/bot/cfg.ts';
 import { Command } from '@/bot/command.ts';
