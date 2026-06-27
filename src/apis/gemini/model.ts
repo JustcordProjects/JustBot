@@ -1,6 +1,4 @@
 import * as gemini from 'gemini';
-import process from 'node:process';
-
 export * from 'gemini';
 
 class ModelNotInitializedError extends Error {
@@ -13,8 +11,8 @@ let genai: gemini.GoogleGenerativeAI | null = null;
 let models: Record<string, gemini.GenerativeModel[]> = {};
 
 export async function init() {
-    if (process.env.JB_GEMINI_API_KEY) {
-        genai = new gemini.GoogleGenerativeAI(process.env.JB_GEMINI_API_KEY);
+    if (Deno.env.get('JB_GEMINI_API_KEY')) {
+        genai = new gemini.GoogleGenerativeAI(Deno.env.get('JB_GEMINI_API_KEY')!);
         models = {};
     }
 }

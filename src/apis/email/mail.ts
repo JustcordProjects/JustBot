@@ -10,8 +10,8 @@ export async function init() {
     transporter = nm.createTransport({
         service: 'gmail',
         auth: {
-            user: process.env.JB_EMAIL_USER,
-            pass: process.env.JB_EMAIL_PASS,
+            user: Deno.env.get('JB_EMAIL_USER'),
+            pass: Deno.env.get('JB_EMAIL_PASS'),
         },
     });
 
@@ -20,8 +20,8 @@ export async function init() {
         port: 993,
         secure: true,
         auth: {
-            user: process.env.JB_EMAIL_USER!,
-            pass: process.env.JB_EMAIL_PASS!,
+            user: Deno.env.get('JB_EMAIL_USER')!,
+            pass: Deno.env.get('JB_EMAIL_PASS')!,
         },
         logger: false,
     });

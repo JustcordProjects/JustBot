@@ -1,14 +1,13 @@
 import path from 'node:path';
 import fs from 'node:fs/promises';
-import process from 'node:process';
 
 function getCacheDir(): string {
-    const cacheHome = process.env.XDG_CACHE_HOME;
+    const cacheHome = Deno.env.get('XDG_CACHE_HOME');
     if (cacheHome) {
         return path.join(cacheHome, 'justbot');
     }
 
-    const home = process.env.HOME;
+    const home = Deno.env.get('HOME');
     if (home) {
         return path.join(home, '.cache', 'justbot');
     }

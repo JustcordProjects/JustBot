@@ -12,7 +12,7 @@ import { output } from '@/bot/logging.ts';
 import { cfg } from '@/bot/cfg.ts';
 import { client } from '@/client.ts';
 import { db } from '@/apis/db/bot-db.ts';
-import process from 'node:process';
+
 import logError from '@/util/log-error.ts';
 
 export async function executeAsk(msg: dsc.Message, question: string, contextMsgs: number) {
@@ -197,7 +197,7 @@ export async function executeAsk(msg: dsc.Message, question: string, contextMsgs
                 const formData = new FormData();
 
                 formData.append('file', await (await fetch(args.file_url)).blob(), 'image.png');
-                formData.append('apikey', process.env.JB_OCR_API ?? '');
+                formData.append('apikey', Deno.env.get('JB_OCR_API') ?? '');
 
                 const res = await fetch('https://api8.ocr.space/parse/image', {
                     method: 'POST',

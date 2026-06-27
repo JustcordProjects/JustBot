@@ -6,7 +6,6 @@ import { sendLog } from '@/apis/log/send-log.ts';
 import { db } from '@/apis/db/bot-db.ts';
 import { AddressObject } from 'mailparser';
 import { PredefinedColors } from '@/util/color.ts';
-import process from 'node:process';
 
 async function isSpam(subject: string, text: string, sender: string) {
     // blacklist check
@@ -126,7 +125,7 @@ export const onReceivedEmailAction: Action<ReceivedNewEmail> = {
                     },
                     {
                         name: 'Do',
-                        value: receiver ?? process.env.JB_EMAIL_USER ?? '<nieznany odbiorca>',
+                        value: receiver ?? Deno.env.get('JB_EMAIL_USER') ?? '<nieznany odbiorca>',
                         inline: true,
                     },
                 ],

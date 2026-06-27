@@ -3,7 +3,7 @@ console.log('Welcome to JustBOT!');
 // preparation & basic imports
 import { client } from '@/client.ts';
 import { ft, output } from '@/bot/logging.ts';
-import * as dotenv from 'dotenv';
+
 import process from 'node:process';
 import logError from '@/util/log-error.ts';
 process.on('uncaughtException', (e) => {
@@ -13,7 +13,6 @@ process.on('uncaughtException', (e) => {
         process.exit(2);
     }
 });
-dotenv.config({ quiet: true });
 
 // required libs
 import * as dsc from 'discord.js';
@@ -77,7 +76,7 @@ import { pollsModerator } from '@/features/actions/mod/polls-mod.ts';
 client.once('clientReady', async () => {
     await output.init();
     output.log(`${ft.CYAN}Logged in.`);
-    if (process.env.JB_DEVELOPMENT == 'true') {
+    if (Deno.env.get('JB_DEVELOPMENT') == 'true') {
         output.verbose(
             '------------------------------------------------\n' +
             'Verbose logging enabled.\n' +
@@ -96,7 +95,7 @@ client.once('clientReady', async () => {
 
     addVoiceExperience();
 
-    if (!process.env.JB_EMAIL_USER || !process.env.JB_EMAIL_PASS) {
+    if (!Deno.env.get('JB_EMAIL_USER') || !Deno.env.get('JB_EMAIL_PASS')) {
         output.warn('You should set JB_EMAIL_USER and JB_EMAIL_PASS enviorment variables to a GMail login and temporary password\nOtherwise, the e-mail based commands will not work');
     } else {
         await email.init();
@@ -255,7 +254,7 @@ async function main() {
 }
 
 (async function () {
-    if (!process.env.JB_TOKEN && process.env.TOKEN)
-        Deno.env.set("JB_TOKEN", process.env.TOKEN);
-    await client.login(process.env.JB_TOKEN);
+    if (!Deno.env.get('JB_TOKEN') && Deno.env.get('TOKEN'))
+        Deno.env.set("JB_TOKEN", Deno.env.get('TOKEN')!);
+    await client.login(Deno.env.get('JB_TOKEN'));
 })();
