@@ -27,8 +27,8 @@ export default {
     ],
 
     async execute(api) {
-        const MIN_VOTES = 4;
-        const TIME = 60_000;
+        const MIN_VOTES = 3;
+        const TIME = 120_000;
         const EXPIRES_AT = Date.now() + TIME;
 
         const quotedMsg = api.getTypedArg('message', 'message-ref').value;
