@@ -24,11 +24,11 @@ export function makeChannelName(data: ChannelName) {
     if (cfg.channels.settings.emojiPlacement == 'before-name')
         channel_name += makeEmojiForChannelName(data.emoji);
 
-    channel_name += data.name 
+    channel_name += data.name
         .replaceAll(
-            ' ', 
-            data.leaveSpaces 
-                ? ' ' 
+            ' ',
+            data.leaveSpaces
+                ? ' '
                 : (cfg.channels.settings.spaceReplacement ?? '-')
         );
 

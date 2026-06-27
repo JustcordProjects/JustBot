@@ -1,9 +1,10 @@
-import { Config } from '@/bot/cfg.ts';
+import * as config from '@/bot/config/schema.ts';
+
 import { channelsCfg } from './channels.ts';
 import { economyCfg } from './economy.ts';
 import { hierarchyCfg } from './hierarchy.ts';
 
-export const featuresConfig: Config['features'] = {
+export const featuresCfg: config.Features = {
     compilation: {
         replaceCompilerMap: {
             'gcc-head-c': ['c', 'gcc'],

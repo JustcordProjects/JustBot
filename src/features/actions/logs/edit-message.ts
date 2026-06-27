@@ -8,7 +8,7 @@ export function registerMsgEditDscEvents(client: dsc.Client) {
         if (oldMsg.content?.trim() == msg.content?.trim()) return;
         if (oldMsg.partial) return;
 
-        const logs_channel = await msg.client.channels.fetch(cfg.channels.mod.logs) as dsc.GuildTextBasedChannel;   
+        const logs_channel = await msg.client.channels.fetch(cfg.channels.mod.logs) as dsc.GuildTextBasedChannel;
         logs_channel.send({ embeds: [
             (await mkMessageReferenceEmbed(oldMsg, {
                 color: PredefinedColors.Blue,

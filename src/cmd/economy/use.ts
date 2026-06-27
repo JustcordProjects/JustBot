@@ -4,13 +4,14 @@ import { CommandAPI } from '@/bot/command/api.ts';
 import { PredefinedColors } from '@/util/color.ts';
 import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
 import { output } from '@/bot/logging.ts';
-
-import { ConfigEconomyAction } from '@/bot/config/schema/economy.ts';
-import Money from '@/util/money.ts';
 import { formatEmoji } from 'discord.js';
 import { cfg } from '@/bot/cfg.ts';
 
-export function formatAction(api: CommandAPI, action: ConfigEconomyAction): ReplyEmbed | null {
+import * as config from '@/bot/config/schema.ts';
+
+import Money from '@/util/money.ts';
+
+export function formatAction(api: CommandAPI, action: config.economy.Action): ReplyEmbed | null {
     const SuccessColor = PredefinedColors.Green;
     const LossColor = PredefinedColors.Red;
 

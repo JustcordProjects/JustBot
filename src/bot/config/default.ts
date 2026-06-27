@@ -1,9 +1,10 @@
 import { Config } from '@/bot/cfg.ts';
-import { hierarchyCfg } from './hierarchy.ts';
-import { channelsCfg } from './channels.ts';
-import { featuresConfig } from './features.ts';
 
-export const defaultCfg: Config = {
+import { hierarchyCfg } from './default/hierarchy.ts';
+import { channelsCfg } from './default/channels.ts';
+import { featuresCfg } from './default/features.ts';
+
+const defaultCfg: Config = {
     bot: {
         status: 'dnd',
         activities: [
@@ -75,7 +76,7 @@ export const defaultCfg: Config = {
         },
     },
 
-    features: featuresConfig,
+    features: featuresCfg,
 
     emojis: {
         darkRedBlock: { name: 'dark_red_block', id: '1510910262868447293' },
@@ -96,3 +97,5 @@ export const defaultCfg: Config = {
         idkEmoji: { name: 'joe_no_trudno', id: '1510694676158742770' },
     },
 };
+
+export default defaultCfg;

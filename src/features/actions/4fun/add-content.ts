@@ -20,7 +20,7 @@ export const addMusicAction: Action<MessageEventCtx> = {
         async (msg: dsc.Message) => {
             for (const cdb of cfg.features.contentDatabases) {
                 if (cdb.channel !== msg.channelId) continue;
-                
+
                 const links = extractMediaLinks(msg.content, cdb);
 
                 for (const link of links) {

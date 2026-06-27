@@ -1,7 +1,8 @@
-import EconomyConfig from '@/bot/config/schema/economy.ts';
+import * as config from '@/bot/config/schema.ts';
+
 import { PredefinedColors } from '@/util/color.ts';
 
-export const economyCfg: EconomyConfig = {
+export const economyCfg: config.Economy = {
     roles: [
         {
             name: "Server Booster",

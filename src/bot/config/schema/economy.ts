@@ -1,74 +1,74 @@
 import { Color } from '@/util/color.ts';
 import * as dsc from 'discord.js';
 
-export type ConfigEconomyMoney = number;
+export type Money = number;
 
-export type ConfigEconomyCond =
+export type Cond =
     | { op: 'has-role'; roleId: string }
     | { op: 'has-item'; itemId: string }
-    | { op: 'money-gte'; amount: ConfigEconomyMoney }
-    | { op: 'money-lte'; amount: ConfigEconomyMoney }
+    | { op: 'money-gte'; amount: Money }
+    | { op: 'money-lte'; amount: Money }
     | { op: 'random-chance'; chance: number };
 
-export interface ConfigEconomyRandomVariant {
+export interface RandomVariant {
     weight?: number;
-    actions: ConfigEconomyAction[];
+    actions: Action[];
 }
 
-// roleId = config role id (ConfigEconomyRole.id), not discord id (!)
-export type ConfigEconomyAction =
+// roleId = config role id (Role.id), not discord id (!)
+export type Action =
     | { op: 'add-item'; itemId: string }
     | { op: 'rem-item'; itemId: string }
     | { op: 'add-role'; roleId: string }
     | { op: 'rem-role'; roleId: string }
-    | { op: 'add-money'; amount: ConfigEconomyMoney }
-    | { op: 'sub-money'; amount: ConfigEconomyMoney }
-    | { op: 'random'; variants: ConfigEconomyRandomVariant[] }
-    | { op: 'if'; cond: ConfigEconomyCond; then: ConfigEconomyAction[]; else?: ConfigEconomyAction[] }
+    | { op: 'add-money'; amount: Money }
+    | { op: 'sub-money'; amount: Money }
+    | { op: 'random'; variants: RandomVariant[] }
+    | { op: 'if'; cond: Cond; then: Action[]; else?: Action[] }
     | {
         op: 'while';
-        cond: ConfigEconomyCond;
-        do: ConfigEconomyAction[];
+        cond: Cond;
+        do: Action[];
         maxIterations?: number; // by default: 100
     };
 
-export type ConfigEconomyMultiplierKind = 'work' | 'slut' | 'crime';
-export type ConfigEconomyMultiplierFilter = ConfigEconomyMultiplierKind[] | '*';
+export type MultiplierKind = 'work' | 'slut' | 'crime';
+export type MultiplierFilter = MultiplierKind[] | '*';
 
-export interface ConfigEconomyMultiplier {
-    filter: ConfigEconomyMultiplierFilter;
+export interface Multiplier {
+    filter: MultiplierFilter;
     multiplier: number;
 }
 
-export interface ConfigEconomyRoleBenefits {
-    multipliers: ConfigEconomyMultiplier[];
-    dailyIncome: ConfigEconomyAction[];
+export interface RoleBenefits {
+    multipliers: Multiplier[];
+    dailyIncome: Action[];
 }
 
-export interface ConfigEconomyThing {
+export interface Thing {
     id: string;
     name: string;
     desc: string;
 }
 
-export interface ConfigEconomyRole extends ConfigEconomyThing {
+export interface Role extends Thing {
     discordRoleId: dsc.Snowflake;
-    refund: ConfigEconomyMoney;
-    benefits: ConfigEconomyRoleBenefits;
+    refund: Money;
+    benefits: RoleBenefits;
 }
 
-export interface ConfigEconomyItem extends ConfigEconomyThing {
-    onUse: ConfigEconomyAction[]; // for example: add-role/add-money
+export interface Item extends Thing {
+    onUse: Action[]; // for example: add-role/add-money
     directOfferId?: string;
 }
 
-export interface ConfigEconomyShopOffer extends ConfigEconomyThing {
-    price: ConfigEconomyMoney;
-    onBuy: ConfigEconomyAction[]; // for example: add-item
+export interface ShopOffer extends Thing {
+    price: Money;
+    onBuy: Action[]; // for example: add-item
     buyOnce: boolean;
 }
 
-export interface ConfigEconomyShopCategory {
+export interface ShopCategory {
     id: string;
     name: string;
     desc: string;
@@ -78,12 +78,12 @@ export interface ConfigEconomyShopCategory {
 }
 
 // ----- config ----- //
-export default interface EconomyConfig {
+export default interface Economy {
     currencySign: string;
     currencySignPlacement: 'left' | 'right';
 
-    roles: ConfigEconomyRole[];
-    items: ConfigEconomyItem[];
-    offers: ConfigEconomyShopOffer[];
-    shop: ConfigEconomyShopCategory[];
+    roles: Role[];
+    items: Item[];
+    offers: ShopOffer[];
+    shop: ShopCategory[];
 }

@@ -19,5 +19,8 @@ local.mk
 Dockerfile
 .dockerignore
 
+# zapup rootfs
+rootfs/
+
 # compiled binary
 justbot

@@ -1,4 +1,4 @@
-import { ConfigEconomyAction, ConfigEconomyCond } from '@/bot/config/schema/economy.ts';
+import * as config from '@/bot/config/schema.ts';
 import { EconomyExecutor } from './action.ts';
 
 import Money from '@/util/money.ts';
@@ -14,7 +14,7 @@ export interface EconomyActionsFormatterConfig {
 }
 
 export interface EconomyActionsFormatter {
-    format(actions: ConfigEconomyAction[]): string[];
+    format(actions: config.economy.Action[]): string[];
 }
 
 export class MinimalActionsFormatter implements EconomyActionsFormatter {
@@ -35,7 +35,7 @@ export class MinimalActionsFormatter implements EconomyActionsFormatter {
         };
     }
 
-    private formatCondition(cond: ConfigEconomyCond): string | null {
+    private formatCondition(cond: config.economy.Cond): string | null {
         switch (cond.op) {
             case 'has-role': {
                 const role = this.ctx.getRoleById(cond.roleId);
@@ -64,7 +64,7 @@ export class MinimalActionsFormatter implements EconomyActionsFormatter {
         }
     }
 
-    private isGood(action: ConfigEconomyAction): Ternary {
+    private isGood(action: config.economy.Action): Ternary {
         switch (action.op) {
             case 'add-role':
             case 'add-item':
@@ -81,7 +81,7 @@ export class MinimalActionsFormatter implements EconomyActionsFormatter {
         }
     }
 
-    private formatActionSubject(action: ConfigEconomyAction): string | null {
+    private formatActionSubject(action: config.economy.Action): string | null {
         switch (action.op) {
             case 'add-role':
             case 'rem-role': {
@@ -105,7 +105,7 @@ export class MinimalActionsFormatter implements EconomyActionsFormatter {
         return null;
     }
 
-    private formatRandom(action: ConfigEconomyAction & { op: 'random' }, indent: string, header: string, allowExpansion: boolean): string[] {
+    private formatRandom(action: config.economy.Action & { op: 'random' }, indent: string, header: string, allowExpansion: boolean): string[] {
         const result: string[] = [header];
 
         const sum = action.variants.reduce((acc, v) => acc + (v.weight ?? 1), 0);
@@ -161,7 +161,7 @@ export class MinimalActionsFormatter implements EconomyActionsFormatter {
         return result;
     }
 
-    private formatActionsList(actions: ConfigEconomyAction[], indent: string, allowExpansion: boolean): string[] {
+    private formatActionsList(actions: config.economy.Action[], indent: string, allowExpansion: boolean): string[] {
         const result: string[] = [];
         for (const action of actions) {
             const linePrefix = indent ? this.config.zeroWidthSpace + indent : '';
@@ -223,7 +223,7 @@ export class MinimalActionsFormatter implements EconomyActionsFormatter {
         return result;
     }
 
-    format(actions: ConfigEconomyAction[]): string[] {
+    format(actions: config.economy.Action[]): string[] {
         return this.formatActionsList(actions, '', true);
     }
 }

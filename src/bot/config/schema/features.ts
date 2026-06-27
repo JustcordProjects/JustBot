@@ -1,8 +1,9 @@
 import * as dsc from 'discord.js';
-import { ConfigTranslation, ContentConfig } from './subtypes.ts';
-import EconomyConfig from './economy.ts';
 
-export interface ConfigFeatures {
+import { Translation, ContentType } from './subtypes.ts';
+import Economy from './economy.ts';
+
+export default interface Features {
     compilation: {
         replaceCompilerMap: Record<string, string[]>;
     };
@@ -47,8 +48,8 @@ export interface ConfigFeatures {
             };
         };
     };
-    economy: EconomyConfig;
-    translations: ConfigTranslation[];
+    economy: Economy;
+    translations: Translation[];
     watchdog: {
         kickNewMembers: boolean;
         allowNewBots: boolean;
@@ -82,7 +83,7 @@ export interface ConfigFeatures {
         contextDefaultMessages: number;
         contextMaxMessages: number;
     };
-    contentDatabases: ContentConfig[];
+    contentDatabases: ContentType[];
     actions: {
         disabled: string[];
     };

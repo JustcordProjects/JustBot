@@ -1,10 +1,19 @@
 import * as dsc from 'discord.js';
-import { BlockCommandsRules, ConfigActivity, Emoji, PermissionDefinitionConfig } from './subtypes.ts';
-import { ConfigFeatures } from './features.ts';
 
-export interface Config {
+import {
+    BlockCommandsRules, Activity, Emoji, Permission
+} from './schema/subtypes.ts';
+import Features from './schema/features.ts';
+
+export * from './schema/subtypes.ts';
+export * as economy from './schema/economy.ts';
+
+export type { default as Economy  } from './schema/economy.ts';
+export type { default as Features } from './schema/features.ts';
+
+export default interface Config {
     hierarchy: {
-        developers: PermissionDefinitionConfig;
+        developers: Permission;
 
         administration: {
             headAdmin: dsc.Snowflake;
@@ -107,7 +116,7 @@ export interface Config {
         };
     };
 
-    features: ConfigFeatures;
+    features: Features;
 
     emojis: {
         darkRedBlock: Emoji;
@@ -127,6 +136,8 @@ export interface Config {
 
     bot: {
         status: 'dnd' | 'online' | 'invisible' | 'brb';
-        activities: ConfigActivity[];
+        activities: Activity[];
     }
 }
+
+export type Hierarchy = Config['hierarchy'];

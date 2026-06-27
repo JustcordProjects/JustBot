@@ -6,14 +6,15 @@ import { cfg } from '@/bot/cfg.ts';
 import { PredefinedColors } from '@/util/color.ts';
 import capitalizeFirst from '@/util/capitalize-first.ts';
 
+import * as config from '@/bot/config/schema.ts';
 import * as dsc from 'discord.js';
+
 import Money from '@/util/money.ts';
 
 import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
-import { ConfigEconomyShopCategory, ConfigEconomyShopOffer } from '@/bot/config/schema/economy.ts';
 import { MinimalActionsFormatter } from '@/apis/economy/format.ts';
 
-function buildSelectMenu(categories: ConfigEconomyShopCategory[]): dsc.StringSelectMenuBuilder {
+function buildSelectMenu(categories: config.economy.ShopCategory[]): dsc.StringSelectMenuBuilder {
     return new dsc.StringSelectMenuBuilder()
         .setCustomId('shop-select-category')
         .setPlaceholder('⚡ Wybierz kategorię...')
@@ -27,7 +28,7 @@ function buildSelectMenu(categories: ConfigEconomyShopCategory[]): dsc.StringSel
         );
 }
 
-function buildCategoryEmbed(category: ConfigEconomyShopCategory, offers: ConfigEconomyShopOffer[], api: CommandAPI): ReplyEmbed {
+function buildCategoryEmbed(category: config.economy.ShopCategory, offers: config.economy.ShopOffer[], api: CommandAPI): ReplyEmbed {
     const embed = new ReplyEmbed()
         .setTitle(`${category.emoji ?? '💳'} ${category.name}`)
         .setDescription(category.desc)
@@ -141,7 +142,7 @@ const shopCmd: Command = {
         }
 
         const values = (categoriesArg.value as string).split(/\s+/);
-        let categoriesToShow: ConfigEconomyShopCategory[] = [];
+        let categoriesToShow: config.economy.ShopCategory[] = [];
 
         if (values.includes('all')) {
             categoriesToShow = categories;
@@ -163,7 +164,7 @@ const shopCmd: Command = {
 
         const allEmbeds = [introEmbed];
         for (const category of categoriesToShow) {
-            let categoryOffers: ConfigEconomyShopOffer[] = [];
+            let categoryOffers: config.economy.ShopOffer[] = [];
             for (const o of allOffers.filter((o) => category.items.includes(o.id))) {
                 if (o.buyOnce && await api.executor.purchases.getPurchaseCount(o.id) >= 1) continue;
                 categoryOffers.push(o);

@@ -13,35 +13,35 @@ export interface Emoji {
     id: dsc.Snowflake;
 }
 
-export interface ConfigTranslation {
+export interface Translation {
     input: string[] | string;
     output: string;
 }
 
-export interface RegexExpressionDefinition {
+export interface Regex {
     regex: string;
     flags: `i` | undefined;
 }
 
-export interface ConfigCommandArgumentRulesForNumbers {
+export interface CmdArgRulesForNums {
     allowInfinity: boolean;
     onlyIntegers: boolean;
 }
 
-export interface ContentConfig {
+export interface ContentType {
     id: string;
     channel: dsc.Snowflake;
     domains: string[];
 }
 
-export interface ConfigActivity {
+export interface Activity {
     type: 'playing' | 'listening' | 'watching';
     name: string;
     description: string;
 }
 
-////////////// permissions ///////////////
-export interface PermissionDefinitionConfig {
+export interface Permission {
     allowedUsers: dsc.Snowflake[];
     allowedRoles: dsc.Snowflake[];
 }
+

@@ -2,8 +2,9 @@ import JSON5 from 'json5';
 
 import { deepMerge } from '@/util/objects/objects.ts';
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
-import { Config } from './config/schema/config.ts';
-import { defaultCfg } from './config/default/index.ts';
+
+import Config     from '@/bot/config/schema.ts';
+import defaultCfg from '@/bot/config/default.ts';
 
 export let overrideCfg: Partial<Config> = {};
 
@@ -27,5 +28,4 @@ function makeConfig(): Config {
 }
 
 export const cfg = makeConfig();
-
 export type { Config };

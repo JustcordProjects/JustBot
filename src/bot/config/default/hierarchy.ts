@@ -1,6 +1,6 @@
-import { Config } from '@/bot/config/schema/config.ts';
+import * as config from '@/bot/config/schema.ts';
 
-export const hierarchyCfg: Config['hierarchy'] = {
+export const hierarchyCfg: config.Hierarchy = {
     developers: {
         allowedRoles: [],
         allowedUsers: [

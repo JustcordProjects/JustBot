@@ -130,7 +130,7 @@ export class PredefinedActionCallbacks {
             else msg.delete();
         }).catch(() => {
             msg.delete()
-        }) 
+        })
         return MagicSkipAllActions;
     };
 }
@@ -302,9 +302,9 @@ class ActionManager {
         for (const action of actions) {
             if (actionFilter && !actionFilter(action, ...args))
                 continue;
-            
+
             if (this.disabledFromName(action.name))
-                continue; 
+                continue;
 
             if (eventType == PredefinedActionEventTypes.OnMessageCreate && !action.worksOutsideGuild) {
                 if (!(ctx as MessageEventCtx).inGuild()) continue;

@@ -1,4 +1,4 @@
-import { ConfigEconomyAction, ConfigEconomyCond, ConfigEconomyMultiplierKind, ConfigEconomyRandomVariant, ConfigEconomyRole } from '@/bot/config/schema/economy.ts';
+import * as config from '@/bot/config/schema.ts';
 import { cfg } from '@/bot/cfg.ts';
 
 import * as dsc from 'discord.js';
@@ -44,12 +44,12 @@ export class EconomyExecutor {
         return this.getByName(name, cfg.features.economy.offers);
     }
 
-    getMemberRoles(): ConfigEconomyRole[] {
+    getMemberRoles(): config.economy.Role[] {
         if (!this.ctx.member) return [];
         return cfg.features.economy.roles.filter((r) => this.ctx.member!.roles.cache.has(r.discordRoleId));
     }
 
-    getMultiplier(kind: ConfigEconomyMultiplierKind): number {
+    getMultiplier(kind: config.economy.MultiplierKind): number {
         const roles = this.getMemberRoles();
         let total = 1.0;
         for (const role of roles) {
@@ -61,14 +61,14 @@ export class EconomyExecutor {
         return total;
     }
 
-    getDailyIncomeActions(): ConfigEconomyAction[] {
+    getDailyIncomeActions(): config.economy.Action[] {
         return this.getMemberRoles().flatMap((r) => r.benefits.dailyIncome);
     }
     async applyDailyIncome() {
         await this.executeActions(this.getDailyIncomeActions());
     }
 
-    async executeActions(actions: ConfigEconomyAction[]): Promise<ConfigEconomyAction[]> {
+    async executeActions(actions: config.economy.Action[]): Promise<config.economy.Action[]> {
         const expanded = await this.expandActions(actions);
         for (const action of expanded) {
             await this.executeLeafAction(action);
@@ -76,8 +76,8 @@ export class EconomyExecutor {
         return expanded;
     }
 
-    async expandActions(actions: ConfigEconomyAction[]): Promise<ConfigEconomyAction[]> {
-        const res: ConfigEconomyAction[] = [];
+    async expandActions(actions: config.economy.Action[]): Promise<config.economy.Action[]> {
+        const res: config.economy.Action[] = [];
         for (const action of actions) {
             switch (action.op) {
                 case 'if': {
@@ -130,7 +130,7 @@ export class EconomyExecutor {
         return res;
     }
 
-    private async executeLeafAction(action: ConfigEconomyAction) {
+    private async executeLeafAction(action: config.economy.Action) {
         switch (action.op) {
             case 'add-item':
                 await this.ctx.user.inventory.addItem(action.itemId);
@@ -153,7 +153,7 @@ export class EconomyExecutor {
         }
     }
 
-    private async checkCondition(cond: ConfigEconomyCond): Promise<boolean> {
+    private async checkCondition(cond: config.economy.Cond): Promise<boolean> {
         switch (cond.op) {
             case 'has-role':
                 return this.hasRole(cond.roleId);
@@ -172,7 +172,7 @@ export class EconomyExecutor {
         }
     }
 
-    private async expandRandom(variants: ConfigEconomyRandomVariant[]): Promise<ConfigEconomyAction[]> {
+    private async expandRandom(variants: config.economy.RandomVariant[]): Promise<config.economy.Action[]> {
         if (variants.length == 0) return [];
 
         const totalWeight = variants.reduce((acc, v) => acc + (v.weight ?? 1), 0);

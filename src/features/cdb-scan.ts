@@ -1,9 +1,9 @@
+import * as config from '@/bot/config/schema.ts';
 import * as dsc from 'discord.js';
 
-import { ContentConfig } from '@/bot/config/schema/subtypes.ts';
 import { ContentEntry } from '@/apis/db/bot-db.ts';
 
-function makeRegex(contentType: ContentConfig) {
+function makeRegex(contentType: config.ContentType) {
     const domainsPattern = contentType.domains
         .map(domain => domain.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
         .join('|');
@@ -15,11 +15,11 @@ function extractMediaLinksInternal(text: string, pattern: RegExp): string[] {
     return matches.map((link) => link.replace(/[),.]+$/, ''));
 }
 
-export function extractMediaLinks(text: string, contentType: ContentConfig): string[] {
+export function extractMediaLinks(text: string, contentType: config.ContentType): string[] {
     return extractMediaLinksInternal(text, makeRegex(contentType));
 }
 
-export async function contentDatabaseScan(channel: dsc.GuildTextBasedChannel, contentType: ContentConfig): Promise<ContentEntry[]> {
+export async function contentDatabaseScan(channel: dsc.GuildTextBasedChannel, contentType: config.ContentType): Promise<ContentEntry[]> {
     const contentEntries: ContentEntry[] = [];
     let lastMessageId: string | undefined;
 
