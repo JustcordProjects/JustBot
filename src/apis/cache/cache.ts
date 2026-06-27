@@ -1,5 +1,4 @@
-import path from 'node:path';
-import fs from 'node:fs/promises';
+import * as path from "@std/path";
 
 function getCacheDir(): string {
     const cacheHome = Deno.env.get('XDG_CACHE_HOME');
@@ -12,11 +11,11 @@ function getCacheDir(): string {
         return path.join(home, '.cache', 'justbot');
     }
 
-    return path.join('/', 'tmp', 'eb-cache');
+    return path.join('/', 'tmp', 'jb-cache');
 }
 
 export async function init() {
-    await fs.mkdir(getCacheDir(), { recursive: true });
+    await Deno.mkdir(getCacheDir(), { recursive: true });
 }
 
 function getBoxFilepath(box: string): string {
@@ -25,10 +24,10 @@ function getBoxFilepath(box: string): string {
 
 async function readBox(boxpath: string): Promise<Record<string, unknown>> {
     try {
-        const content = await fs.readFile(boxpath, 'utf8');
+        const content = await Deno.readTextFile(boxpath);
         return JSON.parse(content);
     } catch (err: unknown) {
-        if ((err as Error & { code: string })?.code === 'ENOENT') {
+        if (err instanceof Deno.errors.NotFound) {
             return {};
         }
         throw err;
@@ -41,7 +40,7 @@ export async function store<T>(box: string, key: string, value: T) {
     const json = await readBox(boxpath);
     json[key] = value;
 
-    await fs.writeFile(boxpath, JSON.stringify(json));
+    await Deno.writeTextFile(boxpath, JSON.stringify(json, null, 2));
 }
 
 export async function load<T>(box: string, key: string): Promise<T | undefined> {
@@ -57,5 +56,5 @@ export async function del(box: string, key: string) {
     const json = await readBox(boxpath);
     delete json[key];
 
-    await fs.writeFile(boxpath, JSON.stringify(json));
+    await Deno.writeTextFile(boxpath, JSON.stringify(json, null, 2));
 }
