@@ -65,21 +65,21 @@ export namespace output {
     }
 
     export function log(...args: unknown[]) {
-        const data = format(args);
+        const data = format(...args);
         const prefixed = decorate('LOG', colors.CYAN, data);
         console.log(prefixed);
         send('stdout', data);
     }
 
     export function warn(...args: unknown[]) {
-        const data = format(args);
+        const data = format(...args);
         const prefixed = decorate('WARN', colors.YELLOW, data);
         console.warn(prefixed);
         send('stdwarn', data);
     }
 
     export function err(...args: unknown[]) {
-        const data = format(args);
+        const data = format(...args);
         const prefixed = decorate('ERR', colors.RED, data);
         console.error(prefixed);
         send('stderr', data);
@@ -87,7 +87,7 @@ export namespace output {
 
     export function verbose(...args: unknown[]) {
         if (Deno.env.get('JB_DEVELOPMENT') != 'true') return;
-        const data = format(args);
+        const data = format(...args);
         const prefixed = decorate('VERB', colors.GRAY, data);
         console.log(prefixed);
     }
