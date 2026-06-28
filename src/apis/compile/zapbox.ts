@@ -8,8 +8,6 @@ export function isAvailable(): boolean {
 let initialized: boolean = false;
 
 export async function init() {
-    output.log('zapbox.init() called');
-
     const exePath = Deno.env.get('JB_ZAPBOX_PATH')
     if (!exePath) return;
 
@@ -22,7 +20,7 @@ export async function init() {
         output.err('failed to initialize zapbox:');
         output.err(new TextDecoder().decode(out.stderr));
     } else {
-        output.log('zapbox initialized');
+        output.verbose('zapbox initialized');
         initialized = true;
     }
 }
