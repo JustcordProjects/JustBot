@@ -36,6 +36,7 @@ export class BotDatabase {
                 last_crimed INTEGER DEFAULT 0,
                 last_collect_income INTEGER DEFAULT 0,
                 last_email_sent INTEGER DEFAULT 0,
+                last_used_image_gen INTEGER DEFAULT 0,
 
                 signature TEXT,
                 default_email_title TEXT,

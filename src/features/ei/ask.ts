@@ -15,6 +15,21 @@ import { client } from '@/client.ts';
 import { db } from '@/apis/db/bot-db.ts';
 
 import logError from '@/util/log-error.ts';
+import { getCommandConfig } from '@/util/cmd/get-command-config.ts';
+import { Hour } from '@/util/parse-timestamp.ts';
+
+import askCmd from '@/cmd/utilities/ask.ts';
+import User from '@/apis/db/user.ts';
+
+// NOTE: duplicated logic with src/features/.../make-command-api.ts
+//       i'm too lazy to move it to some kind of helper so sorry
+//       it's only 4 lines anyway so maybe it's not a big deal.
+async function checkImageGenCooldown(member: dsc.GuildMember) {
+    const cmdCfg = getCommandConfig(askCmd);
+    if (cmdCfg.cooldownBypassUsers?.includes(member.id)) return { can: true };
+    if (cmdCfg.cooldownBypassRoles && cmdCfg.cooldownBypassRoles.some((r) => member.roles.cache.has(r))) return { can: true };
+    return await new User(member.user.id).cooldowns.check('image-gen', Hour * 1000);
+}
 
 export async function executeAsk(msg: dsc.Message, question: string, contextMsgs: number) {
     const attachments: dsc.AttachmentBuilder[] = [];
@@ -59,8 +74,8 @@ export async function executeAsk(msg: dsc.Message, question: string, contextMsgs
         }
     }
     function formatMsg(m: dsc.Message): string {
-        const sanitized = m.content.replace('"', '\\"').replace('\n', '\\n').replaceAll('\\n-# just inteligence', '');
-        return `"${sanitized}"` + formatAttachments(m.attachments.values());
+        const sanitized = m.content.replace(''', '\\'').replace('\n', '\\n').replaceAll('\\n-# just inteligence', '');
+        return `'${sanitized}'` + formatAttachments(m.attachments.values());
     }
 
     const channel = msg.channel as dsc.TextBasedChannel;
@@ -82,7 +97,7 @@ export async function executeAsk(msg: dsc.Message, question: string, contextMsgs
     if (msg.reference?.messageId) {
         try {
             const refMsg = await msg.fetchReference();
-            referencedContext = `\n\nUżytkownik odpowiada na wiadomość od ${formatUser(refMsg.author)}: "${refMsg.content}"`;
+            referencedContext = `\n\nUżytkownik odpowiada na wiadomość od ${formatUser(refMsg.author)}: '${refMsg.content}'`;
         } catch (err) {
             output.err(err);
         }
@@ -253,22 +268,26 @@ export async function executeAsk(msg: dsc.Message, question: string, contextMsgs
             }
         },
         generate_image: async (args: { prompt: string; resolution: '1:1' | '16:9' }) => {
+            if (!checkImageGenCooldown(msg.member!)) {
+                return { message: 'image generation on cooldown for this user' };
+            }
+
             try {
                 const api_shit = 'https://router.huggingface.co/hf-inference/models/black-forest-labs/FLUX.1-schnell';
                 const shit_headers = {
-                    "Authorization": `Bearer ${Deno.env.get("JB_IMAGE_GEN_API_KEY")}`,
-                    "Content-Type": "application/json"
+                    'Authorization': `Bearer ${Deno.env.get('JB_IMAGE_GEN_API_KEY')}`,
+                    'Content-Type': 'application/json'
                 };
                 const shit_body = {
                     inputs: args.prompt,
-                    parameters: getImageResolution(args.resolution) 
+                    parameters: getImageResolution(args.resolution)
                 };
-                const fetched_slop = await fetch(api_shit, { headers: shit_headers, body: JSON.stringify(shit_body), method: "POST" });
+                const fetched_slop = await fetch(api_shit, { headers: shit_headers, body: JSON.stringify(shit_body), method: 'POST' });
                 const fetched_txt = await fetched_slop.bytes();
 
                 const decoded = new TextDecoder().decode(fetched_txt).trim();
                 if (decoded.startsWith('{') && decoded.endsWith('}')) {
-                    logError("stdwarn", new Error(decoded), "Image generation API");
+                    logError('stdwarn', new Error(decoded), 'Image generation API');
                     return { error: JSON.stringify(decoded) };
                 }
 
@@ -279,10 +298,10 @@ export async function executeAsk(msg: dsc.Message, question: string, contextMsgs
 
                 return {
                     success: true,
-                    message: "image successfully generated and will be attached to the response"
+                    message: 'image successfully generated and will be attached to the response'
                 };
             } catch (err) {
-                logError("stdwarn", err as Error, "Image generation API");
+                logError('stdwarn', err as Error, 'Image generation API');
                 return { error: (err as Error).message };
             }
         },

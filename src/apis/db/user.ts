@@ -13,6 +13,7 @@ const CooldownMap = {
     'crime': { col: 'last_crimed', prop: 'lastCrimed' },
     'collect-income': { col: 'last_collect_income', prop: 'lastCollectIncome' },
     'email': { col: 'last_email_sent', prop: 'lastEmailSent' },
+    'image-gen': { col: 'last_used_image_gen', prop: 'lastUsedImageGen' },
 } as const;
 
 export interface CooldownReady {
