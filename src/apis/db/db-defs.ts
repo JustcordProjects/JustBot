@@ -9,6 +9,7 @@ export interface UserDataRaw {
     last_crimed: number;
     last_collect_income: number;
     last_email_sent: number;
+    last_used_image_gen: number;
     prestige_points: number;
 }
 

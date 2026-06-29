@@ -74,7 +74,7 @@ export async function executeAsk(msg: dsc.Message, question: string, contextMsgs
         }
     }
     function formatMsg(m: dsc.Message): string {
-        const sanitized = m.content.replace(''', '\\'').replace('\n', '\\n').replaceAll('\\n-# just inteligence', '');
+        const sanitized = m.content.replace('"', '\\"').replace('\n', '\\n').replaceAll('\\n-# just inteligence', '');
         return `'${sanitized}'` + formatAttachments(m.attachments.values());
     }
 
