@@ -12,6 +12,7 @@ package-lock.json
 .env
 *.db
 bot/config*
+bot/logs/
 local.mk
 
 # hosting only files

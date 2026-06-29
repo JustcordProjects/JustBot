@@ -28,7 +28,8 @@ const defaultCfg: Config = {
                 name: 'Serwer Justcord',
                 description: 'Zastanawiam się co się tu dzieje.'
             }
-        ]
+        ],
+        logsDirPath: 'bot/logs',
     },
 
     hierarchy: hierarchyCfg,

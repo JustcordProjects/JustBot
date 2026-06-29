@@ -75,7 +75,7 @@ import { pollsModerator } from '@/features/mod/polls-mod.ts';
 // --------------- INIT ---------------
 client.once('clientReady', async () => {
     await output.init();
-    output.log(`${ft.CYAN}Logged in.`);
+    output.log(`Logged in.`);
     if (Deno.env.get('JB_DEVELOPMENT') == 'true') {
         output.verbose(
             '------------------------------------------------\n' +
@@ -253,8 +253,13 @@ async function main() {
     reminderHandler();
 }
 
+globalThis.addEventListener('exit', output.deinit);
+Deno.addSignalListener('SIGINT', () => {
+    Deno.exit(0); // NOTE: this triggers exit listener two lines above
+});
+
 (async function () {
     if (!Deno.env.get('JB_TOKEN') && Deno.env.get('TOKEN'))
-        Deno.env.set("JB_TOKEN", Deno.env.get('TOKEN')!);
+        Deno.env.set('JB_TOKEN', Deno.env.get('TOKEN')!);
     await client.login(Deno.env.get('JB_TOKEN'));
 })();

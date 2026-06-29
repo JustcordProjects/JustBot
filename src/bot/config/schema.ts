@@ -129,6 +129,7 @@ export default interface Config {
     bot: {
         status: 'dnd' | 'online' | 'invisible' | 'brb';
         activities: Activity[];
+        logsDirPath: string | null;
     }
 }
 
