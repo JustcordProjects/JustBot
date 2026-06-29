@@ -1,9 +1,10 @@
 import { Category, Command } from '@/bot/command.ts';
-import { output } from '@/bot/logging.ts';
-import logError from '@/util/log-error.ts';
 import { CommandPermissions } from '@/bot/command/permissions.ts';
 import { deepEqual } from '@/util/objects/objects.ts';
-import { cfg } from '@/bot/cfg.ts';
+import { getCommandConfig } from '@/util/cmd/get-command-config.ts';
+
+import { output } from '@/bot/logging.ts';
+import logError from '@/util/log-error.ts';
 
 export const commands: Map<Category, Command[]> = new Map();
 
@@ -34,8 +35,9 @@ export async function registerCommands() {
                 }
 
                 const command: Command = module.default;
+                const cmdCfg = getCommandConfig(command);
 
-                if (cfg.commands.disabledCommands.includes(command.name)) {
+                if (cmdCfg.enabled === false) {
                     if (deepEqual(command.permissions, CommandPermissions.devOnly()) || command.name == 'configuration') {
                         output.warn('Dev-only command ' + command.name + ' should not be disabled. Leaving enabled.');
                     } else {

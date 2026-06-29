@@ -42,9 +42,6 @@ const defaultCfg: Config = {
         confirmUnsafeCommands: false,
         confirmDeprecatedCommands: false,
 
-        restrictedCommands: [],
-        disabledCommands: [],
-        cooldownBypasses: [],
 
         blocking: {
             full: {
@@ -63,6 +60,16 @@ const defaultCfg: Config = {
                 default: 'block',
                 allow: [channelsCfg.other.economy],
             },
+        },
+
+        configuration: {},
+
+        defaultConfiguration: {
+            enabled: true,
+            aliases: [],
+
+            allowedUsers: null,
+            allowedRoles: null,
         },
     },
 

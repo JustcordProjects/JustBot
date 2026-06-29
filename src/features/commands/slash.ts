@@ -16,6 +16,7 @@ import { formatArgType } from './helpers/fmt-arg-type.ts';
 import findCommand from '@/util/cmd/find-command.ts';
 import canExecuteCmd from '@/util/cmd/can-execute.ts';
 import isCommandBlockedOnChannel from '@/util/cmd/is-blocked.ts';
+import { isCommandDisallowed } from '@/util/cmd/is-disallowed.ts';
 
 import { ParsedRawArgument } from './helpers/argument-parser.ts';
 import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
@@ -96,6 +97,10 @@ client.on('interactionCreate', async (int: Interaction) => {
         },
     };
 
+    if (isCommandDisallowed(command, (int.member as dsc.GuildMember) ?? int.user)) {
+        return await log.replyWarn(replyable, 'Nie dla psa kiełbasa...', 'Niestety ktoś mądry pomyślał, by specjalnie dla ciebie wyłączyć tę komendę.');
+    }
+
     if (!canExecuteCmd(command, (int.member as dsc.GuildMember) ?? int.user)) {
         return log.replyError(
             replyable,
@@ -147,9 +152,7 @@ client.on('interactionCreate', async (int: Interaction) => {
         }
     }
 
-    if (cfg.commands.restrictedCommands.find((r) => int.user.id == r.targetUserID && command.name == r.commandName)) {
-        return await log.replyWarn(replyable, 'Nie dla psa kiełbasa...', 'Niestety ktoś mądry pomyślał, by specjalnie dla ciebie wyłączyć tę komendę.');
-    }
+
 
     if (!int.deferred && !int.replied) {
         await int.deferReply();

@@ -8,6 +8,7 @@ import { commands } from '@/cmd/list.ts';
 
 import canExecuteCmd from '@/util/cmd/can-execute.ts';
 import findCommand from '@/util/cmd/find-command.ts';
+import { isCommandDisallowed } from '@/util/cmd/is-disallowed.ts';
 
 import isCommandBlockedOnChannel from '@/util/cmd/is-blocked.ts';
 import actionsManager, { PredefinedActionEventTypes } from '../actions.ts';
@@ -84,6 +85,10 @@ async function prefixCommandsMessageHandler(msg: dsc.OmitPartialGroupDMChannel<d
 
     const { command } = result;
 
+    if (isCommandDisallowed(command, msg.member ?? msg.author)) {
+        return await log.replyWarn(msg, 'Nie dla psa kiełbasa...', 'Niestety ktoś mądry pomyślał, by specjalnie dla ciebie wyłączyć tę komendę.');
+    }
+
     if (!canExecuteCmd(command, msg.member ?? msg.author)) {
         log.replyError(
             msg,
@@ -139,15 +144,8 @@ async function prefixCommandsMessageHandler(msg: dsc.OmitPartialGroupDMChannel<d
         }
     }
 
-    if (cfg.commands.restrictedCommands.find((r) => msg.author.id == r.targetUserID && command.name == r.commandName)) {
-        return await log.replyWarn(msg, 'Nie dla psa kiełbasa...', 'Niestety ktoś mądry pomyślał, by specjalnie dla ciebie wyłączyć tę komendę.');
-    }
-
     try {
         await msg.channel.sendTyping();
-    } catch {}
-
-    try {
         const api = await makeCommandApi(command, argsRaw, {
             msg,
             guild: msg.guild ?? undefined,

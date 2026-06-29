@@ -50,30 +50,41 @@ const cooldownBypassCmd: Command = {
         const targetType = target.type.base === 'user-mention' ? 'user' : 'role';
         const targetID = target.value.id;
 
-        const currentBypasses = cfg.commands.cooldownBypasses;
-        const index = currentBypasses.findIndex((b) => b.commandName === cmdName && b.targetID === targetID && b.targetType === targetType);
+        overrideCfg.commands ??= {} as unknown as Config['commands'];
+        overrideCfg.commands.configuration ??= {};
+        overrideCfg.commands.configuration[cmdName] ??= {};
+
+        cfg.commands.configuration ??= {};
+        cfg.commands.configuration[cmdName] ??= {};
+
+        const listName = targetType === 'user' ? 'cooldownBypassUsers' : 'cooldownBypassRoles';
+
+        overrideCfg.commands.configuration[cmdName][listName] ??= [];
+        cfg.commands.configuration[cmdName][listName] ??= [];
+
+        const currentList = overrideCfg.commands.configuration[cmdName][listName] as string[];
+        const index = currentList.indexOf(targetID);
 
         let opText: string;
         if (op === 'add') {
             if (index !== -1) return api.log.replyError(api, 'Błąd', 'Ten bypass już istnieje!');
-            currentBypasses.push({ commandName: cmdName, targetID, targetType });
+            currentList.push(targetID);
             opText = 'Dodano';
         } else if (op === 'rem') {
             if (index === -1) return api.log.replyError(api, 'Błąd', 'Ten bypass nie istnieje!');
-            currentBypasses.splice(index, 1);
+            currentList.splice(index, 1);
             opText = 'Usunięto';
         } else {
             if (index !== -1) {
-                currentBypasses.splice(index, 1);
+                currentList.splice(index, 1);
                 opText = 'Usunięto';
             } else {
-                currentBypasses.push({ commandName: cmdName, targetID, targetType });
+                currentList.push(targetID);
                 opText = 'Dodano';
             }
         }
 
-        overrideCfg.commands ??= {} as unknown as Config['commands'];
-        overrideCfg.commands.cooldownBypasses = currentBypasses;
+        cfg.commands.configuration[cmdName][listName] = currentList;
 
         saveConfigurationChanges();
         return api.log.replySuccess(

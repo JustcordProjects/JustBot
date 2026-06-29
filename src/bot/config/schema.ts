@@ -1,7 +1,6 @@
 import * as dsc from 'discord.js';
-
 import {
-    BlockCommandsRules, Activity, Emoji, Permission
+    BlockCommandsRules, Activity, Emoji, Permission, CommandOpts
 } from './schema/subtypes.ts';
 import Features from './schema/features.ts';
 
@@ -33,16 +32,6 @@ export default interface Config {
         confirmUnsafeCommands: boolean;
         confirmDeprecatedCommands: boolean;
 
-        restrictedCommands: {
-            targetUserID: string;
-            commandName: string;
-        }[];
-        disabledCommands: string[];
-        cooldownBypasses: {
-            targetType: 'role' | 'user',
-            targetID: string;
-            commandName: string;
-        }[]
 
         blocking: {
             full: BlockCommandsRules;
@@ -50,6 +39,9 @@ export default interface Config {
             spammy: BlockCommandsRules;
             economy: BlockCommandsRules;
         };
+
+        configuration?: Record<string, CommandOpts>;
+        defaultConfiguration: CommandOpts;
     };
 
     database: {

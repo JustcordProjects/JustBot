@@ -10,7 +10,7 @@ import { deepMerge } from '@/util/objects/objects.ts';
 import { commands } from '@/cmd/list.ts';
 import { EconomyExecutor } from '@/apis/economy/action.ts';
 import { flatTypesToUnion } from './flat-types.ts';
-import { cfg } from '@/bot/cfg.ts';
+import { getCommandConfig } from '@/util/cmd/get-command-config.ts';
 
 type FirstArg<T> = T extends { (...args: infer A): unknown } ? A extends [infer F, ...unknown[]] ? F : never
     : T extends { call(this: unknown, ...args: infer A): unknown } ? A extends [unknown, infer F, ...unknown[]] ? F : never
@@ -80,10 +80,9 @@ export async function makeCommandApi(commandObj: Command, argsRaw: ParsedRawArgu
         guild: context.interaction?.guild ?? context.msg?.guild ?? undefined,
 
         checkCooldown: async (field, cooldownMs: number) => {
-            const bypasses = cfg.commands.cooldownBypasses.filter((b) => b.commandName == commandObj.name);
-
-            if (bypasses.some((b) => b.targetType == 'user' && b.targetID == user.id)) return { can: true };
-            if (bypasses.some((b) => b.targetType == 'role' && rawMember?.roles.cache.has(b.targetID))) return {can: true};
+            const cmdCfg = getCommandConfig(commandObj);
+            if (cmdCfg.cooldownBypassUsers?.includes(user.id)) return { can: true };
+            if (cmdCfg.cooldownBypassRoles && rawMember && cmdCfg.cooldownBypassRoles.some((r) => rawMember.roles.cache.has(r))) return { can: true };
 
             return await user.cooldowns.check(field as 'work', cooldownMs);
         },

@@ -27,14 +27,19 @@ const enableCommandCmd: Command = {
         const cmd = api.getTypedArg('arg', 'command-ref').value;
         const name = cmd.name;
 
-        if (!cfg.commands.disabledCommands.includes(name)) {
+        overrideCfg.commands ??= {} as unknown as Config['commands'];
+        overrideCfg.commands.configuration ??= {};
+        overrideCfg.commands.configuration[name] ??= {};
+
+        if (overrideCfg.commands.configuration[name].enabled !== false) {
             return api.log.replyError(api, 'Błąd', `Komenda **${name}** jest już włączona!`);
         }
 
-        cfg.commands.disabledCommands = cfg.commands.disabledCommands.filter((c) => c !== name);
+        overrideCfg.commands.configuration[name].enabled = true;
 
-        overrideCfg.commands ??= {} as unknown as Config['commands'];
-        overrideCfg.commands.disabledCommands = cfg.commands.disabledCommands;
+        cfg.commands.configuration ??= {};
+        cfg.commands.configuration[name] ??= {};
+        cfg.commands.configuration[name].enabled = true;
 
         saveConfigurationChanges();
 

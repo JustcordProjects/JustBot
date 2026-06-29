@@ -45,3 +45,16 @@ export interface Permission {
     allowedRoles: dsc.Snowflake[];
 }
 
+export interface CommandOpts {
+    enabled?: boolean;
+    aliases?: string[];
+
+    allowedUsers?: dsc.Snowflake[] | null;
+    allowedRoles?: dsc.Snowflake[] | null;
+    disallowedUsers?: dsc.Snowflake[];
+    disallowedRoles?: dsc.Snowflake[];
+    cooldownBypassUsers?: dsc.Snowflake[];
+    cooldownBypassRoles?: dsc.Snowflake[];
+    // deno-lint-ignore no-explicit-any
+    [key: string]: any;
+}

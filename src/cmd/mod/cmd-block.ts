@@ -46,37 +46,45 @@ const cmdBlockCmd: Command = {
         const cmd = api.getTypedArg('cmd', 'command-ref')?.value;
         const target = api.getTypedArg('target', ['user-mention', 'role-mention']);
 
-        if (target.type.base === 'role-mention') {
-            return api.log.replyError(api, 'Błąd', 'Blokowanie komend dla ról nie jest wspierane w nowym API (restrictedCommands wspiera tylko użytkowników).');
-        }
-
         const cmdName = cmd.name;
-        const targetUserID = target.value.id;
+        const targetType = target.type.base === 'user-mention' ? 'user' : 'role';
+        const targetID = target.value.id;
 
-        const currentRestricted = cfg.commands.restrictedCommands;
-        const index = currentRestricted.findIndex((r) => r.commandName === cmdName && r.targetUserID === targetUserID);
+        overrideCfg.commands ??= {} as unknown as Config['commands'];
+        overrideCfg.commands.configuration ??= {};
+        overrideCfg.commands.configuration[cmdName] ??= {};
+
+        cfg.commands.configuration ??= {};
+        cfg.commands.configuration[cmdName] ??= {};
+
+        const listName = targetType === 'user' ? 'disallowedUsers' : 'disallowedRoles';
+
+        overrideCfg.commands.configuration[cmdName][listName] ??= [];
+        cfg.commands.configuration[cmdName][listName] ??= [];
+
+        const currentList = overrideCfg.commands.configuration[cmdName][listName] as string[];
+        const index = currentList.indexOf(targetID);
 
         let opText: string;
         if (op === 'add') {
             if (index !== -1) return api.log.replyError(api, 'Błąd', 'Ta blokada już istnieje!');
-            currentRestricted.push({ commandName: cmdName, targetUserID });
+            currentList.push(targetID);
             opText = 'Zablokowano';
         } else if (op === 'rem') {
             if (index === -1) return api.log.replyError(api, 'Błąd', 'Ta blokada nie istnieje!');
-            currentRestricted.splice(index, 1);
+            currentList.splice(index, 1);
             opText = 'Odblokowano';
         } else {
             if (index !== -1) {
-                currentRestricted.splice(index, 1);
+                currentList.splice(index, 1);
                 opText = 'Odblokowano';
             } else {
-                currentRestricted.push({ commandName: cmdName, targetUserID });
+                currentList.push(targetID);
                 opText = 'Zablokowano';
             }
         }
 
-        overrideCfg.commands ??= {} as unknown as Config['commands'];
-        overrideCfg.commands.restrictedCommands = currentRestricted;
+        cfg.commands.configuration[cmdName][listName] = currentList;
 
         saveConfigurationChanges();
         api.log.replySuccess(api, 'Udało się!', `**${opText}** dostęp do komendy **${cmdName}** dla podanego celu!`);
