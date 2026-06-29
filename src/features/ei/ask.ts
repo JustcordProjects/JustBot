@@ -273,6 +273,8 @@ export async function executeAsk(msg: dsc.Message, question: string, contextMsgs
                 return { message: 'image generation on cooldown for this user', waitSec: (cooldown as CooldownWaiting).waitSec };
             }
 
+            new User(msg.author.id).cooldowns.set('image-gen', Date.now());
+
             try {
                 const api_shit = 'https://router.huggingface.co/hf-inference/models/black-forest-labs/FLUX.1-schnell';
                 const shit_headers = {
