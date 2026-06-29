@@ -19,7 +19,7 @@ import { getCommandConfig } from '@/util/cmd/get-command-config.ts';
 import { Hour } from '@/util/parse-timestamp.ts';
 
 import askCmd from '@/cmd/utilities/ask.ts';
-import User from '@/apis/db/user.ts';
+import User, { CooldownWaiting } from '@/apis/db/user.ts';
 
 // NOTE: duplicated logic with src/features/.../make-command-api.ts
 //       i'm too lazy to move it to some kind of helper so sorry
@@ -268,8 +268,9 @@ export async function executeAsk(msg: dsc.Message, question: string, contextMsgs
             }
         },
         generate_image: async (args: { prompt: string; resolution: '1:1' | '16:9' }) => {
-            if (!checkImageGenCooldown(msg.member!)) {
-                return { message: 'image generation on cooldown for this user' };
+            const cooldown = await checkImageGenCooldown(msg.member!);
+            if (!cooldown.can) {
+                return { message: 'image generation on cooldown for this user', waitSec: (cooldown as CooldownWaiting).waitSec };
             }
 
             try {
