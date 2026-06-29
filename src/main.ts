@@ -3,11 +3,12 @@ console.log('Welcome to JustBOT!');
 // preparation & basic imports
 import { client } from '@/client.ts';
 import { ft, output } from '@/bot/logging.ts';
+import process from 'node:process';
 
 import logError from '@/util/log-error.ts';
-globalThis.addEventListener("error", (event) => {
-    logError('stderr', event.error);
-    if (event.error.message?.includes('An invalid token was provided.')) {
+process.on("uncaughtException", (err) => {
+    logError('stderr', err);
+    if (err.message?.includes('An invalid token was provided.')) {
         output.err('Automatic shutdown. Token is invalid.');
         Deno.exit(2);
     }

@@ -15,7 +15,7 @@ export namespace output {
     let stderrChannel: GuildTextBasedChannel;
     let stdwarnChannel: GuildTextBasedChannel;
 
-    function format(...args: unknown[]): string {
+    function format(args: unknown[]): string {
         return args
             .map((arg) => {
                 if (typeof arg == 'string')
