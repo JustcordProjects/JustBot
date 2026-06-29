@@ -3,6 +3,7 @@ import * as gemini from '@/apis/gemini/model.ts';
 import * as reddit from '@/apis/reddit/reddit.ts';
 import * as log from '@/util/log.ts';
 import * as dsc from 'discord.js';
+import { Buffer } from 'node:buffer';
 
 import { SystemPrompt } from '@/features/ei/models.ts';
 import { toolDeclarations } from '@/apis/gemini/ask.ts';
@@ -16,6 +17,7 @@ import { db } from '@/apis/db/bot-db.ts';
 import logError from '@/util/log-error.ts';
 
 export async function executeAsk(msg: dsc.Message, question: string, contextMsgs: number) {
+    const attachments: dsc.AttachmentBuilder[] = [];
     if (!gemini.isInitialized()) {
         return log.replyError(
             msg,
@@ -41,6 +43,20 @@ export async function executeAsk(msg: dsc.Message, question: string, contextMsgs
             }
         }
         return result;
+    }
+    function getImageResolution(proportions: '16:9' | '1:1') {
+        switch (proportions) {
+        case '16:9':
+            return {
+                width: 1920,
+                height: 1080
+            };
+        case '1:1':
+            return {
+                width: 1024,
+                height: 1024
+            };
+        }
     }
     function formatMsg(m: dsc.Message): string {
         const sanitized = m.content.replace('"', '\\"').replace('\n', '\\n').replaceAll('\\n-# just inteligence', '');
@@ -236,6 +252,40 @@ export async function executeAsk(msg: dsc.Message, question: string, contextMsgs
                 return { error: (err as Error).message };
             }
         },
+        generate_image: async (args: { prompt: string; resolution: '1:1' | '16:9' }) => {
+            try {
+                const api_shit = 'https://router.huggingface.co/hf-inference/models/black-forest-labs/FLUX.1-schnell';
+                const shit_headers = {
+                    "Authorization": `Bearer ${Deno.env.get("JB_IMAGE_GEN_API_KEY")}`,
+                    "Content-Type": "application/json"
+                };
+                const shit_body = {
+                    inputs: args.prompt,
+                    parameters: getImageResolution(args.resolution) 
+                };
+                const fetched_slop = await fetch(api_shit, { headers: shit_headers, body: JSON.stringify(shit_body), method: "POST" });
+                const fetched_txt = await fetched_slop.bytes();
+
+                const decoded = new TextDecoder().decode(fetched_txt).trim();
+                if (decoded.startsWith('{') && decoded.endsWith('}')) {
+                    logError("stdwarn", new Error(decoded), "Image generation API");
+                    return { error: JSON.stringify(decoded) };
+                }
+
+                const attachment = new dsc.AttachmentBuilder(Buffer.from(fetched_txt), {
+                    name: 'image.png'
+                });
+                attachments.push(attachment);
+
+                return {
+                    success: true,
+                    message: "image successfully generated and will be attached to the response"
+                };
+            } catch (err) {
+                logError("stdwarn", err as Error, "Image generation API");
+                return { error: (err as Error).message };
+            }
+        },
     };
 
     const finalSystemInstruction = [
@@ -352,8 +402,8 @@ export async function executeAsk(msg: dsc.Message, question: string, contextMsgs
     }
 
     let content = result.response.text();
-    if (content.trim().length > 0) {
-        if (!prefixChecked) {
+    if (content.trim().length > 0 || attachments.length > 0) {
+        if (content.trim().length > 0 && !prefixChecked) {
             if (allPrefixes.some((p) => content.startsWith(p))) {
                 content = '... ' + content;
             }
@@ -361,10 +411,11 @@ export async function executeAsk(msg: dsc.Message, question: string, contextMsgs
         }
 
         const payload = {
-            content: `${content}\n-# just inteligence`,
+            content: content.trim().length > 0 ? `${content}\n-# just inteligence` : '\n-# just inteligence',
             allowedMentions: {
                 parse: [],
             },
+            files: attachments,
         };
 
         await msg.reply(payload as dsc.MessageReplyOptions);

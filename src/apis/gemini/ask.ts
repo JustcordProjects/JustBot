@@ -177,6 +177,26 @@ export const toolDeclarations: gemini.Tool[] = [
                     },
                 },
             },
+            {
+                name: 'generate_image',
+                description: 'Generuje obraz na podstawie opisu (promptu) i proporcji/rozdzielczości.',
+                parameters: {
+                    type: gemini.SchemaType.OBJECT,
+                    properties: {
+                        prompt: {
+                            type: gemini.SchemaType.STRING,
+                            description: 'Opis obrazu do wygenerowania (najlepiej po angielsku).',
+                        },
+                        resolution: {
+                            type: gemini.SchemaType.STRING,
+                            description: 'Proporcje obrazu.',
+                            enum: ['1:1', '16:9'],
+                            format: 'enum',
+                        },
+                    },
+                    required: ['prompt', 'resolution'],
+                },
+            },
         ],
     },
 ];
