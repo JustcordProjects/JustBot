@@ -38,29 +38,29 @@ const toplvlCmd: Command = {
             }
 
             const fields: dsc.APIEmbedField[] = [];
-            let i_abs = 0;
-            let i_real = 0;
+            let absCounter = 0;
+            let realCounter = 0;
 
             for (const row of rows) {
-                i_abs++;
-                if (++i_real > 12) break;
+                absCounter++;
+                if (++realCounter > 12) break;
 
                 try {
                     const member = await api.guild?.members.fetch(row.user_id);
                     if (!member) {
-                        i_real--;
+                        realCounter--;
                         continue;
                     }
 
                     const userLvlRole = lvlRoles.filter((id) => member.roles.cache.has(id)).at(-1);
                     fields.push({
-                        name: `${i_abs} » ${member.user.username}`,
+                        name: `${absCounter} » ${member.user.username}`,
                         value: `${userLvlRole ? `<@&${userLvlRole}>` : `<@&${cfg.features.welcomer.freeRolesForEveryone[0]}>`}\n**Lvl**: ${calculateLevel(row.xp, cfg.features.leveling.levelDivider)}\n**XP**: ${row.xp}`,
                         inline: true,
                     });
                 } catch (e) {
                     output.warn(e);
-                    i_real--;
+                    realCounter--;
                     continue;
                 }
             }

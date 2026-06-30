@@ -130,20 +130,20 @@ const addAltAccountCommand: Command = {
 
                 collector.stop();
 
-                const user_inv = new User(api.invoker.id);
+                const userInventory = new User(api.invoker.id);
                 await db.runSql('INSERT INTO alternative_accounts VALUES (?, ?);', [primary.id, api.invoker.id]);
                 const user_primary = new User(primary.id);
 
                 // leveling
-                user_primary.leveling.addXP(await user_inv.leveling.getXP());
+                user_primary.leveling.addXP(await userInventory.leveling.getXP());
                 addLvlRole(api.invoker.member!.guild, xpToLevel(await user_primary.leveling.getXP()), api.invoker.member!.id);
 
                 // economy
-                const economy_balance = await user_inv.economy.getBalance();
-                user_primary.economy.addBankMoney(economy_balance.bank.add(economy_balance.wallet));
+                const economyBalance = await userInventory.economy.getBalance();
+                user_primary.economy.addBankMoney(economyBalance.bank.add(economyBalance.wallet));
 
                 // prestige
-                user_primary.prestige.addPoints(await user_inv.prestige.getPoints());
+                user_primary.prestige.addPoints(await userInventory.prestige.getPoints());
 
                 // very scary
                 await db.reset.all(api.invoker.id);

@@ -152,8 +152,8 @@ const manageAccountsCmd: Command = {
                     // updating data
                     await new_primary.leveling.addXP(await old_primary.leveling.getXP());
                     await addLvlRole(api.guild!, xpToLevel(await new_primary.leveling.getXP()), i.user.id);
-                    const economy_balance = await old_primary.economy.getBalance();
-                    new_primary.economy.addBankMoney(economy_balance.bank.add(economy_balance.wallet));
+                    const economyBalance = await old_primary.economy.getBalance();
+                    new_primary.economy.addBankMoney(economyBalance.bank.add(economyBalance.wallet));
                     new_primary.prestige.addPoints(await old_primary.prestige.getPoints());
 
                     // very scary

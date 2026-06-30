@@ -2,7 +2,7 @@ import { Command } from '@/bot/command.ts';
 import { CommandPermissions } from '@/bot/command/permissions.ts';
 import { CommandFlags } from '@/bot/command/misc.ts';
 
-const searxng_instances = [
+const searchingInstances = [
     'https://searx.projectlounge.pw',
 ];
 
@@ -19,9 +19,9 @@ function buildSearchURL(instance: string, query: string, json: boolean) {
 }
 
 async function getSearchResults(query: string): Promise<SearchResults | undefined> {
-    for (const instance_url of searxng_instances) {
+    for (const instanceUrl of searchingInstances) {
         try {
-            const fetched = await fetch(buildSearchURL(instance_url, query, true));
+            const fetched = await fetch(buildSearchURL(instanceUrl, query, true));
             if (fetched.status !== 200) continue;
 
             return await fetched.json();

@@ -127,8 +127,8 @@ export interface WikiDisamiguition {
 export default async function getWikiArticle(rawQuery: string): Promise<WikiError | WikiResponse | WikiDisamiguition> {
     const query = rawQuery == 'hubix' ? 'Niepełnosprawność intelektualna w stopniu głębokim' : rawQuery;
 
-    const fetched_raw = await downloadFromWikipedia(['pl', 'simple', 'en'], [query]);
-    const fetched = fetched_raw?.fetched;
+    const fetchedRaw = await downloadFromWikipedia(['pl', 'simple', 'en'], [query]);
+    const fetched = fetchedRaw?.fetched;
 
     if (!fetched || !fetched.ok) {
         if (!gemini.isInitialized() || !gemini.getModels('wiki-cmd').length) {
@@ -144,17 +144,17 @@ export default async function getWikiArticle(rawQuery: string): Promise<WikiErro
         } catch {
             return { success: false, reason: 'ai-error' };
         }
-        const ai_response = result.response.text();
-        if (ai_response.toLowerCase().trim().includes('--ignore')) {
+        const aiResponse = result.response.text();
+        if (aiResponse.toLowerCase().trim().includes('--ignore')) {
             return { success: false, reason: 'ai-ignore' };
         }
-        const ai_fl = ai_response.split('\n')[0].trim();
-        const ai_has_title = ai_fl.startsWith('# ');
-        const ai_description = ai_has_title ? ai_response.slice(ai_fl.length).trim() : ai_response;
+        const aiHeader = aiResponse.split('\n')[0].trim();
+        const aiHasTitle = aiHeader.startsWith('# ');
+        const aiDescription = aiHasTitle ? aiResponse.slice(aiHeader.length).trim() : aiResponse;
         return {
             success: true, usedAi: true, isDisamiguition: false,
-            title: ai_has_title ? ai_fl.replace('# ', '') : 'Definicja od AI',
-            description: ai_description, url: `https://google.com/search?q=${encodeURIComponent(query)}`
+            title: aiHasTitle ? aiHeader.replace('# ', '') : 'Definicja od AI',
+            description: aiDescription, url: `https://google.com/search?q=${encodeURIComponent(query)}`
         };
     }
 
@@ -163,7 +163,7 @@ export default async function getWikiArticle(rawQuery: string): Promise<WikiErro
     const extrdesc = (json.extract ?? '') + (json.description ?? '');
 
     if (extrdesc?.includes('strona ujednoznaczniająca') || extrdesc?.includes('may refer to')) {
-        const titles = await getDisambiguationTitles(json.title, fetched_raw.lang);
+        const titles = await getDisambiguationTitles(json.title, fetchedRaw.lang);
         return {
             success: true, isDisamiguition: true,
             url: json.content_urls.desktop.page,

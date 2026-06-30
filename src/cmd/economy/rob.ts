@@ -29,7 +29,7 @@ async function tryRob(attacker: User, target: User): Promise<{ ok: boolean; amou
     const targetBalance = await target.economy.getBalance();
 
     if (targetBalance.wallet.lessThan(MinStealable)) {
-        return { ok: false, reason: 'too_poor' };
+        return { ok: false, reason: 'too-poor' };
     }
 
     const success = getRandomFloat(0, 1) < BaseSuccessChance;
@@ -48,7 +48,7 @@ async function tryRob(attacker: User, target: User): Promise<{ ok: boolean; amou
 
             if (result.changes === 0) {
                 await db.runSql('ROLLBACK');
-                return { ok: false, reason: 'target_update_failed' };
+                return { ok: false, reason: 'target-update-failed' };
             }
 
             await attacker.economy.addWalletMoney(amount);
@@ -65,7 +65,7 @@ async function tryRob(attacker: User, target: User): Promise<{ ok: boolean; amou
         try {
             await db.runSql('ROLLBACK');
         } catch {}
-        return { ok: false, reason: 'db_error' };
+        return { ok: false, reason: 'db-error' };
     }
 }
 
@@ -111,7 +111,7 @@ const robCmd: Command = {
             const result = await tryRob(api.executor, target);
 
             if (!result.ok) {
-                if (result.reason === 'too_poor') {
+                if (result.reason === 'too-poor') {
                     const embed = new ReplyEmbed()
                         .setColor(PredefinedColors.Yellow)
                         .setTitle('Cel jest zbyt biedny')

@@ -18,7 +18,7 @@ export async function registerCommands() {
             continue;
         }
 
-        const cat_cmds: Command[] = [];
+        const categoryCmds: Command[] = [];
 
         for (const cmd of Deno.readDirSync(`./src/cmd/${cat.name}`)) {
             if (!cmd.name.endsWith('.ts')) {
@@ -45,7 +45,7 @@ export async function registerCommands() {
                     }
                 }
 
-                cat_cmds.push(command);
+                categoryCmds.push(command);
             } catch (e) {
                 logError('stdwarn', e, 'Command importer');
             }
@@ -53,7 +53,7 @@ export async function registerCommands() {
 
         commands.set(
             Category.fromString(cat.name)!,
-            cat_cmds,
+            categoryCmds,
         );
     }
 }

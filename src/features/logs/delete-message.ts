@@ -20,8 +20,8 @@ export const deleteMessageAction: Action<MessageEventCtx> = {
                     .some((p) => msg.content.startsWith(p))
             ) await new User(msg.author.id).leveling.removeXP(computeLevelForMessage(msg));
 
-            const logs_channel = await msg.client.channels.fetch(cfg.channels.mod.logs) as GuildTextBasedChannel;
-            logs_channel.send({
+            const logsChannel = await msg.client.channels.fetch(cfg.channels.mod.logs) as GuildTextBasedChannel;
+            logsChannel.send({
                 embeds: [
                     (await mkMessageReferenceEmbed(msg, {
                         title: "Wiadomość została usunięta",

@@ -31,26 +31,26 @@ export const rankCmd: Command = {
         const userArg = api.getTypedArg('user', 'user-mention')?.value;
         const user = userArg?.user ?? api.invoker.user;
 
-        const db_user = new User(user.id);
-        db_user.ensureExists();
+        const dbUser = new User(user.id);
+        dbUser.ensureExists();
 
-        const top_lvl = await db.leveling.getTop();
-        const index_lvl = top_lvl.findIndex((value) => value.id == db_user.id);
+        const topLevel = await db.leveling.getTop();
+        const levelRank = topLevel.findIndex((value) => value.id == dbUser.id);
 
-        const top_rep = await db.prestige.getTop();
-        const index_rep = top_rep.findIndex((value) => value.id == db_user.id);
+        const topRep = await db.prestige.getTop();
+        const repRank = topRep.findIndex((value) => value.id == dbUser.id);
 
-        const top_eco = await db.economy.getTopTotal();
-        const index_eco = top_eco.findIndex((value) => value.id == db_user.id);
+        const topEco = await db.economy.getTopTotal();
+        const ecoRank = topEco.findIndex((value) => value.id == dbUser.id);
 
         api.reply({
             embeds: [
                 (api.log.getInfoEmbed(
                     'Twoje miejsce w rankingach',
                     `Aktualnie znajdujesz się:\n` +
-                    `- na miejscu **${index_lvl + 1}** w rankingu poziomów\n` +
-                    `- na miejscu **${index_rep + 1}** w rankingu prestiżu\n` +
-                    `- na miejscu **${index_eco + 1}** w rankingu ekonomii`
+                    `- na miejscu **${levelRank + 1}** w rankingu poziomów\n` +
+                    `- na miejscu **${repRank + 1}** w rankingu prestiżu\n` +
+                    `- na miejscu **${ecoRank + 1}** w rankingu ekonomii`
                 ))
                 .setThumbnail(user.displayAvatarURL())
             ]

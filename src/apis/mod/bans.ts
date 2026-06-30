@@ -24,10 +24,10 @@ export default async function ban(
 
     let firstBannerMember: dsc.GuildMember;
 
-    for (const mem_id of members) {
+    for (const memberId of members) {
         let smember: dsc.GuildMember;
         try {
-            smember = await member.guild.members.fetch(mem_id);
+            smember = await member.guild.members.fetch(memberId);
         } catch {
             continue;
         }

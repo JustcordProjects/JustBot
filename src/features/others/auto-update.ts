@@ -37,12 +37,12 @@ export const autoUpdateAction: Action<MessageEventCtx> = {
                 });
             }
 
-            const cmd_check = new Deno.Command('make', {
+            const checkCmd = new Deno.Command('make', {
                 args: ['check', 'lint'],
             });
-            const out_check = await cmd_check.output();
+            const checkOutput = await checkCmd.output();
 
-            if (out_check.code != 0) {
+            if (checkOutput.code != 0) {
                 await msg.react('❌');
                 return await sendLog({
                     title: 'Auto update się zjebał',
