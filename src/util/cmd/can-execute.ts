@@ -11,8 +11,8 @@ export default function canExecuteCmd(cmd: Command, user: dsc.GuildMember | dsc.
 
     const cmdCfg = getCommandConfig(cmd);
 
-    const allowedUsers = cmdCfg.allowedUsers !== undefined ? cmdCfg.allowedUsers : cmd.permissions.allowedUsers;
-    const allowedRoles = cmdCfg.allowedRoles !== undefined ? cmdCfg.allowedRoles : cmd.permissions.allowedRoles;
+    const allowedUsers = cmdCfg.allowedUsers ? cmdCfg.allowedUsers : cmd.permissions.allowedUsers;
+    const allowedRoles = cmdCfg.allowedRoles ? cmdCfg.allowedRoles : cmd.permissions.allowedRoles;
 
     if (allowedUsers == null || allowedRoles == null) return true;
 
