@@ -40,7 +40,9 @@ lint:
 	@$(DENO) lint src/**/*
 
 format:
-	@$(DENO) fmt src/**/*
+	@echo "human is the best formatter,"
+	@echo "go and format code yourself"
+	@echo "you can do it, we all believe in you!"
 test:
 	@$(DENO) test $(DENO_FLAGS) tests/main.ts
 
