@@ -75,8 +75,11 @@ const manCmd: Command = {
         const { command, category } = found;
 
         const formattedArgs = command.expectedArgs.map((arg) => `**${arg.name}** (${arg.type.base}): ${arg.description}`);
-        const formattedAllowedRoles: string[] = command.permissions.allowedRoles !== null ? command.permissions.allowedRoles.map((role: string) => `<@&${role}>`) : ['każda rola'];
-        const formattedAllowedUsers: string[] = command.permissions.allowedUsers !== null ? command.permissions.allowedUsers.map((user: string) => `<@${user}>`) : ['każdy użytkownik'];
+
+        const allowedRoles = command.permissions.allowedRoles == null ? null : [...new Set(command.permissions.allowedRoles)];
+        const allowedUsers = command.permissions.allowedUsers == null ? null : [...new Set(command.permissions.allowedUsers)];
+        const formattedAllowedRoles: string[] = allowedRoles != null ? allowedRoles.map((role: string) => `<@&${role}>`) : ['każda rola'];
+        const formattedAllowedUsers: string[] = allowedUsers != null ? allowedUsers.map((user: string) => `<@${user}>`) : ['każdy użytkownik'];
 
         const canUseCommand = canExecuteCmd(command, api.invoker.member ?? api.invoker.user);
 
