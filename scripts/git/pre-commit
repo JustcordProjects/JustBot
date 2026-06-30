@@ -1,0 +1,15 @@
+#!/bin/bash
+set -e
+
+run() {
+    echo "-->> $*"
+    "$@" || {
+        echo -e "\n\033[37;41m                   PRE-COMMIT HOOK FAILURE                   \033[0m"
+        echo "commit aborted, to bypass use \`git commit -n -a -m \"message\"\`"
+        exit 1
+    }
+}
+
+run make check
+run make lint
+run make test
