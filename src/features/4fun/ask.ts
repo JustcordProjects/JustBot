@@ -15,7 +15,7 @@ export const askAction: Action<MessageEventCtx> = {
     constraints: [
         (ctx) => ctx.author.id != client.user?.id,
         async (ctx) => {
-            const referenced = typeof ctx.reference?.messageId == 'string' && typeof ctx.reference?.guildId == 'string'
+            const referenced = typeof ctx.reference?.messageId == 'string' && typeof ctx.reference?.guildId == 'string' && !ctx.flags.has('HasSnapshot')
                 ? await ctx.fetchReference() : false;
 
             return ctx.content.trim().startsWith(`<@${client.user?.id}>`) ||
