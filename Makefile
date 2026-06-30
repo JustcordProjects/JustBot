@@ -1,5 +1,5 @@
-.PHONY: all run dev check format fmt lint tests
 
+DENO ?= deno
 HOME ?= ~
 
 CACHE_DIR ?= $(HOME)/.cache/justbot
@@ -17,30 +17,37 @@ DENO_PERMISSION_FLAGS = $(DENO_IO_PERMS_FLAGS) --allow-net --allow-sys --allow-f
 
 DENO_FLAGS            = --no-prompt --env-file $(DENO_PERMISSION_FLAGS)
 
-all:
-	@deno compile $(DENO_FLAGS) --output justbot src/main.ts
+.PHONY: all run dev check
+.PHONY: format fmt lint test tests
+.PHONY: hook-register
+all: compile
 
-run:
-	@deno run $(DENO_FLAGS) src/main.ts
+CMD_FILES = $(shell find src/cmd -name "*.ts" -not -name "list.ts")
+INCLUDE_FLAGS = $(foreach file,$(CMD_FILES),--include $(file))
 
+compile: check lint
+	@$(DENO) compile $(DENO_FLAGS) $(INCLUDE_FLAGS) --output justbot src/main.ts
+
+run: check lint
+	@$(DENO) run $(DENO_FLAGS) src/main.ts
 dev: check lint
-	@deno run $(DENO_FLAGS) --watch src/main.ts
+	@$(DENO) run $(DENO_FLAGS) --watch src/main.ts
 
 check:
-	@deno check src/main.ts
-	@deno check src/cmd/**/*.ts
+	@$(DENO) check src/main.ts
+	@$(DENO) check src/cmd/**/*.ts
+lint:
+	@$(DENO) lint src/**/*
 
 format:
-	@deno fmt src/**/*
+	@$(DENO) fmt src/**/*
+test:
+	@$(DENO) test $(DENO_FLAGS) tests/main.ts
 
-hook_register:
-	git config core.hooksPath src/events/git 
-	chmod +x src/events/git/pre-commit
-
-tests:
-	deno test $(DENO_FLAGS) tests/main.ts	
-
+tests: test
 fmt: format
 
-lint:
-	@deno lint src/**/*
+hook-register:
+	chmod +x scripts/git/pre-commit
+	git config core.hooksPath scripts/git
+
