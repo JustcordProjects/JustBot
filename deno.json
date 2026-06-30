@@ -28,7 +28,7 @@
     },
     "imports": {
         "@std/path": "jsr:@std/path@^1.0.0",
-
+        "@std/assert": "jsr:@std/assert@^1.0.0",
         "@vitalets/google-translate-api": "npm:@vitalets/google-translate-api@^9.2.1",
         "discord.js": "npm:discord.js@^14.26.3",
         "figlet": "npm:figlet@^1.11.0",
@@ -39,6 +39,7 @@
         "gemini": "npm:@google/generative-ai@^0.24.1",
         "pokenode-ts": "npm:pokenode-ts@^1.20.0",
         "sqlite": "https://deno.land/x/sqlite@v3.9.1/mod.ts",
-        "@/": "./src/"
+        "@/": "./src/",
+        "#tests/": "./tests/"
     }
 }

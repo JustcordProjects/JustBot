@@ -1,4 +1,4 @@
-.PHONY: all run dev check format fmt lint
+.PHONY: all run dev check format fmt lint tests
 
 HOME ?= ~
 
@@ -10,10 +10,10 @@ DATABASES ?= bot.db,bot.db-journal
 -include local.mk
 ZAPBOX_PATH ?= zapbox
 
-DENO_IO_PERMS_FLAGS   = --allow-read=$(CONFIG_FILE),.env,$(DATABASES),$(CACHE_DIR),$(PKG_DIR),. \
+DENO_IO_PERMS_FLAGS   = --allow-read=$(CONFIG_FILE),tests,.env,$(DATABASES),$(CACHE_DIR),$(PKG_DIR),. \
 						--allow-write=$(CONFIG_FILE),$(DATABASES),$(CACHE_DIR),$(PKG_DIR),.
 DENO_PERMISSION_FLAGS = $(DENO_IO_PERMS_FLAGS) --allow-net --allow-sys --allow-ffi \
-						--allow-env --allow-run=cdecl,git,make,$(ZAPBOX_PATH)
+						--allow-env --allow-run=cdecl,chmod,git,make,$(ZAPBOX_PATH)
 
 DENO_FLAGS            = --no-prompt --env-file $(DENO_PERMISSION_FLAGS)
 
@@ -32,6 +32,13 @@ check:
 
 format:
 	@deno fmt src/**/*
+
+hook_register:
+	git config core.hooksPath src/events/git 
+	chmod +x src/events/git/pre-commit
+
+tests:
+	deno test $(DENO_FLAGS) tests/main.ts	
 
 fmt: format
 

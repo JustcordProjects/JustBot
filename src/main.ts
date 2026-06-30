@@ -86,7 +86,7 @@ client.once('clientReady', async () => {
             '------------------------------------------------'
         );
     }
-
+    
     await registerCommands();
     output.verbose('Commands registered');
 

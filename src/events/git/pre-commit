@@ -1,0 +1,17 @@
+#!/bin/bash
+
+set -e 
+
+run() {
+    echo "-- $*"
+    "$@" || {
+        echo "failure!!!!"
+        echo " \"napisz lepszy kod brother\" "
+        echo "commit aborted"
+        exit 1
+    }
+}
+
+run make check 
+run make lint
+run make tests
