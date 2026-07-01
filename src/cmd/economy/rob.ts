@@ -4,11 +4,11 @@ import { getRandomFloat } from '@/util/math/rand.ts';
 import { Command } from '@/bot/command.ts';
 import { CommandFlags } from '@/bot/command/misc.ts';
 import { PredefinedColors } from '@/util/color.ts';
-import { output } from '@/bot/logging.ts';
 import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
-import Money from '@/util/money.ts';
 
+import Money from '@/util/money.ts';
 import User from '@/apis/db/user.ts';
+import * as output from '@/bot/output.ts';
 
 const CooldownMs = 5 * 60 * 1000;
 const BaseSuccessChance = 0.5;

@@ -2,10 +2,11 @@ console.log('Welcome to JustBOT!');
 
 // preparation & basic imports
 import { client } from '@/client.ts';
-import { ft, output } from '@/bot/logging.ts';
 import process from 'node:process';
 
+import * as output from '@/bot/output.ts';
 import logError from '@/util/log-error.ts';
+
 process.on("uncaughtException", (err) => {
     logError('stderr', err);
     if (err.message?.includes('An invalid token was provided.')) {
@@ -86,7 +87,7 @@ client.once('clientReady', async () => {
             '------------------------------------------------'
         );
     }
-    
+
     await registerCommands();
     output.verbose('Commands registered');
 

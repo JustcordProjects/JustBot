@@ -1,10 +1,9 @@
-import { output } from '@/bot/logging.ts';
-
-import { Interaction } from 'discord.js';
+import * as output from '@/bot/output.ts';
 import * as dsc from 'discord.js';
 import * as log from '@/util/log.ts';
 
 import { cfg } from '@/bot/cfg.ts';
+import { Interaction } from 'discord.js';
 import { CommandFlags } from '@/bot/command/misc.ts';
 import { client } from '@/client.ts';
 import { commands } from '@/cmd/list.ts';
@@ -16,7 +15,7 @@ import { formatArgType } from './helpers/fmt-arg-type.ts';
 import findCommand from '@/util/cmd/find-command.ts';
 import canExecuteCmd from '@/util/cmd/can-execute.ts';
 import isCommandBlockedOnChannel from '@/util/cmd/is-blocked.ts';
-import { isCommandDisallowed } from '@/util/cmd/is-disallowed.ts';
+import isCommandDisallowed from '@/util/cmd/is-disallowed.ts';
 
 import { ParsedRawArgument } from './helpers/argument-parser.ts';
 import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';

@@ -3,11 +3,11 @@ import { CommandFlags } from '@/bot/command/misc.ts';
 import { CommandAPI } from '@/bot/command/api.ts';
 import { PredefinedColors } from '@/util/color.ts';
 import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
-import { output } from '@/bot/logging.ts';
 import { formatEmoji } from 'discord.js';
 import { cfg } from '@/bot/cfg.ts';
 
 import * as config from '@/bot/config/schema.ts';
+import * as output from '@/bot/output.ts';
 
 import Money from '@/util/money.ts';
 

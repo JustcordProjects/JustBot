@@ -1,10 +1,11 @@
 import * as dsc from 'discord.js';
+import * as output from '@/bot/output.ts';
+
 import { Command } from '@/bot/command.ts';
 import { CommandFlags } from '@/bot/command/misc.ts';
 import { CommandPermissions } from '@/bot/command/permissions.ts';
 import { CommandAPI } from '@/bot/command/api.ts';
 import { db } from '@/apis/db/bot-db.ts';
-import { output } from '@/bot/logging.ts';
 import { getErrorEmbed, getSuccessEmbed, getWarnEmbed } from '@/util/log.ts';
 import { cfg } from '@/bot/cfg.ts';
 

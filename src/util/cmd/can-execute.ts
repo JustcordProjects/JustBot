@@ -1,7 +1,7 @@
 import { Command } from '@/bot/command.ts';
 import { getCommandConfig } from './get-command-config.ts';
-import { isCommandDisallowed } from './is-disallowed.ts';
 
+import isCommandDisallowed from './is-disallowed.ts';
 import * as dsc from 'discord.js';
 
 export default function canExecuteCmd(cmd: Command, user: dsc.GuildMember | dsc.User) {

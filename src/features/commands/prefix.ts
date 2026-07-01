@@ -1,6 +1,6 @@
 import * as log from '@/util/log.ts';
 import * as dsc from 'discord.js';
-import { output } from '@/bot/logging.ts';
+import * as output from '@/bot/output.ts';
 
 import { cfg } from '@/bot/cfg.ts';
 import { CommandFlags } from '@/bot/command/misc.ts';
@@ -8,7 +8,7 @@ import { commands } from '@/cmd/list.ts';
 
 import canExecuteCmd from '@/util/cmd/can-execute.ts';
 import findCommand from '@/util/cmd/find-command.ts';
-import { isCommandDisallowed } from '@/util/cmd/is-disallowed.ts';
+import isCommandDisallowed from '@/util/cmd/is-disallowed.ts';
 
 import isCommandBlockedOnChannel from '@/util/cmd/is-blocked.ts';
 import actionsManager, { PredefinedActionEventTypes } from '../actions.ts';

@@ -1,9 +1,10 @@
+import * as output from '@/bot/output.ts';
+
 import { Category, Command } from '@/bot/command.ts';
 import { CommandPermissions } from '@/bot/command/permissions.ts';
 import { deepEqual } from '@/util/objects/objects.ts';
 import { getCommandConfig } from '@/util/cmd/get-command-config.ts';
 
-import { output } from '@/bot/logging.ts';
 import logError from '@/util/log-error.ts';
 
 export const commands: Map<Category, Command[]> = new Map();

@@ -9,7 +9,7 @@ import { SystemPrompt } from '@/features/ei/models.ts';
 import { toolDeclarations } from '@/apis/gemini/ask.ts';
 
 import { commands } from '@/cmd/list.ts';
-import { output } from '@/bot/logging.ts';
+import * as output from '@/bot/output.ts';
 import { cfg } from '@/bot/cfg.ts';
 import { client } from '@/client.ts';
 import { db } from '@/apis/db/bot-db.ts';

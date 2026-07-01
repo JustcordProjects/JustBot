@@ -1,3 +1,4 @@
+import * as output from '@/bot/output.ts';
 import * as dsc from 'discord.js';
 
 import User from '@/apis/db/user.ts';
@@ -8,7 +9,6 @@ import { findLowerClosestKey } from '@/util/objects/lower-closest-key.ts';
 
 import { cfg } from '@/bot/cfg.ts';
 import { client } from '@/client.ts';
-import { output } from './logging.ts';
 
 export const OnSetXpEvent = actionsManager.mkEvent('OnSetXpEvent');
 export interface XpEventCtx {

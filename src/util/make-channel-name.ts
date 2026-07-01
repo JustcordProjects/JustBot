@@ -1,5 +1,5 @@
+import * as output from '@/bot/output.ts';
 import { cfg } from '@/bot/cfg.ts';
-import { output } from '@/bot/logging.ts';
 
 export interface ChannelName {
     name: string;

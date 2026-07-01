@@ -5,22 +5,22 @@ import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
 import { PredefinedColors } from '@/util/color.ts';
 
 import * as tfwiki from '@/apis/wiki/titanfall.ts';
+import * as output from '@/bot/output.ts';
 import * as dsc from 'discord.js';
 
 import logError from '@/util/log-error.ts';
-import { output } from '@/bot/logging.ts';
 
 const MAX_LEN = 600;
 
 function findBestImage(imgs: tfwiki.Image[], title: string): dsc.APIEmbedImage | undefined {
     if (imgs.length == 0) return undefined;
 
-    const matches = imgs.filter(img => 
+    const matches = imgs.filter(img =>
         img.title && img.title.toLowerCase().includes(title.toLowerCase())
     );
 
     if (matches.length > 0) {
-        return matches.reduce((shortest, current) => 
+        return matches.reduce((shortest, current) =>
             current.title.length < shortest.title.length ? current : shortest
         );
     }
@@ -93,4 +93,3 @@ const tfwikiCmd: Command = {
 };
 
 export default tfwikiCmd;
-

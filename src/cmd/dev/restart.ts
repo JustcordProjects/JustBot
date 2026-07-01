@@ -1,8 +1,8 @@
 import { Command } from '@/bot/command.ts';
 import { CommandFlags } from '@/bot/command/misc.ts';
 import { CommandPermissions } from '@/bot/command/permissions.ts';
-import { output } from '@/bot/logging.ts';
 
+import * as output from '@/bot/output.ts';
 import * as cache from '@/apis/cache/cache.ts';
 
 const restartCmd: Command = {

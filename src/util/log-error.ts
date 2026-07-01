@@ -1,4 +1,4 @@
-import { output } from '@/bot/logging.ts';
+import * as output from '@/bot/output.ts';
 
 export default function logError(target: 'stdwarn' | 'stderr', error: unknown, from?: string) {
     const details = error instanceof Error ? (error.stack ?? error.message) : String(error);

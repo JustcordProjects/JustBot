@@ -3,9 +3,9 @@ import { Command, CommandAPI } from '@/bot/command.ts';
 import { CommandFlags } from '@/bot/command/misc.ts';
 import { CommandPermissions } from '@/bot/command/permissions.ts';
 import { client } from '@/client.ts';
-import { output } from '@/bot/logging.ts';
 import { db } from '@/apis/db/bot-db.ts';
 
+import * as output from '@/bot/output.ts';
 import JSON5 from 'json5';
 
 type AsyncFunction = () => PromiseLike<unknown>;

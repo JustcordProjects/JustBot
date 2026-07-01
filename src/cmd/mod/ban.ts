@@ -1,5 +1,4 @@
 import * as dsc from 'discord.js';
-import { output as debug } from '@/bot/logging.ts';
 
 import { Command } from '@/bot/command.ts';
 import { CommandFlags } from '@/bot/command/misc.ts';
@@ -9,6 +8,7 @@ import { PredefinedColors } from '@/util/color.ts';
 import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
 
 import ban from '@/apis/mod/bans.ts';
+import logError from '@/util/log-error.ts';
 
 const banCmd: Command = {
     name: 'ban',
@@ -69,7 +69,7 @@ const banCmd: Command = {
                 ],
             });
         } catch (err) {
-            debug.err(err);
+            logError('stdwarn', err, 'ban command');
             return api.log.replyError(api, 'Brak permisji', 'Coś Ty Eklerka znowu pozmieniał? No chyba że banujesz admina...');
         }
     },

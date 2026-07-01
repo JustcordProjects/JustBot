@@ -9,8 +9,8 @@ export type { ContentEntry, ContentEntryRaw, UserDataRaw, Warn, WarnRaw };
 export type { Balance, Cooldown, Cooldowns };
 export { contentFromRaw, warnFromRaw };
 
+import * as output from '@/bot/output.ts';
 import User from './user.ts';
-import { output } from '@/bot/logging.ts';
 
 export interface DBRunResult {
     lastID: number | null;

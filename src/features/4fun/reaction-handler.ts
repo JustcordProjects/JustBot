@@ -1,7 +1,8 @@
 import { Action, PredefinedActionEventTypes, ReactionEventCtx } from '@/features/actions.ts';
-import User from '@/apis/db/user.ts';
 import { cfg } from '@/bot/cfg.ts';
-import { output } from '@/bot/logging.ts';
+
+import User from '@/apis/db/user.ts';
+import * as output from '@/bot/output.ts';
 
 function reactionMain(metadata: {
     givenBy: User,

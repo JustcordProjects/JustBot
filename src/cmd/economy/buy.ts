@@ -1,7 +1,8 @@
+import * as output from '@/bot/output.ts';
+import Money from '@/util/money.ts';
+
 import { Command } from '@/bot/command.ts';
 import { CommandFlags } from '@/bot/command/misc.ts';
-import { output } from '@/bot/logging.ts';
-import Money from '@/util/money.ts';
 import { cfg } from '@/bot/cfg.ts';
 
 const buyCmd: Command = {

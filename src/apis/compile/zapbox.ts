@@ -1,5 +1,5 @@
 import * as compile from '@/apis/compile/driver.ts';
-import { output } from '@/bot/logging.ts';
+import * as output from '@/bot/output.ts';
 
 export function isAvailable(): boolean {
     return Deno.env.get('JB_ZAPBOX_PATH') != undefined;
@@ -144,9 +144,6 @@ export class ZapCompilerDriver implements compile.Driver {
         };
 
         const zapboxOutput = await this.runZapbox(zapboxInput);
-        output.log('zapbox compile() result:');
-        output.log(zapboxOutput);
-
         if ('internalError' in zapboxOutput) {
             return {
                 status: compile.Status.InternalError,

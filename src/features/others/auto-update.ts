@@ -4,7 +4,7 @@ import { MessageEventCtx, PredefinedActionEventTypes } from '../actions.ts';
 import { Action } from '../actions.ts';
 
 import { cfg } from '@/bot/cfg.ts';
-import { output } from '@/bot/logging.ts';
+import * as output from '@/bot/output.ts';
 
 export const autoUpdateAction: Action<MessageEventCtx> = {
     name: 'others/auto-update',

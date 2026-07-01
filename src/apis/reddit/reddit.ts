@@ -1,4 +1,4 @@
-import { output } from '@/bot/logging.ts';
+import * as output from '@/bot/output.ts';
 
 export interface RedditPost {
     title: string;

@@ -1,5 +1,5 @@
 import * as dsc from 'discord.js';
-import { output } from '@/bot/logging.ts';
+import * as output from '@/bot/output.ts';
 
 import { Command } from '@/bot/command.ts';
 import { CommandFlags } from '@/bot/command/misc.ts';

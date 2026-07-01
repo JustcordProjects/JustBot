@@ -5,7 +5,7 @@ export default actionsManager;
 
 import { cfg } from '@/bot/cfg.ts';
 import { watchNewMember } from '@/bot/watchdog.ts';
-import { output } from '@/bot/logging.ts';
+import * as output from '@/bot/output.ts';
 
 import randomElement from '@/util/random-element.ts';
 

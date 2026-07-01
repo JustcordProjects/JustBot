@@ -1,3 +1,4 @@
+import * as output from '@/bot/output.ts';
 import * as dsc from 'discord.js';
 
 import { cfg } from '@/bot/cfg.ts';
@@ -7,7 +8,6 @@ import { Command } from '@/bot/command.ts';
 import { CommandFlags } from '@/bot/command/misc.ts';
 import { CommandAPI } from '@/bot/command/api.ts';
 import { levelToXp, mkLvlProgressBar, xpToLevel } from '@/bot/level.ts';
-import { output } from '@/bot/logging.ts';
 import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
 
 import User from '@/apis/db/user.ts';
