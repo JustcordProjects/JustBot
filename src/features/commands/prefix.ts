@@ -4,7 +4,6 @@ import { output } from '@/bot/logging.ts';
 
 import { cfg } from '@/bot/cfg.ts';
 import { CommandFlags } from '@/bot/command/misc.ts';
-import { commands } from '@/cmd/list.ts';
 
 import canExecuteCmd from '@/util/cmd/can-execute.ts';
 import findCommand from '@/util/cmd/find-command.ts';
@@ -21,6 +20,7 @@ import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
 import { CommandTokenizer } from './helpers/tokenizer.ts';
 
 import sleep from '@/util/sleep.ts';
+import { pluginManager } from '@/plugins/index.ts';
 
 function waitForButton(interaction: dsc.Message, buttonId: string, time = 15000) {
     return new Promise((resolve, reject) => {
@@ -74,7 +74,7 @@ async function prefixCommandsMessageHandler(msg: dsc.OmitPartialGroupDMChannel<d
     if (!cmdArg) return;
     const cmdName = cmdArg.value.toLowerCase();
 
-    const result = findCommand(cmdName, commands);
+    const result = findCommand(cmdName, pluginManager.getAllCommands());
     if (!result) {
         if (content.replaceAll(prefix, '').trim() == '') {
             return;

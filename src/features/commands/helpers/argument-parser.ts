@@ -1,4 +1,4 @@
-import { Category, Command, CommandArgType, CommandArgument, CommandValuableArgument } from '@/bot/command.ts';
+import { Command, CommandArgType, CommandArgument, CommandValuableArgument } from '@/bot/command.ts';
 
 import * as dsc from 'discord.js';
 
@@ -88,7 +88,7 @@ export interface ParserContext {
     guild?: dsc.Guild;
     interaction?: dsc.CommandInteraction;
     cmd?: Command;
-    commands?: Map<Category, Command[]>;
+    commands?: Command[];
 }
 
 async function tryParseArg(

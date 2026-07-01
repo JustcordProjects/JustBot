@@ -8,7 +8,6 @@ import { Buffer } from 'node:buffer';
 import { SystemPrompt } from '@/features/ei/models.ts';
 import { toolDeclarations } from '@/apis/gemini/ask.ts';
 
-import { commands } from '@/cmd/list.ts';
 import { output } from '@/bot/logging.ts';
 import { cfg } from '@/bot/cfg.ts';
 import { client } from '@/client.ts';
@@ -18,8 +17,9 @@ import logError from '@/util/log-error.ts';
 import { getCommandConfig } from '@/util/cmd/get-command-config.ts';
 import { Hour } from '@/util/parse-timestamp.ts';
 
-import askCmd from '@/cmd/utilities/ask.ts';
+import askCmd from '@/plugins/utilities/utilities/commands/ask.ts';
 import User, { CooldownWaiting } from '@/apis/db/user.ts';
+import { pluginManager } from '@/plugins/index.ts';
 
 // NOTE: duplicated logic with src/features/.../make-command-api.ts
 //       i'm too lazy to move it to some kind of helper so sorry
@@ -104,21 +104,8 @@ export async function executeAsk(msg: dsc.Message, question: string, contextMsgs
     }
 
     const toolHandlers = {
-        list_categories: () => {
-            const categories = Array.from(commands.keys());
-            return {
-                categories: categories.map((c) => ({
-                    id: c.stringId(),
-                    name: c.name,
-                    description: c.shortDesc,
-                })),
-            };
-        },
-        list_commands: (args: { category: string }) => {
-            const category = args.category;
-            const cat = Array.from(commands.keys()).find((c) => c.stringId() === category || c.name.toLowerCase() === category.toLowerCase());
-            if (!cat) return { error: `Nie znaleziono kategorii: ${category}` };
-            const cmds = commands.get(cat) || [];
+        list_commands: () => {
+            const cmds = pluginManager.getAllCommands();
             return {
                 commands: cmds.map((c) => ({
                     name: c.name,
@@ -128,21 +115,18 @@ export async function executeAsk(msg: dsc.Message, question: string, contextMsgs
         },
         get_command_help: (args: { command_name: string }) => {
             const command_name = args.command_name;
-            for (const [_, cmds] of commands.entries()) {
-                const cmd = cmds.find((c) => c.name === command_name || c.aliases.includes(command_name));
-                if (cmd) {
-                    return {
-                        name: cmd.name,
-                        aliases: cmd.aliases,
-                        description: cmd.description.main,
-                        args: cmd.expectedArgs.map((a) => ({
-                            name: a.name,
-                            description: a.description,
-                            type: JSON.stringify(a.type),
-                            optional: a.optional,
-                        })),
-                    };
-                }
+            for (const cmd of pluginManager.getAllCommands()) {
+                return {
+                    name: cmd.name,
+                    aliases: cmd.aliases,
+                    description: cmd.description.main,
+                    args: cmd.expectedArgs.map((a) => ({
+                        name: a.name,
+                        description: a.description,
+                        type: JSON.stringify(a.type),
+                        optional: a.optional,
+                    })),
+                };
             }
             return { error: `Nie znaleziono komendy: ${command_name}` };
         },
@@ -151,15 +135,12 @@ export async function executeAsk(msg: dsc.Message, question: string, contextMsgs
 
             // deno-lint-ignore no-explicit-any
             const results: any[] = [];
-            for (const [cat, cmds] of commands.entries()) {
-                for (const cmd of cmds) {
-                    if (cmd.name.toLowerCase().includes(query) || cmd.description.main.toLowerCase().includes(query) || cmd.description.short.toLowerCase().includes(query)) {
-                        results.push({
-                            name: cmd.name,
-                            category: cat.name,
-                            description: cmd.description.short,
-                        });
-                    }
+            for (const cmd of pluginManager.getAllCommands()) {
+                if (cmd.name.toLowerCase().includes(query) || cmd.description.main.toLowerCase().includes(query) || cmd.description.short.toLowerCase().includes(query)) {
+                    results.push({
+                        name: cmd.name,
+                        description: cmd.description.short,
+                    });
                 }
             }
 

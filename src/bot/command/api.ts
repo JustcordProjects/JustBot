@@ -5,7 +5,6 @@ import User, { CooldownCheckResult } from '@/apis/db/user.ts';
 
 import { CommandArgBaseType, CommandArgType, CommandValuableArgument, PreciseValuableArgument } from './arguments.ts';
 
-import { Category } from '@/bot/categories.ts';
 import { Command } from './cmd.ts';
 import { EconomyExecutor } from '@/apis/economy/action.ts';
 
@@ -40,7 +39,7 @@ export interface CommandAPI {
     economy: EconomyExecutor;
 
     // ---- EXTERNAL DATA ----
-    commands: Map<Category, Command[]>;
+    commands: Command[];
     log: typeof log;
 
     // ---- EXEC LOCATION ----

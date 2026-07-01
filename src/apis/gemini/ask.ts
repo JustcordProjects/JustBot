@@ -4,25 +4,12 @@ export const toolDeclarations: gemini.Tool[] = [
     {
         functionDeclarations: [
             {
-                name: 'list_categories',
-                description: 'Zwraca listę wszystkich kategorii komend bota.',
-                parameters: {
-                    type: gemini.SchemaType.OBJECT,
-                    properties: {},
-                },
-            },
-            {
                 name: 'list_commands',
                 description: 'Zwraca listę wszystkich dostępnych komend bota w danej kategorii wraz z ich krótkimi opisami.',
                 parameters: {
                     type: gemini.SchemaType.OBJECT,
-                    properties: {
-                        category: {
-                            type: gemini.SchemaType.STRING,
-                            description: "Kategoria do filtrowania komend (np. 'economy', 'mod', 'general').",
-                        },
-                    },
-                    required: ['category'],
+                    properties: {},
+                    required: [],
                 },
             },
             {

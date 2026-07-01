@@ -2,7 +2,7 @@ console.log('Welcome to JustBOT!');
 
 // preparation & basic imports
 import { client } from '@/client.ts';
-import { ft, output } from '@/bot/logging.ts';
+import { output } from '@/bot/logging.ts';
 import process from 'node:process';
 
 import logError from '@/util/log-error.ts';
@@ -64,13 +64,13 @@ import { initAskCmdModel, initWikiModel } from '@/features/ei/models.ts';
 import { askAction } from '@/features/4fun/ask.ts';
 import { addVoiceExperience } from '@/bot/level.ts';
 import { addMusicAction } from '@/features/4fun/add-content.ts';
-import { registerCommands } from '@/cmd/list.ts';
 import { reactionAddHandler, reactionRemoveHandler } from '@/features/4fun/reaction-handler.ts';
 import { registerMsgEditDscEvents } from '@/features/logs/edit-message.ts';
 import { deleteMessageAction } from '@/features/logs/delete-message.ts';
 import { reminderHandler } from '@/features/reminders.ts';
 import { autoUpdateAction } from './features/others/auto-update.ts';
 import { pollsModerator } from '@/features/mod/polls-mod.ts';
+import { pluginManager } from '@/plugins/index.ts';
 
 // --------------- INIT ---------------
 client.once('clientReady', async () => {
@@ -87,8 +87,8 @@ client.once('clientReady', async () => {
         );
     }
     
-    await registerCommands();
-    output.verbose('Commands registered');
+    pluginManager.loadPlugins();
+    output.verbose('Plugins and associated commands registered');
 
     await db.init();
     output.verbose(`Database initialized.`);

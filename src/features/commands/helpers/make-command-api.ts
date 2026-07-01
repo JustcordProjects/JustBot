@@ -7,10 +7,10 @@ import { Command, CommandAPI, CommandArgType } from '@/bot/command.ts';
 import { parseArgs, ParsedRawArgument } from './argument-parser.ts';
 import { t } from '@/apis/translations/translate.ts';
 import { deepMerge } from '@/util/objects/objects.ts';
-import { commands } from '@/cmd/list.ts';
 import { EconomyExecutor } from '@/apis/economy/action.ts';
 import { flatTypesToUnion } from './flat-types.ts';
 import { getCommandConfig } from '@/util/cmd/get-command-config.ts';
+import { pluginManager } from '@/plugins/index.ts';
 
 type FirstArg<T> = T extends { (...args: infer A): unknown } ? A extends [infer F, ...unknown[]] ? F : never
     : T extends { call(this: unknown, ...args: infer A): unknown } ? A extends [unknown, infer F, ...unknown[]] ? F : never
@@ -44,7 +44,7 @@ function makeOptions(options: FirstArg<CommandAPI['reply']>): object {
 }
 
 export async function makeCommandApi(commandObj: Command, argsRaw: ParsedRawArgument[], context: { msg?: dsc.Message; guild?: dsc.Guild; interaction?: dsc.CommandInteraction; cmd?: Command; invokedviaalias: string }): Promise<CommandAPI> {
-    const parsedArgs = await parseArgs(argsRaw, commandObj.expectedArgs, { ...context, commands });
+    const parsedArgs = await parseArgs(argsRaw, commandObj.expectedArgs, { ...context, commands: pluginManager.getAllCommands() });
     const rawMember = context.msg?.member ??
         (context.interaction?.member as dsc.GuildMember) ??
         null;
@@ -74,7 +74,7 @@ export async function makeCommandApi(commandObj: Command, argsRaw: ParsedRawArgu
 
         // misc
         reply: context.interaction ? ((options) => context.interaction!.editReply(makeOptions(options))) : ((options) => context.msg!.reply(makeOptions(options))),
-        commands: commands,
+        commands: pluginManager.getAllCommands(),
         log,
         executor: user,
         guild: context.interaction?.guild ?? context.msg?.guild ?? undefined,
