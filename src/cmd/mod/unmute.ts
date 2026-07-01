@@ -5,7 +5,7 @@ import { PredefinedColors } from '@/util/color.ts';
 import { sendLog } from '@/apis/log/send-log.ts';
 import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
 
-const unmuteCmd: Command = {
+export default {
     name: 'unmute',
     aliases: [],
     description: {
@@ -63,6 +63,4 @@ const unmuteCmd: Command = {
             ],
         });
     },
-};
-
-export default unmuteCmd;
+} satisfies Command;

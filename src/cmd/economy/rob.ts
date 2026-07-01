@@ -69,7 +69,7 @@ async function tryRob(attacker: User, target: User): Promise<{ ok: boolean; amou
     }
 }
 
-const robCmd: Command = {
+export default {
     name: 'rob',
     description: {
         main: 'Spróbuj okraść innego gracza. Kwota kradzieży bazuje na procencie pieniędzy celu.',
@@ -133,6 +133,4 @@ const robCmd: Command = {
             return api.log.replyError(api, 'Coś się odwaliło...', 'Proszę, pytaj sqlite3 a nie mnie obwiniasz.');
         }
     },
-};
-
-export default robCmd;
+} satisfies Command;

@@ -3,7 +3,7 @@ import { CommandFlags } from '@/bot/command/misc.ts';
 import { CommandPermissions } from '@/bot/command/permissions.ts';
 import { db } from '@/apis/db/bot-db.ts';
 
-const remindMeCmd: Command = {
+export default {
     name: 'remind-me',
     aliases: ['remindme', 'reminder', 'remind'],
     description: {
@@ -33,6 +33,4 @@ const remindMeCmd: Command = {
 
         await api.log.replySuccess(api, 'Ustawiono przypomnienie!', 'Mam nadzieję, że nie zapomnisz o kupnie snu... o zrobieniu tego, na czym Ci zależy');
     },
-};
-
-export default remindMeCmd;
+} satisfies Command;

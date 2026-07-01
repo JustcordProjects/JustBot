@@ -17,7 +17,7 @@ async function replyAIModelErr(err: string, msg: dsc.Message) {
     });
 }
 
-const wikiCmd: Command = {
+export default {
     name: 'wiki',
     aliases: [],
     description: {
@@ -85,6 +85,4 @@ const wikiCmd: Command = {
             });
         }
     },
-};
-
-export default wikiCmd;
+} satisfies Command;

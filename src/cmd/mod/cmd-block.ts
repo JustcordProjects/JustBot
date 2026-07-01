@@ -2,7 +2,7 @@ import { cfg, Config, overrideCfg, saveConfigurationChanges } from '@/bot/cfg.ts
 import { Command } from '@/bot/command.ts';
 import { CommandFlags } from '@/bot/command/misc.ts';
 
-const cmdBlockCmd: Command = {
+export default {
     name: 'cmd-block',
     description: {
         main: 'Zablokuj komuś możliwość używania danej komendy.',
@@ -89,6 +89,4 @@ const cmdBlockCmd: Command = {
         saveConfigurationChanges();
         api.log.replySuccess(api, 'Udało się!', `**${opText}** dostęp do komendy **${cmdName}** dla podanego celu!`);
     },
-};
-
-export default cmdBlockCmd;
+} satisfies Command;

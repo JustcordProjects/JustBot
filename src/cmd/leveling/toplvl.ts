@@ -14,7 +14,7 @@ function calculateLevel(xp: number, levelDivider: number): number {
     );
 }
 
-const toplvlCmd: Command = {
+export default {
     name: 'toplvl',
     aliases: ['topka', 'toplevel'],
     description: {
@@ -85,6 +85,4 @@ const toplvlCmd: Command = {
             await api.reply('❌ Wystąpił błąd podczas pobierania topu poziomów.');
         }
     },
-};
-
-export default toplvlCmd;
+} satisfies Command;

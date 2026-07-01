@@ -22,7 +22,7 @@ const pokedexSpeciesColorMap: Record<string, dsc.ColorResolvable> = {
     'yellow': PredefinedColors.Yellow,
 };
 
-const pokedexCmd: Command = {
+export default {
     name: 'pokedex',
     aliases: ['pokemon'],
     description: {
@@ -90,6 +90,4 @@ const pokedexCmd: Command = {
             );
         }
     },
-};
-
-export default pokedexCmd;
+} satisfies Command;

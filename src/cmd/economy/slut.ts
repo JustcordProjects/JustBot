@@ -67,7 +67,7 @@ const SlutFailMessages: MessageCallback[] = [
     (amount) => `Zgłosiłeś się do dorywczej roboty, ale musiałeś kupić narzędzia za **${amount.format()}** i pracy i tak nie było.`,
 ];
 
-const slutCmd: Command = {
+export default {
     name: 'slut',
     aliases: [],
     description: {
@@ -111,6 +111,4 @@ const slutCmd: Command = {
 
         return api.reply({ embeds: [embed] });
     },
-};
-
-export default slutCmd;
+} satisfies Command;

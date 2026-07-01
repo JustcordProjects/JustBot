@@ -20,7 +20,7 @@ function parseOpts(str: string): { from?: string; to?: string } {
     return { from, to };
 }
 
-const translateCmd: Command = {
+export default {
     name: 'translate',
     aliases: ['tr'],
     description: {
@@ -85,6 +85,4 @@ const translateCmd: Command = {
             )
         }
     }
-};
-
-export default translateCmd;
+} satisfies Command;

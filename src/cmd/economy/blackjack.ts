@@ -307,7 +307,7 @@ class BlackjackGame {
     }
 }
 
-const blackjackCmd: Command = {
+export default {
     name: 'blackjack',
     aliases: ['bj'],
     description: {
@@ -335,6 +335,4 @@ const blackjackCmd: Command = {
         const game = new BlackjackGame(api, amount);
         await game.start();
     },
-};
-
-export default blackjackCmd;
+} satisfies Command;

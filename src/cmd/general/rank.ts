@@ -4,7 +4,7 @@ import { CommandFlags } from '@/bot/command/misc.ts';
 import { db } from '@/apis/db/bot-db.ts';
 import User from '@/apis/db/user.ts';
 
-export const rankCmd: Command = {
+export default {
     name: 'rank',
     aliases: [],
     description: {
@@ -56,6 +56,4 @@ export const rankCmd: Command = {
             ]
         });
     }
-};
-
-export default rankCmd;
+} satisfies Command;

@@ -3,7 +3,7 @@ import { CommandFlags } from '@/bot/command/misc.ts';
 
 import cdecl from '@/apis/cdecl/cdecl.ts';
 
-const cdeclCmd: Command = {
+export default {
     name: 'cdecl',
     aliases: [],
     description: {
@@ -42,6 +42,4 @@ const cdeclCmd: Command = {
             );
         }
     }
-};
-
-export default cdeclCmd;
+} satisfies Command;

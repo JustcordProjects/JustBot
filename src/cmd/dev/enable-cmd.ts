@@ -2,7 +2,7 @@ import { cfg, Config, overrideCfg, saveConfigurationChanges } from '@/bot/cfg.ts
 import { Command } from '@/bot/command.ts';
 import { CommandFlags } from '@/bot/command/misc.ts';
 
-const enableCommandCmd: Command = {
+export default {
     name: 'cmd-enable',
     description: {
         main: 'Włącz komendę. Użyteczne czasami. Często nie.',
@@ -45,6 +45,4 @@ const enableCommandCmd: Command = {
 
         api.log.replySuccess(api, 'Udało się!', `Włączono komendę **${name}**!`);
     },
-};
-
-export default enableCommandCmd;
+} satisfies Command;

@@ -5,7 +5,7 @@ import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
 import { MinimalActionsFormatter } from '@/apis/economy/format.ts';
 import { cfg } from '@/bot/cfg.ts';
 
-const itemInfoCmd: Command = {
+export default {
     name: 'iteminfo',
     aliases: ['info'],
     description: {
@@ -76,6 +76,4 @@ const itemInfoCmd: Command = {
         embed.setFooter({ text: `ID: ${item.id} | ${new Date()}` });
         await api.reply({ embeds: [embed] });
     },
-};
-
-export default itemInfoCmd;
+} satisfies Command;

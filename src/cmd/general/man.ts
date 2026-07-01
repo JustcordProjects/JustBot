@@ -10,7 +10,7 @@ import { Category } from '@/bot/command.ts';
 import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
 import { CommandPermissions } from '@/bot/command/permissions.ts';
 
-const manCmd: Command = {
+export default {
     name: 'man',
     description: {
         main: 'Dokładniejsza dokumentacja, pokazująca użycie komend, czy możesz ich użyć oraz dokładny opis.',
@@ -106,6 +106,4 @@ const manCmd: Command = {
 
         return api.reply({ embeds: [embed] });
     },
-};
-
-export default manCmd;
+} satisfies Command;

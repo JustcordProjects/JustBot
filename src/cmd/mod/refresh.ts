@@ -10,7 +10,7 @@ import { addLvlRole, xpToLevel } from '@/bot/level.ts';
 import { cfg } from '@/bot/cfg.ts';
 import { db } from '@/apis/db/bot-db.ts';
 
-const refreshCmd: Command = {
+export default {
     name: 'refresh',
     aliases: [],
     description: {
@@ -105,6 +105,4 @@ const refreshCmd: Command = {
             api.log.replyError(api, 'Nie przeładowano', 'Ziignorowałeś wszystko za pomocą flag...');
         }
     },
-};
-
-export default refreshCmd;
+} satisfies Command;

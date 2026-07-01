@@ -7,7 +7,7 @@ import { db } from '@/apis/db/bot-db.ts';
 import User from '@/apis/db/user.ts';
 import { addLvlRole, xpToLevel } from '@/bot/level.ts';
 
-const addAltAccountCommand: Command = {
+export default {
     name: 'add-primary-account',
     aliases: [],
     description: {
@@ -170,6 +170,4 @@ const addAltAccountCommand: Command = {
             }
         });
     },
-};
-
-export default addAltAccountCommand;
+} satisfies Command;

@@ -114,7 +114,7 @@ function renderFigletWrappedString(words: string[], font: string = 'Standard', m
     return blocks.map((block) => block.join('\n')).join('\n\n');
 }
 
-const figletCmd: Command = {
+export default {
     name: 'figlet',
     aliases: ['render-ascii-text'],
     description: {
@@ -164,6 +164,4 @@ const figletCmd: Command = {
             embeds: [new ReplyEmbed().setTitle('Wynik').setDescription(`\`\`\`${result}\`\`\``)],
         });
     },
-};
-
-export default figletCmd;
+} satisfies Command;

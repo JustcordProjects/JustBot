@@ -18,7 +18,7 @@ function getMainAccount(id: string) {
     }
 }
 
-const manageAccountsCmd: Command = {
+export default {
     name: 'manage-accounts',
     aliases: ['account'],
 
@@ -175,6 +175,4 @@ const manageAccountsCmd: Command = {
             }
         });
     },
-};
-
-export default manageAccountsCmd;
+} satisfies Command;

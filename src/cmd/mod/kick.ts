@@ -8,7 +8,7 @@ import kick from '@/apis/mod/kicks.ts';
 import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
 import { CommandPermissions } from '@/bot/command/permissions.ts';
 
-const kickCmd: Command = {
+export default {
     name: 'kick',
     aliases: [],
     description: {
@@ -76,6 +76,4 @@ const kickCmd: Command = {
             return api.log.replyError(api, 'Brak permisji', 'Coś Ty Eklerka znowu pozmieniał? No chyba że kickujesz admina...');
         }
     },
-};
-
-export default kickCmd;
+} satisfies Command;

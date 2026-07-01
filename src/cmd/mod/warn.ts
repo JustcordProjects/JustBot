@@ -10,7 +10,7 @@ import parseTimestamp, { Timestamp } from '@/util/parse-timestamp.ts';
 import clamp from '@/util/math/clamp.ts';
 import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
 
-const warnCmd: Command = {
+export default {
     name: 'warn',
     aliases: [],
     description: {
@@ -106,6 +106,4 @@ const warnCmd: Command = {
 
         await api.reply({ embeds: [embed] });
     },
-};
-
-export default warnCmd;
+} satisfies Command;

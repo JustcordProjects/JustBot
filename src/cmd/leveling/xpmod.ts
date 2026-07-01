@@ -7,7 +7,7 @@ import { CommandFlags } from '@/bot/command/misc.ts';
 import { CommandAPI } from '@/bot/command/api.ts';
 import { levelToXp, OnSetXpEvent } from '@/bot/level.ts';
 
-const xpCmd: Command = {
+export default {
     name: 'xpmod',
     aliases: ['lvlmod'],
     description: {
@@ -68,6 +68,4 @@ const xpCmd: Command = {
 
         api.log.replySuccess(api, 'Udało się!', `Wykonałem akcję na użytkowniku **${targetUser.user.tag}**`);
     },
-};
-
-export default xpCmd;
+} satisfies Command;

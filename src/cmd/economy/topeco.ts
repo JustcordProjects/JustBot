@@ -10,7 +10,7 @@ import { cfg } from '@/bot/cfg.ts';
 
 const ecoRoles = cfg.features.economy.roles.filter((x) => x.id.includes('vip')).map((x) => x.discordRoleId);
 
-const topecoCmd: Command = {
+export default {
     name: 'topeco',
     aliases: ['topmoney'],
     description: {
@@ -67,6 +67,4 @@ const topecoCmd: Command = {
             return api.log.replyError(api, 'Błąd pobierania topki', 'Pytaj twórców biblioteki sqlite3...');
         }
     },
-};
-
-export default topecoCmd;
+} satisfies Command;

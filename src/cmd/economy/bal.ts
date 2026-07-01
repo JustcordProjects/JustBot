@@ -8,7 +8,7 @@ import { PredefinedColors } from '@/util/color.ts';
 import { output } from '@/bot/logging.ts';
 import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
 
-const balCmd: Command = {
+export default {
     name: 'bal',
     aliases: ['balance'],
     description: {
@@ -58,6 +58,4 @@ const balCmd: Command = {
             api.log.replyError(api, 'Błąd pobierania balansu', 'Coś poszło nie tak z bazą danych.');
         }
     },
-};
-
-export default balCmd;
+} satisfies Command;

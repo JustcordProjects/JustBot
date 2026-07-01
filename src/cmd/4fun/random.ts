@@ -3,7 +3,7 @@ import { CommandFlags } from '@/bot/command/misc.ts';
 import { db, ContentEntry } from '@/apis/db/bot-db.ts';
 import { cfg } from '@/bot/cfg.ts';
 
-const randomCmd: Command = {
+export default {
     name: 'random',
     aliases: ['rand'],
     description: {
@@ -60,6 +60,4 @@ const randomCmd: Command = {
             },
         });
     },
-};
-
-export default randomCmd;
+} satisfies Command;
