@@ -10,7 +10,7 @@ import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
 
 import ban from '@/apis/mod/bans.ts';
 
-const banCmd: Command = {
+export default {
     name: 'ban',
     aliases: [],
     description: {
@@ -73,6 +73,4 @@ const banCmd: Command = {
             return api.log.replyError(api, 'Brak permisji', 'Coś Ty Eklerka znowu pozmieniał? No chyba że banujesz admina...');
         }
     },
-};
-
-export default banCmd;
+} satisfies Command;

@@ -7,7 +7,7 @@ import { client as cl } from '../../client.ts';
 import { CommandPermissions } from '@/bot/command/permissions.ts';
 import User from '@/apis/db/user.ts';
 
-const warnlistCmd: Command = {
+export default {
     name: 'warnlist',
     aliases: ['warn-list', 'warnlista'],
     description: {
@@ -131,6 +131,4 @@ const warnlistCmd: Command = {
             await msg.edit({ components: [] }).catch(() => {});
         });
     },
-};
-
-export default warnlistCmd;
+} satisfies Command;

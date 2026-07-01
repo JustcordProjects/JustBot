@@ -2,7 +2,7 @@ import { Command, CommandAPI } from '@/bot/command.ts';
 import { output } from '@/bot/logging.ts';
 import { CommandFlags } from '@/bot/command/misc.ts';
 
-const withdrawCmd: Command = {
+export default {
     name: 'withdraw',
     aliases: ['with', 'wd'],
     description: {
@@ -54,6 +54,4 @@ const withdrawCmd: Command = {
             api.log.replyError(api, 'Błąd wypłaty', 'Coś poszło nie tak z bazą danych.');
         }
     },
-};
-
-export default withdrawCmd;
+} satisfies Command;

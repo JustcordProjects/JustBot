@@ -92,7 +92,7 @@ function getBlockedCommands(
     return blocked;
 }
 
-const helpCmd: Command = {
+export default {
     name: 'help',
     aliases: ['pomoc', 'kolo-ratunkowe'],
     description: {
@@ -190,6 +190,4 @@ const helpCmd: Command = {
 
         await api.reply({ embeds: allEmbeds });
     },
-};
-
-export default helpCmd;
+} satisfies Command;

@@ -72,7 +72,7 @@ export function formatAction(api: CommandAPI, action: config.economy.Action): Re
     return null;
 }
 
-const useCmd: Command = {
+export default {
     name: 'use',
     aliases: ['use-item'],
     description: {
@@ -153,6 +153,4 @@ const useCmd: Command = {
             );
         }
     },
-};
-
-export default useCmd;
+} satisfies Command;

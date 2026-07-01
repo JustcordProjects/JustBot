@@ -4,7 +4,7 @@ import { cfg } from '@/bot/cfg.ts';
 import { Command } from '@/bot/command.ts';
 import { executeAsk } from '../../features/ei/ask.ts';
 
-const askCmd: Command = {
+export default {
     name: 'ask',
     aliases: ['zapytaj'],
     description: {
@@ -40,6 +40,4 @@ const askCmd: Command = {
 
         executeAsk(api.raw.msg, question, Number(ctxMsgs));
     },
-};
-
-export default askCmd;
+} satisfies Command;

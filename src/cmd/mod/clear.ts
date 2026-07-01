@@ -5,7 +5,7 @@ import { CommandFlags } from '@/bot/command/misc.ts';
 import { CommandPermissions } from '@/bot/command/permissions.ts';
 import { CommandAPI } from '@/bot/command/api.ts';
 
-const clearCmd: Command = {
+export default {
     name: 'clear',
     aliases: [],
     description: {
@@ -54,6 +54,4 @@ const clearCmd: Command = {
             await channel.bulkDelete(fetched, true);
         }
     },
-};
-
-export default clearCmd;
+} satisfies Command;

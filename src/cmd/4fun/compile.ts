@@ -4,7 +4,7 @@ import { CommandPermissions } from '@/bot/command/permissions.ts';
 import { getCompilerForLang } from '@/apis/compile/auto.ts';
 import * as compile from '@/apis/compile/driver.ts';
 
-const compileCmd: Command = {
+export default {
     name: 'compile',
     aliases: ['exec-code'],
     flags: CommandFlags.None,
@@ -149,6 +149,4 @@ const compileCmd: Command = {
             ],
         });
     },
-};
-
-export default compileCmd;
+} satisfies Command;

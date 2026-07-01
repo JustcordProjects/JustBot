@@ -4,7 +4,7 @@ import { CommandFlags } from '@/bot/command/misc.ts';
 import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
 import { PredefinedColors } from '@/util/color.ts';
 
-const bannerCmd: Command = {
+export default {
     name: 'banner',
     description: {
         main: 'Dobra... Wyświetle Ci jełopa baner jak chcesz.',
@@ -64,6 +64,4 @@ const bannerCmd: Command = {
             });
         }
     },
-};
-
-export default bannerCmd;
+} satisfies Command;

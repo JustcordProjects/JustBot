@@ -23,7 +23,7 @@ interface WeatherAPIReply {
     }[];
 }
 
-const easCmd: Command = {
+export default {
     name: 'emergency-alert-system',
     aliases: ['eas'],
     description: {
@@ -146,6 +146,4 @@ const easCmd: Command = {
             });
         });
     },
-};
-
-export default easCmd;
+} satisfies Command;

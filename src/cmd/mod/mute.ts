@@ -12,7 +12,7 @@ import { sendLog } from '@/apis/log/send-log.ts';
 import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
 import { CommandPermissions } from '@/bot/command/permissions.ts';
 
-const muteCmd: Command = {
+export default {
     name: 'mute',
     aliases: [],
     description: {
@@ -89,6 +89,4 @@ const muteCmd: Command = {
             ],
         });
     },
-};
-
-export default muteCmd;
+} satisfies Command;

@@ -6,7 +6,7 @@ import { output } from '@/bot/logging.ts';
 import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
 import { db } from '@/apis/db/bot-db.ts';
 
-const topprestigeCmd: Command = {
+export default {
     name: 'topprestige',
     aliases: ['top-prestige', 'top-prestiżu'],
     description: {
@@ -66,6 +66,4 @@ const topprestigeCmd: Command = {
             ],
         });
     },
-};
-
-export default topprestigeCmd;
+} satisfies Command;

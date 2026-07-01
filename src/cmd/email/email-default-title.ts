@@ -2,7 +2,7 @@ import { Command } from '@/bot/command.ts';
 import { CommandFlags } from '@/bot/command/misc.ts';
 import { CommandPermissions } from '@/bot/command/permissions.ts';
 
-const emailDefaultTitleCmd: Command = {
+export default {
     name: 'email-set-default-title',
     aliases: [
         'email-default-title',
@@ -35,6 +35,4 @@ const emailDefaultTitleCmd: Command = {
         await emailApi.setDefaultTitle(api.invoker.id, signature);
         return api.log.replySuccess(api, 'Gotowe!', "Ustawiłem twój domyślny tytuł mail'a. To tyle w sumie.");
     },
-};
-
-export default emailDefaultTitleCmd;
+} satisfies Command;

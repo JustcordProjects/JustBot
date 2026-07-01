@@ -8,7 +8,7 @@ import { output } from '@/bot/logging.ts';
 import { getErrorEmbed, getSuccessEmbed, getWarnEmbed } from '@/util/log.ts';
 import { cfg } from '@/bot/cfg.ts';
 
-const resetCmd: Command = {
+export default {
     name: 'reset',
     aliases: [],
     description: {
@@ -133,6 +133,4 @@ const resetCmd: Command = {
             }
         });
     },
-};
-
-export default resetCmd;
+} satisfies Command;

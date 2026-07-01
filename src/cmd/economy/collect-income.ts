@@ -4,7 +4,7 @@ import { PredefinedColors } from '@/util/color.ts';
 import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
 import { output } from '@/bot/logging.ts';
 
-const collectIncomeCmd: Command = {
+export default {
     name: 'collect-income',
     aliases: ['income', 'daily-income', 'collectincome'],
     description: {
@@ -67,6 +67,4 @@ const collectIncomeCmd: Command = {
             );
         }
     },
-};
-
-export default collectIncomeCmd;
+} satisfies Command;

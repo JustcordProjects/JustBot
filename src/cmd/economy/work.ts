@@ -66,7 +66,7 @@ const WorkMessages: MessageCallback[] = [
     (amount) => `Przespałeś cały dzień za biurkiem ale szef i tak cię pochwalił i zarobiłeś **${amount.format()}**. Chyba nie możesz narzekać.`,
 ];
 
-const workCmd: Command = {
+export default {
     name: 'work',
     aliases: [],
     description: {
@@ -97,6 +97,4 @@ const workCmd: Command = {
         const genMessage = WorkMessages[getRandomInt(0, WorkMessages.length - 1)];
         return api.log.replySuccess(api, 'Ciężka praca popłaca', genMessage(totalMoney));
     },
-};
-
-export default workCmd;
+} satisfies Command;

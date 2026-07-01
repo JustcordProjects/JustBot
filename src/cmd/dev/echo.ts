@@ -2,7 +2,7 @@ import { cfg } from '@/bot/cfg.ts';
 import { Command } from '@/bot/command.ts';
 import { CommandFlags } from '@/bot/command/misc.ts';
 
-const echoCmd: Command = {
+export default {
     name: 'echo',
     description: {
         main: 'Wypisuje podany argument',
@@ -59,6 +59,4 @@ const echoCmd: Command = {
                 break;
         }
     },
-};
-
-export default echoCmd;
+} satisfies Command;

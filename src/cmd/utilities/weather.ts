@@ -4,7 +4,7 @@ import { CommandPermissions } from '@/bot/command/permissions.ts';
 import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
 import { PredefinedColors } from '@/util/color.ts';
 
-const weatherCmd: Command = {
+export default {
     name: 'weather',
     description: {
         main: 'W skrócie no to wyświetla pogodę w danej lokalizacji co sobie wybierzesz.',
@@ -80,6 +80,4 @@ const weatherCmd: Command = {
                 .setColor(PredefinedColors.Blue)
         ] })
     }
-};
-
-export default weatherCmd;
+} satisfies Command;

@@ -4,7 +4,7 @@ import { output } from '@/bot/logging.ts';
 import Money from '@/util/money.ts';
 import { cfg } from '@/bot/cfg.ts';
 
-const buyCmd: Command = {
+export default {
     name: 'buy',
     aliases: [],
     description: {
@@ -97,6 +97,4 @@ const buyCmd: Command = {
             );
         }
     },
-};
-
-export default buyCmd;
+} satisfies Command;

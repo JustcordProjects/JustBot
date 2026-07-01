@@ -2,7 +2,7 @@ import { Command, CommandAPI } from '@/bot/command.ts';
 import { output } from '@/bot/logging.ts';
 import { CommandFlags } from '@/bot/command/misc.ts';
 
-const depositCmd: Command = {
+export default {
     name: 'deposit',
     aliases: ['dep'],
     description: {
@@ -54,6 +54,4 @@ const depositCmd: Command = {
             api.log.replyError(api, 'Błąd depozytu', 'Coś poszło nie tak z bazą danych.');
         }
     },
-};
-
-export default depositCmd;
+} satisfies Command;

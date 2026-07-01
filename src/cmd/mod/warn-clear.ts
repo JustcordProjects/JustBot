@@ -7,7 +7,7 @@ import { sendLog } from '@/apis/log/send-log.ts';
 import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
 import { CommandPermissions } from '@/bot/command/permissions.ts';
 
-const warnClearCmd: Command = {
+export default {
     name: 'warn-clear',
     aliases: ['clearwarn', 'warnusun'],
     description: {
@@ -69,6 +69,4 @@ const warnClearCmd: Command = {
             return api.log.replyError(api, 'Błąd bazy danych', 'Spróbuj ponownie później.');
         }
     },
-};
-
-export default warnClearCmd;
+} satisfies Command;

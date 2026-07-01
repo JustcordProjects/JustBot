@@ -5,7 +5,7 @@ import { output } from '@/bot/logging.ts';
 
 import * as cache from '@/apis/cache/cache.ts';
 
-const restartCmd: Command = {
+export default {
     name: 'restart',
     description: {
         main: 'Restartuje bota... Nie tykaj!',
@@ -28,6 +28,4 @@ const restartCmd: Command = {
         output.log('Shutting down... (reason: restart command)');
         Deno.exit(1);
     },
-};
-
-export default restartCmd;
+} satisfies Command;

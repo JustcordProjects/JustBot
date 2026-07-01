@@ -28,7 +28,7 @@ function findBestImage(imgs: tfwiki.Image[], title: string): dsc.APIEmbedImage |
     return { ...imgs[0] };
 }
 
-const tfwikiCmd: Command = {
+export default {
     name: 'tfwiki',
     aliases: ['titanfall-wiki'],
     description: {
@@ -90,7 +90,4 @@ const tfwikiCmd: Command = {
             ]
         })
     },
-};
-
-export default tfwikiCmd;
-
+} satisfies Command;

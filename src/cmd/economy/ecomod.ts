@@ -6,7 +6,7 @@ import { CommandFlags } from '@/bot/command/misc.ts';
 import User from '@/apis/db/user.ts';
 import Money from '@/util/money.ts';
 
-const ecomodCmd: Command = {
+export default {
     name: 'ecomod',
     description: {
         main: 'Coś poszło nie tak? Naprawisz to ręcznie. Chyba...',
@@ -90,6 +90,4 @@ const ecomodCmd: Command = {
 
         return api.log.replySuccess(api, 'Operacja zakończona!', `Pomyślnie zmodyfikowałeś balans użytkownika <@${targetId}>, tak że ${actionToString()}. Przed tą operacją w tej lokalizacji miał ${before!.format()}.`)
     },
-};
-
-export default ecomodCmd;
+} satisfies Command;

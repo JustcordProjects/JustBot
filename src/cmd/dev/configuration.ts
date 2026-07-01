@@ -2,7 +2,7 @@ import { cfg, overrideCfg, saveConfigurationChanges } from '@/bot/cfg.ts';
 import { Command } from '@/bot/command.ts';
 import { CommandFlags } from '@/bot/command/misc.ts';
 
-const configurationCommand: Command = {
+export default {
     name: 'configuration',
     description: {
         main: 'Zmień konfigurację bota, bo exec robi to źle!',
@@ -91,6 +91,4 @@ const configurationCommand: Command = {
             `Ustawiono \`${property}\` na \`${value}\`; polecam jeszcze odpalić \`${cfg.commands.prefix}restart\`.`,
         );
     },
-};
-
-export default configurationCommand;
+} satisfies Command;

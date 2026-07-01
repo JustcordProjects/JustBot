@@ -2,7 +2,7 @@ import { cfg, Config, overrideCfg, saveConfigurationChanges } from '@/bot/cfg.ts
 import { Command } from '@/bot/command.ts';
 import { CommandFlags } from '@/bot/command/misc.ts';
 
-const cooldownBypassCmd: Command = {
+export default {
     name: 'cooldown-bypass',
     description: {
         main: 'Dodaj użytkownika lub rolę do listy bez cooldownu dla danej komendy.',
@@ -93,6 +93,4 @@ const cooldownBypassCmd: Command = {
             `${opText} bypass cooldownu **${cmdName}** dla podanego celu!`,
         );
     },
-};
-
-export default cooldownBypassCmd;
+} satisfies Command;
