@@ -12,7 +12,7 @@ export default async function kick(
         await member.send({
             embeds: [
                 new ReplyEmbed()
-                    .setTitle('📢 Zostałeś wywalony z serwera Piekarnia eklerki!')
+                    .setTitle('📢 Zostałeś wywalony z serwera Justcord!')
                     .setDescription(`To straszne wiem. Powód kicka brzmi: ${data.reason}`)
                     .setColor(PredefinedColors.Orange),
             ],
