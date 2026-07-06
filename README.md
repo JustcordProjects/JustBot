@@ -26,6 +26,10 @@ Or with hot reload on file changes:
 
 `make dev`
 
+You may want to register Git hooks to run type checks, tests and linter before commiting:
+
+`make hook-register`
+
 > [!IMPORTANT]
 > To see any verbose messages, you have to set `JB_DEVELOPMENT` enviorment variable to `true`
 
