@@ -63,7 +63,7 @@ export default {
         const location = (api.getEnumArg('location', ['wallet', 'bank'])?.value) || 'wallet';
         const targetMember = api.getTypedArg('who', 'user-mention')?.value!;
 
-        if (amount.isNegative()) return api.log.replyError(api, 'Nieprawidłowa kwota', 'Nie może być ona ujemna.');
+        if (amount.isNegative()) return api.log.replyError(api, 'Nieprawidłowa kwota', 'Nie może być ona ujemna. Może użyj przeciwnej operacji i usuń ten znak?');
 
         const targetId = targetMember.id;
         const targetUser = new User(targetId);
