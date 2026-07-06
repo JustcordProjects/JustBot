@@ -6,6 +6,7 @@ import { output } from '@/bot/logging.ts';
 import { sendLog } from '@/apis/log/send-log.ts';
 import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
 import { CommandPermissions } from '@/bot/command/permissions.ts';
+import { WarnRaw } from '@/apis/db/db-defs.ts';
 
 export default {
     name: 'warn-clear',
@@ -36,7 +37,7 @@ export default {
         const warnId = Number(warnIdArg.value);
 
         try {
-            const row = await db.selectOne('SELECT * FROM warns WHERE id = ?', [warnId]);
+            const row = await db.selectOne('SELECT * FROM warns WHERE id = ?', [warnId]) as WarnRaw & { user_id: string };
             if (!row) {
                 return api.log.replyError(
                     api,
@@ -54,6 +55,17 @@ export default {
                 color: PredefinedColors.DarkAqua,
                 title: 'Pozbyto się warna!',
                 description: `Usunięto warna o ID \`${warnId}\`.`,
+                fields: [
+                    {
+                        name: 'Powód', value: row.reason_string
+                    },
+                    {
+                        name: 'Dla', value: `<@${row.user_id}>`, inline: true
+                    },
+                    {
+                        name: 'Od', value: `<@${row.moderator_id}>`, inline: true
+                    }
+                ]
             });
 
             return api.reply({
@@ -61,6 +73,17 @@ export default {
                     new ReplyEmbed()
                         .setTitle(':white_check_mark: Warn usunięty')
                         .setDescription(`Warn o ID \`${warnId}\` został pomyślnie usunięty.`)
+                        .addFields([
+                            {
+                                name: 'Powód', value: row.reason_string
+                            },
+                            {
+                                name: 'Dla', value: `<@${row.user_id}>`
+                            },
+                            {
+                                name: 'Od', value: `<@${row.moderator_id}>`
+                            }
+                        ])
                         .setColor(PredefinedColors.Green),
                 ],
             });
