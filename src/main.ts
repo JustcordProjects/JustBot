@@ -2,7 +2,7 @@ console.log('Welcome to JustBOT!');
 
 // preparation & basic imports
 import { client } from '@/client.ts';
-import { ft, output } from '@/bot/logging.ts';
+import { output } from '@/bot/logging.ts';
 import process from 'node:process';
 
 import logError from '@/util/log-error.ts';
