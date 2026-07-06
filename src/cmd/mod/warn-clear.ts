@@ -71,6 +71,7 @@ export default {
             return api.reply({
                 embeds: [
                     new ReplyEmbed()
+                        .setAuthor({ name: 'JustBOT' })
                         .setTitle(':white_check_mark: Warn usunięty')
                         .setDescription(`Warn o ID \`${warnId}\` został pomyślnie usunięty.`)
                         .addFields([
