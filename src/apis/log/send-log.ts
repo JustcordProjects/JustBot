@@ -29,6 +29,7 @@ export async function sendLog(logData: LogData, additionalChannels: dsc.Snowflak
                     .setAuthor({
                         name: 'JustBOT',
                     }),
+                ...(logData.additionalEmbeds ?? [])
             ],
         });
         if ((logData.attachments ?? []).length != 0) {

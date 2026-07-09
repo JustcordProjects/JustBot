@@ -21,12 +21,14 @@ export const channelsCfg: Config['channels'] = {
         rules: '1510567451262324766',
         announcements: '1510651649692270602',
         boosts: '1510651610542375055',
-        levels: '1510651575121608866'
+        levels: '1510651575121608866',
+        honeypot: '1524714770240897125'
     },
     general: {
         general: '1510282257095458846',
         commands: '1510282342374310049',
         media: '1510282421386350612',
+        programming: '1510997728329728110'
     },
     other: {
         music: '1510644230119493772',

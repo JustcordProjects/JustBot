@@ -83,11 +83,13 @@ export default interface Config {
             announcements: dsc.Snowflake;
             boosts: dsc.Snowflake;
             levels: dsc.Snowflake;
+            honeypot: dsc.Snowflake;
         };
         general: {
             general: dsc.Snowflake;
             commands: dsc.Snowflake;
             media: dsc.Snowflake;
+            programming: dsc.Snowflake;
         };
         other: {
             music: dsc.Snowflake;

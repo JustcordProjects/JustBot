@@ -71,6 +71,7 @@ import { deleteMessageAction } from '@/features/logs/delete-message.ts';
 import { reminderHandler } from '@/features/reminders.ts';
 import { autoUpdateAction } from './features/others/auto-update.ts';
 import { pollsModerator } from '@/features/mod/polls-mod.ts';
+import setupHoneypotAction from '@/features/mod/honeypot.ts';
 
 // --------------- INIT ---------------
 client.once('clientReady', async () => {
@@ -144,6 +145,7 @@ function setUpActions() {
         welcomeNewUserAction,
         sayGoodbyeAction,
         // automod
+        setupHoneypotAction(),
         ...AutoModRules.all(),
         pollsModerator,
         // msg-specific actions

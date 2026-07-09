@@ -1,4 +1,5 @@
 import * as dsc from 'discord.js';
+import type { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
 
 export interface LogData {
     title: string;
@@ -7,4 +8,5 @@ export interface LogData {
     fields?: dsc.APIEmbedField[];
     color?: dsc.ColorResolvable;
     where?: dsc.Snowflake;
+    additionalEmbeds?: ReplyEmbed[];
 }
