@@ -59,7 +59,7 @@ export default {
             embeds: [
                 new ReplyEmbed()
                     .setColor('#1ebfd5')
-                    .setImage('https://raw.githubusercontent.com/JustcordProjects/JustBot/refs/heads/main/assets/top-lvl.png'),
+                    .setImage('https://raw.githubusercontent.com/JustcordProjects/JustBot/refs/heads/main/assets/top-reputation.png'),
                 new ReplyEmbed()
                     .setFields(fields)
                     .setColor('#1ebfd5')
