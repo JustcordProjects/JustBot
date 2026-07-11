@@ -31,10 +31,10 @@ export default {
     permissions: CommandPermissions.modPlus(),
 
     async execute(api: CommandAPI) {
-        const amount = api.getTypedArg('amount', 'float')?.value as number;
+        const amount = Number(api.getTypedArg('amount', 'int')?.value);
         const who = api.getTypedArg('user', 'user-mention')?.value as dsc.GuildMember;
 
-        if (amount > 98 || amount < 0) {
+        if (!Number.isSafeInteger(amount) || amount > 98 || amount < 0) {
             return api.log.replyError(api, 'Zła ta liczba', 'Maksymalnie wolno usunąć 98 wiadomości, a minimalnie to musisz choć jedną dać.')
         }
 
