@@ -42,11 +42,12 @@ function bfetch(url: string) {
     const bytes = new Uint8Array(32);
     crypto.getRandomValues(bytes);
 
-    return fetch(`https://corsproxy.io?url=${encodeURIComponent(url)}`, {
+    return fetch(`https://proxy.corsfix.com/?${(url)}`, {
         headers: {
             // oh hell nah spierdalaj z tym limitem
             "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:152.0) Gecko/20100101 Firefox/152.0",
-            "Referrer": `http://localhost/${Array.from(bytes, (b) => b.toString(16).padStart(2, "0")).join('')}`
+            "Referrer": `http://localhost/${Array.from(bytes, (b) => b.toString(16).padStart(2, "0")).join('')}`,
+            "Origin": "http://localhost",
         }
     });
 }
