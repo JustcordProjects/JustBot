@@ -38,6 +38,19 @@ interface WikiPageResult {
     index: number;
 }
 
+function bfetch(url: string) {
+    const bytes = new Uint8Array(32);
+    crypto.getRandomValues(bytes);
+
+    return fetch(`https://corsproxy.io?url=${encodeURIComponent(url)}`, {
+        headers: {
+            // oh hell nah spierdalaj z tym limitem
+            "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:152.0) Gecko/20100101 Firefox/152.0",
+            "Referrer": `http://localhost/${Array.from(bytes, (b) => b.toString(16).padStart(2, "0")).join('')}`
+        }
+    });
+}
+
 async function searchWikipedia(lang: string, query: string, limit = 10) {
     const url =
         `https://${lang}.wikipedia.org/w/api.php` +
@@ -51,7 +64,7 @@ async function searchWikipedia(lang: string, query: string, limit = 10) {
         `&format=json` +
         `&origin=*`;
 
-    const res = await fetch(url);
+    const res = await bfetch(url);
     if (!res.ok) return [];
 
     const data = await res.json();
@@ -90,7 +103,7 @@ async function downloadFromWikipedia(
                     `https://${lang}.wikipedia.org/api/rest_v1/page/summary/` +
                     encodeURIComponent(res.title);
 
-                const fetched = await fetch(summaryUrl);
+                const fetched = await bfetch(summaryUrl);
 
                 if (fetched.ok) {
                     return { fetched, lang, title: res.title };
