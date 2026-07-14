@@ -23,15 +23,18 @@ export const mediaChannelAction: Action<MessageEventCtx> = {
         async (msg: dsc.Message) => {
             const channelConfig = cfg.features.forFun.media.find((mc) => mc.channel == msg.channelId)!;
             let check = false;
-            if (msg.attachments.size > 0) {
-                for (const attachment of msg.attachments.values()) {
-                    if (attachment.contentType?.startsWith('image/')) {
-                        check = true;
-                    } else if (attachment.contentType?.startsWith('video/')) {
-                        check = true;
+            for (const thingyThing of [msg, ...msg.messageSnapshots.values()]) {
+                if (thingyThing.attachments.size > 0) {
+                    for (const attachment of thingyThing.attachments.values()) {
+                        if (attachment.contentType?.startsWith('image/')) {
+                            check = true;
+                        } else if (attachment.contentType?.startsWith('video/')) {
+                            check = true;
+                        }
                     }
                 }
             }
+
             if (/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:watch\?v=|shorts\/)|youtu\.be\/)([\w-]{11})(?:[?&](?:list|index|t)=[^&]*)*/.test(msg.content)) {
                 check = true;
             }

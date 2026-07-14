@@ -37,14 +37,15 @@ export async function contentDatabaseScan(channel: dsc.GuildTextBasedChannel, co
 
         for (const message of messages.values()) {
             if (message.author.bot) continue;
-
-            const links = extractMediaLinksInternal(message.content, theRegex);
-            for (const link of links) {
-                contentEntries.push({
-                    key: contentType.id,
-                    authorId: message.author.id,
-                    contentUrl: link,
-                });
+            for (const stuff of [message, ...message.messageSnapshots.values()]) {
+                const links = extractMediaLinksInternal(stuff.content, theRegex);
+                for (const link of links) {
+                    contentEntries.push({
+                        key: contentType.id,
+                        authorId: stuff.author?.id ?? message.author.id,
+                        contentUrl: link,
+                    });
+                }
             }
         }
 
