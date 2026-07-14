@@ -1,11 +1,16 @@
 import { Command } from '@/bot/command.ts';
 import { CommandFlags } from '@/bot/command/misc.ts';
 import { CommandPermissions } from '@/bot/command/permissions.ts';
-import { mkMessageReferenceEmbed } from '@/bot/templates/message-reference.ts';
 import { PredefinedColors } from '@/util/color.ts';
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType, Message } from 'discord.js';
 import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
+
 import User from '@/apis/db/user.ts';
+import sleep from '@/util/sleep.ts';
+
+const MIN_VOTES = 5;
+const TIME = 120_000;
+const DELETE_DELAY = 3_000;
 
 export default {
     name: 'votepin',
@@ -27,14 +32,10 @@ export default {
     ],
 
     async execute(api) {
-        const MIN_VOTES = 3;
-        const TIME = 120_000;
-        const EXPIRES_AT = Date.now() + TIME;
-
         const quotedMsg = api.getTypedArg('message', 'message-ref').value;
-        const msg = await mkMessageReferenceEmbed(quotedMsg, { color: PredefinedColors.DarkRed });
+        const expiresAt = Date.now() + TIME;
 
-        function buildVoteUI(quoted: Message, embed: ReplyEmbed, expiresAt: number, votes: number) {
+        function buildVoteUI(quoted: Message, expiresAt: number, votes: number) {
             return {
                 embeds: [
                     new ReplyEmbed()
@@ -46,7 +47,6 @@ export default {
                             `**Głosowanie wygasa** <t:${Math.floor(expiresAt / 1000)}:R>`
                         ].join('\n'))
                         .setColor(PredefinedColors.DarkRed),
-                    embed
                 ],
                 components: [
                     new ActionRowBuilder<ButtonBuilder>()
@@ -60,12 +60,12 @@ export default {
             };
         }
 
-        if (msg.quotedMsg.pinned)
+        if (quotedMsg.pinned)
             return await api.log.replyInfo(api, 'Nie tym razem', 'Ta wiadomość już została przez kogoś przypięta. Nie możesz jej przypiąć ponownie');
 
         const votes: string[] = [ api.executor.id ];
         let finished = false;
-        const reply = await api.reply(buildVoteUI(msg.quotedMsg, msg.embed, EXPIRES_AT, votes.length));
+        const reply = await api.reply(buildVoteUI(quotedMsg, expiresAt, votes.length));
         const collector = reply.createMessageComponentCollector({
             time: TIME,
             componentType: ComponentType.Button
@@ -93,34 +93,31 @@ export default {
             if (votes.length == MIN_VOTES) {
                 finished = true;
 
-                await msg.quotedMsg.fetch(true);
-                if (msg.quotedMsg.pinned) {
+                await quotedMsg.fetch(true);
+                if (quotedMsg.pinned) {
                     return await reply.edit({
                         embeds: [ api.log.getInfoEmbed('Nie tym razem', 'Ta wiadomość już została przez kogoś przypięta. Nie możesz jej przypiąć ponownie') ],
                         components: []
                     });
                 }
 
-                await msg.quotedMsg.pin('votepin command successfull');
-
-                await reply.edit({
-                    embeds: [
-                        api.log.getSuccessEmbed('Udało się!', 'Zagłosowała odpowiednia, wymagana ilość osób w wymaganym czasie, więc pomyślnie przypiąłem tę wiadomość.')
-                    ],
-                    components: []
-                });
+                const promise = quotedMsg.pin('votepin command successfull');
+                await reply.delete();
+                await promise;
             } else {
-                await reply.edit(buildVoteUI(msg.quotedMsg, msg.embed, EXPIRES_AT, votes.length))
+                await reply.edit(buildVoteUI(quotedMsg, expiresAt, votes.length))
             }
         });
-        collector.on('end', () => {
+        collector.on('end', async () => {
             if (finished) return;
-            reply.edit({
+            await reply.edit({
                 embeds: [
                     api.log.getErrorEmbed('Nie udało się!', 'Zbyt mało osób zagłosowało, by można było przypiąć tę wiadomość. Możesz spróbować ponownie.')
                 ],
                 components: [],
             });
+            await sleep(DELETE_DELAY);
+            await reply.delete();
         })
     },
 } satisfies Command;
