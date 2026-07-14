@@ -189,7 +189,9 @@ export default async function getWikiArticle(rawQuery: string): Promise<WikiErro
         success: true, usedAi: false,
         isDisamiguition: false,
         title: json.titles.normalized,
-        description: json.extract,
+        description: json.extract.length > 1800
+            ? json.extract.slice(0, 1800) + '...'
+            : json.extract,
         url: json.content_urls.desktop.page,
         thumbnail: json.thumbnail
     }
