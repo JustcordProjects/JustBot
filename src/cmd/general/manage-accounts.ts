@@ -5,21 +5,20 @@ import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
 import { PredefinedColors } from '@/util/color.ts';
 import { client } from '@/client.ts';
 import logError from '@/util/log-error.ts';
-import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, ComponentType, LabelBuilder, ModalBuilder, StringSelectMenuBuilder, StringSelectMenuInteraction, TextInputBuilder, TextInputStyle } from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, ComponentType, StringSelectMenuBuilder, StringSelectMenuInteraction } from 'discord.js';
 import { db } from '@/apis/db/bot-db.ts';
 import { addLvlRole, xpToLevel } from '@/bot/level.ts';
 import User from '@/apis/db/user.ts';
-import awaitUserConfirmation from '@/features/serchat/await-user-confirmation.ts';
 
 function getMainAccount(id: string) {
     try {
         return client.users.fetch(id);
-    } catch { 
+    } catch {
         return null;
     }
 }
 
-const manageAccountsCmd: Command = {
+export default {
     name: 'manage-accounts',
     aliases: ['account'],
 
@@ -48,7 +47,7 @@ const manageAccountsCmd: Command = {
                         'Oto wszystkie konta, które połączyłeś w naszym rewolucyjnym bocie. Współdzielisz pomiędzy nimi pieniądze na ekonomii, poziom i dużo różnego rodzaju stanu.',
                         '',
                         `**Główne konto:** \`${main_account?.username ?? 'nieznane'}\``,
-                        alternative_accounts.length > 0 
+                        alternative_accounts.length > 0
                             ? `**Twoje multikonta:** \`${alternative_accounts.map((a) => a.username).join('`, `')}\``
                             : '**Nie posiadasz multikont.** Możesz je dodać za pomocą komendy `add-primary-account`.'
                     ].join('\n'))
@@ -58,12 +57,8 @@ const manageAccountsCmd: Command = {
                 new ActionRowBuilder<ButtonBuilder>()
                     .addComponents([
                         new ButtonBuilder()
-                            .setCustomId('add-external-account')
-                            .setStyle(ButtonStyle.Primary)
-                            .setLabel('Dodaj zewnętrzne konto'),
-                        new ButtonBuilder()
                             .setCustomId('move-primary')
-                            .setStyle(ButtonStyle.Secondary)
+                            .setStyle(ButtonStyle.Primary)
                             .setLabel('Zmień główne konto'),
                         new ButtonBuilder()
                             .setCustomId('leave-group')
@@ -71,24 +66,27 @@ const manageAccountsCmd: Command = {
                             .setLabel('Opuść grupę')
                     ])
             ]
-        }); 
+        });
 
         const filter = (i: ButtonInteraction | StringSelectMenuInteraction) => [...alternative_accounts, main_account].filter(Boolean).map(u => u!.id).includes(i.user.id);
         const collector = msg.createMessageComponentCollector<ComponentType.Button | ComponentType.StringSelect>({ filter, time: 90000 });
-        
+
         collector.on('collect', async (i) => {
             if (i.customId !== 'add-external-account-user-sel') i.deferUpdate();
 
-            if ([ 'leave-group', 'leave-group-final', 'move-primary', 'move-primary-selected' ].includes(i.customId)) {
+            if (
+                [ 'leave-group', 'leave-group-final', 'move-primary', 'move-primary-selected' ].includes(i.customId) &&
+                alternative_accounts.length <= 0
+            ) {
                 return await msg.edit({ embeds: [
                     api.log.getErrorEmbed('Nie masz tu altów.', 'Te funkcje są dozwolone tylko dla osób, które posiadają tu alternatywne konta.')
-                ] });
+                ], components: [] });
             }
 
             if (i.customId == 'leave-group' && i.isButton()) {
                 if (api.executor.id == i.user.id) {
-                    return await msg.edit({ embeds: [ 
-                        api.log.getErrorEmbed('Masz problem', 'Jako główne konto nie możesz opuścić grupy multikont. Najpierw musisz przenieść tę pozycję na inne konto.') 
+                    return await msg.edit({ embeds: [
+                        api.log.getErrorEmbed('Masz problem', 'Jako główne konto nie możesz opuścić grupy multikont. Najpierw musisz przenieść tę pozycję na inne konto.')
                     ], components: [] })
                 }
 
@@ -109,7 +107,7 @@ const manageAccountsCmd: Command = {
                                     .setLabel('Anuluj')
                             ])
                     ]
-                }) 
+                })
             } else if (i.customId == 'leave-group-final' && i.isButton()) {
                 db.runSql("DELETE FROM alternative_accounts WHERE alternative_account = ?", [i.user.id]);
 
@@ -132,94 +130,39 @@ const manageAccountsCmd: Command = {
                                 new StringSelectMenuBuilder()
                                     .setPlaceholder('Wybierz konto')
                                     .setCustomId('move-primary-selected')
-                                    .setOptions(alternative_accounts.map((ac) => { return { label: ac.displayName, description: `${ac.username} (id: ${ac.id})`, value: ac.id }; }))       
+                                    .setOptions(alternative_accounts.map((ac) => { return { label: ac.displayName, description: `${ac.username} (id: ${ac.id})`, value: ac.id }; }))
                             ])
                     ]
-                });                
+                });
             } else if (i.customId == 'cancel' && i.isButton()) {
                 return await msg.edit({
                     embeds: [ api.log.getWarnEmbed('Anulowano', 'Operacja nie została zfinalizowana.') ],
                     components: []
                 });
-            } else if (i.customId == 'move-primary-selected' && i.isStringSelectMenu()) { 
+            } else if (i.customId == 'move-primary-selected' && i.isStringSelectMenu()) {
                 db.transaction(async () => {
                     const old_primary = api.executor;
-                    
+
                     // removing records
                     db.runSql("UPDATE alternative_accounts SET primary_account = ? WHERE primary_account = ?", [ i.values[0], old_primary.id ]);
                     db.runSql("UPDATE alternative_accounts SET alternative_account = ? WHERE primary_account = ? AND alternative_account = ?", [ old_primary.id, i.values[0], i.values[0] ]);
 
                     const new_primary = new User(i.values[0]);
 
-                    // updating data 
+                    // updating data
                     await new_primary.leveling.addXP(await old_primary.leveling.getXP());
                     await addLvlRole(api.guild!, xpToLevel(await new_primary.leveling.getXP()), i.user.id);
-                    const economy_balance = await old_primary.economy.getBalance();
-                    new_primary.economy.addBankMoney(economy_balance.bank.add(economy_balance.wallet));
+                    const economyBalance = await old_primary.economy.getBalance();
+                    new_primary.economy.addBankMoney(economyBalance.bank.add(economyBalance.wallet));
                     new_primary.prestige.addPoints(await old_primary.prestige.getPoints());
 
-                    // very scary 
+                    // very scary
                     await db.reset.all(old_primary.id);
                 });
 
                 await msg.edit({
                     embeds: [ api.log.getSuccessEmbed("Przeniesiono.", `Od teraz to ${i.values[0]} jest Twoim głównym kontem.`) ],
                     components: []
-                });
-            } else if (i.customId == 'add-external-account' && i.isButton()) {
-                await msg.edit({
-                    embeds: [ api.log.getInfoEmbed('Wybierz platformę', 'Musisz wybrać zewnętrzną platformę, o którą Ci chodzi.') ],
-                    components: [
-                        new ActionRowBuilder<StringSelectMenuBuilder>()
-                            .addComponents([
-                                new StringSelectMenuBuilder()
-                                    .setPlaceholder('Poproszę platformę')
-                                    .setCustomId('add-external-account-user-sel')
-                                    .setOptions([ { label: "Serchat", description: "Platforma @catflare z ser.chat.", value: "serchat" } ])
-                            ])
-                    ]
-                });
-            } else if (i.customId == 'add-external-account-user-sel' && i.isStringSelectMenu() && i.values?.[0] == "serchat") {
-                i.showModal(
-                    new ModalBuilder()
-                        .setCustomId('add-external-account-final')
-                        .setTitle('Jeszcze tylko dwa kroki...')
-                        .addLabelComponents(
-                            new LabelBuilder()
-                                .setLabel("Wpisz user ID na Serchat")
-                                .setDescription("Możesz je uzyskać klikając na swój profil prawym przyciskiem myszy i następnie kopiując ID usera.")
-                                .setTextInputComponent(
-                                    new TextInputBuilder()
-                                        .setStyle(TextInputStyle.Short)
-                                        .setCustomId('userid')
-                                        .setPlaceholder("np. 0000000b78c0")
-                                        .setRequired(true)
-                                )
-                        )
-                );
-
-                const ms = await i.awaitModalSubmit({
-                    filter: (interaction) => 
-                        i.user.id === interaction.user.id &&
-                        interaction.customId == 'add-external-account-final',
-                    time: 60_000
-                });
-                await ms.deferUpdate();
-                await msg.edit({
-                    embeds: [
-                        api.log.getInfoEmbed('Sprawdź SerChat', 'Musisz potwierdzić, że to jest naprawdę Twoje konto.')
-                    ],
-                    components: []
-                });
-
-                const serchat_userid = ms.fields.getTextInputValue('userid');
-                await awaitUserConfirmation(`accept-discord-user ${i.user.id}`, serchat_userid, `<userid:'${serchat_userid}'>, napisz \`accept-discord-user ${i.user.id}\`, aby zaakceptować połączenie kont dla użytkownika Discorda ${i.user.username}`);
-                await db.platforms.addAccount('serchat', i.user.id, serchat_userid)
-
-                await msg.edit({
-                    embeds: [
-                        api.log.getSuccessEmbed('Połączono', 'Udało Ci się połączyć konto Discord z kontem SerChat.')
-                    ]
                 });
             }
         })
@@ -232,6 +175,4 @@ const manageAccountsCmd: Command = {
             }
         });
     },
-};
-
-export default manageAccountsCmd;
+} satisfies Command;

@@ -108,12 +108,6 @@ export default interface Config {
             dbBackups: dsc.Snowflake;
             ghBridge: dsc.Snowflake;
         };
-
-        serchat: {
-            serverId: dsc.Snowflake;
-
-            general: dsc.Snowflake;
-        }
     };
 
     features: Features;
