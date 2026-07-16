@@ -9,6 +9,10 @@ export const channelsCfg: Config['channels'] = {
         emojiPlacement: 'before-name',
         spaceReplacement: null,
     },
+    serchat: {
+        serverId: '0334421005076267008',
+        general: '0334421005147570176'
+    },
     mod: {
         modGeneral: '1510229839016230986',
         logs: '1510286821848912043',

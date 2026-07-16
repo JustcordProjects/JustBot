@@ -38,6 +38,7 @@
         "nodemailer": "npm:nodemailer@^8.0.6",
         "gemini": "npm:@google/generative-ai@^0.24.1",
         "pokenode-ts": "npm:pokenode-ts@^1.20.0",
+        "serchat.ts": "npm:serchat.ts@^0.1.14",
         "sqlite": "https://deno.land/x/sqlite@v3.9.1/mod.ts",
         "@/": "./src/",
         "#tests/": "./tests/"
