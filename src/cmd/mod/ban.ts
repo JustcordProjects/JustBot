@@ -1,5 +1,4 @@
 import * as dsc from 'discord.js';
-import { output as debug } from '@/bot/logging.ts';
 
 import { Command } from '@/bot/command.ts';
 import { CommandFlags } from '@/bot/command/misc.ts';
@@ -52,25 +51,20 @@ export default {
             );
         }
 
-        try {
-            await ban(targetUser, { reason, mod: api.invoker.id });
+        await ban(targetUser, { reason, mod: api.invoker.id });
 
-            await api.reply({
-                embeds: [
-                    new ReplyEmbed()
-                        .setTitle(`📢 ${targetUser.user.username} został zbanowany!`)
-                        .setDescription(`Multikonto? Już po nim... Wkurzający chłop? Uciszony na zawsze... Ktokolwiek? Nie może wbić, chyba że zrobi alta...`)
-                        .addFields(
-                            { name: 'Moderator', value: `<@${api.invoker.id}>`, inline: true },
-                            { name: 'Użytkownik', value: `<@${targetUser.id}>`, inline: true },
-                            { name: 'Powód', value: reason, inline: false },
-                        )
-                        .setColor(PredefinedColors.Orange),
-                ],
-            });
-        } catch (err) {
-            debug.err(err);
-            return api.log.replyError(api, 'Brak permisji', 'Coś Ty Eklerka znowu pozmieniał? No chyba że banujesz admina...');
-        }
+        await api.reply({
+            embeds: [
+                new ReplyEmbed()
+                    .setTitle(`📢 ${targetUser.user.username} został zbanowany!`)
+                    .setDescription(`Multikonto? Już po nim... Wkurzający chłop? Uciszony na zawsze... Ktokolwiek? Nie może wbić, chyba że zrobi alta...`)
+                    .addFields(
+                        { name: 'Moderator', value: `<@${api.invoker.id}>`, inline: true },
+                        { name: 'Użytkownik', value: `<@${targetUser.id}>`, inline: true },
+                        { name: 'Powód', value: reason, inline: false },
+                    )
+                    .setColor(PredefinedColors.Orange),
+            ],
+        });
     },
 } satisfies Command;

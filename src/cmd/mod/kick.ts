@@ -1,5 +1,4 @@
 import * as dsc from 'discord.js';
-import { output } from '@/bot/logging.ts';
 
 import { Command } from '@/bot/command.ts';
 import { CommandFlags } from '@/bot/command/misc.ts';
@@ -45,35 +44,30 @@ export default {
             reason = 'Moderator nie poszczycił się znajomością komendy i nie podał powodu... Ale moze to i lepiej...';
 
         try {
-            try {
-                await targetUser.send({
-                    embeds: [
-                        new ReplyEmbed()
-                            .setTitle('📢 Zostałeś wywalony z serwera Piekarnia eklerki!')
-                            .setDescription(`To straszne wiem. Powód kicka brzmi: ${reason}`)
-                            .setColor(PredefinedColors.Orange),
-                    ],
-                });
-            } catch {}
-
-            await kick(targetUser, { reason, mod: api.invoker.id });
-
-            await api.reply({
+            await targetUser.send({
                 embeds: [
                     new ReplyEmbed()
-                        .setTitle(`📢 ${targetUser.user.username} został wywalony!`)
-                        .setDescription(`Ukróciłem jego zagrania! Miejmy nadzieję, że nie wbije znowu...`)
-                        .addFields(
-                            { name: 'Moderator', value: `<@${api.invoker.id}>`, inline: true },
-                            { name: 'Użytkownik', value: `<@${targetUser.id}>`, inline: true },
-                            { name: 'Powód', value: reason, inline: false },
-                        )
+                        .setTitle('📢 Zostałeś wywalony z serwera Justcord!')
+                        .setDescription(`To straszne wiem. Powód kicka brzmi: ${reason}\nMożesz zawsze wrócić, jeżeli masz zaproszenie.`)
                         .setColor(PredefinedColors.Orange),
                 ],
             });
-        } catch (err) {
-            output.err(err);
-            return api.log.replyError(api, 'Brak permisji', 'Coś Ty Eklerka znowu pozmieniał? No chyba że kickujesz admina...');
-        }
+        } catch {}
+
+        await kick(targetUser, { reason, mod: api.invoker.id });
+
+        await api.reply({
+            embeds: [
+                new ReplyEmbed()
+                    .setTitle(`📢 ${targetUser.user.username} został wywalony!`)
+                    .setDescription(`Ukróciłem jego zagrania! Miejmy nadzieję, że nie wbije znowu...`)
+                    .addFields(
+                        { name: 'Moderator', value: `<@${api.invoker.id}>`, inline: true },
+                        { name: 'Użytkownik', value: `<@${targetUser.id}>`, inline: true },
+                        { name: 'Powód', value: reason, inline: false },
+                    )
+                    .setColor(PredefinedColors.Orange),
+            ],
+        });
     },
 } satisfies Command;
