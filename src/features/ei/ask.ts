@@ -8,6 +8,9 @@ import { Buffer } from 'node:buffer';
 import { SystemPrompt } from '@/features/ei/models.ts';
 import { toolDeclarations } from '@/apis/gemini/ask.ts';
 
+import { getCompilerForLang } from '@/apis/compile/auto.ts';
+import * as compile from '@/apis/compile/driver.ts';
+
 import { commands } from '@/cmd/list.ts';
 import { output } from '@/bot/logging.ts';
 import { cfg } from '@/bot/cfg.ts';
@@ -308,6 +311,57 @@ export async function executeAsk(msg: dsc.Message, question: string, contextMsgs
                 return { error: (err as Error).message };
             }
         },
+        compile_code: async (args: { code: string; compiler: string, stdin?: string}) => {
+            const driver = await getCompilerForLang(args.compiler);
+            const info = await driver.info();
+
+            if (info.lang === 'unknown') {
+                return { error: `Podany kompilator "${info.lang}" nie jest prawidłowy` };
+            }
+
+            const result = await driver.compile({source: args.code, stdin: args.stdin ?? ""})
+
+            if (result.status != compile.Status.Success || result.runtime == null) {
+                let title: string;
+                let body: string;
+
+                if (result.runtime == null) {
+                    title = 'Błąd kompilacji';
+                    body = '```\n' + result.compile.messages.map(m => m.content).join('\n') + '```';
+                } else if (result.status == compile.Status.TimeLimitExceeded) {
+                    title = 'Timeout';
+                    body = 'Program działał za długo i musiał zostać zabity.';
+                } else if (result.status == compile.Status.MemLimitExceeded) {
+                    title = 'Przekroczenie limitu pamięci';
+                    body = 'Program zużywał za dużo pamięci i musiał zostać zabity.';
+                } else {
+                    title = 'Błąd';
+                    body = 'Niestety błąd jest nieznany';
+                }
+
+                return { error: title, details: body };
+            }
+
+            let cmdOutput: string = '';
+
+            const allMessages = result.compile.messages;
+            if (result.runtime) allMessages.push(...result.runtime.messages);
+
+            const addStreamMarker = allMessages.some((m) => m.kind == 'stderr');
+
+            for (const msg of allMessages) {
+                switch (msg.kind) {
+                case 'stdout':
+                    cmdOutput += `${addStreamMarker ? '[stdout] ' : ''}${msg.content.replaceAll('\`', '').trim()}\n`;
+                    break;
+                case 'stderr':
+                    cmdOutput += `[stderr] ${msg.content.replaceAll('\`', '').trim()}\n`;
+                    break;
+                }
+            }
+
+            return { output: cmdOutput, exitCode: result.runtime?.exitcode ?? result.compile.exitcode }
+        }
     };
 
     const finalSystemInstruction = [
