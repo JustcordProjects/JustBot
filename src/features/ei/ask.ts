@@ -101,7 +101,7 @@ export async function executeAsk(msg: dsc.Message, question: string, contextMsgs
     if (msg.reference?.messageId) {
         try {
             const refMsg = await msg.fetchReference();
-            referencedContext = `\n\nUżytkownik odpowiada na wiadomość od ${formatUser(refMsg.author)}: '${refMsg.content}'`;
+            referencedContext = `\n\nUżytkownik odpowiada na wiadomość od ${formatUser(refMsg.author)}: '${formatMsg(refMsg)}'`;
         } catch (err) {
             output.err(err);
         }
