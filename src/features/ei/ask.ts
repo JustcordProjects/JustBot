@@ -1,3 +1,4 @@
+import * as compile from '@/apis/compile/driver.ts';
 import * as github from '@/apis/github/github.ts';
 import * as gemini from '@/apis/gemini/model.ts';
 import * as reddit from '@/apis/reddit/reddit.ts';
@@ -9,7 +10,8 @@ import { SystemPrompt } from '@/features/ei/models.ts';
 import { toolDeclarations } from '@/apis/gemini/ask.ts';
 
 import { getCompilerForLang } from '@/apis/compile/auto.ts';
-import * as compile from '@/apis/compile/driver.ts';
+import { sendLog } from '@/apis/log/send-log.ts';
+import { PredefinedColors } from '@/util/color.ts';
 
 import { commands } from '@/cmd/list.ts';
 import { output } from '@/bot/logging.ts';
@@ -38,8 +40,7 @@ export async function executeAsk(msg: dsc.Message, question: string, contextMsgs
     const attachments: dsc.AttachmentBuilder[] = [];
     if (!gemini.isInitialized()) {
         return log.replyError(
-            msg,
-            'Błąd',
+            msg, 'Błąd',
             'Moduł integracji z gemini nie został załadowany przez justbota.' +
                 'A tak po ludzku to poprostu ktoś nie dał api key do .env',
         );
@@ -497,10 +498,22 @@ export async function executeAsk(msg: dsc.Message, question: string, contextMsgs
         await msg.reply(payload as dsc.MessageReplyOptions);
     }
 
-    const toolExecutionHistoryFormatted = JSON.stringify(toolExecutionHistory, null, 4);
+    const toolExecutionHistoryFormatted =
+        JSON.stringify(toolExecutionHistory, null, 4);
 
-    output.verbose(` === BEGIN JustInteligence debug data for input: ${question}`);
-    output.verbose(`JustInteligence final system prompt:\n\n${finalSystemInstruction}`);
-    output.verbose(`JustInteligence tool calls:\n\n${toolExecutionHistoryFormatted}`);
-    output.verbose(` === END JustInteligence debug data for input: ${question}`);
+    await sendLog({
+        color: PredefinedColors.Blurple,
+        title: 'Zapytanie EI',
+        description: 'Dane pomocne w debugowaniu EI tak w skrócie',
+        attachments: [
+            new dsc.AttachmentBuilder(
+                Buffer.from(finalSystemInstruction, 'utf8'),
+                { name: 'ei-final-system-prompt.dat' },
+            ),
+            new dsc.AttachmentBuilder(
+                Buffer.from(toolExecutionHistoryFormatted, 'utf8'),
+                { name: 'ei-tool-calls.json' },
+            )
+        ]
+    });
 }
