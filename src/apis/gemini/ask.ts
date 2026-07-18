@@ -197,6 +197,28 @@ export const toolDeclarations: gemini.Tool[] = [
                     required: ['prompt', 'resolution'],
                 },
             },
+            {
+                name: 'compile_code',
+                description: 'Kompiluje podany kod.',
+                parameters: {
+                    type: gemini.SchemaType.OBJECT,
+                    properties: {
+                        code: {
+                            type: gemini.SchemaType.STRING,
+                            description: 'Kod/skrypt do skompilowania/uruchomienia.',
+                        },
+                        compiler: {
+                            type: gemini.SchemaType.STRING,
+                            description: 'Nazwa kompilatora/języka programowania. Na przykład `bash`.',
+                        },
+                        stdin: {
+                            type: gemini.SchemaType.STRING,
+                            description: 'Tekst który ma zostać wysłany do stdin (wejścia standardowego) programu.'
+                        },
+                    },
+                    required: ['code', 'compiler'],
+                },
+            },
         ],
     },
 ];
