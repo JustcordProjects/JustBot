@@ -12,7 +12,7 @@ export default {
     name: 'reset',
     aliases: [],
     description: {
-        main: 'Pozwala zresetować dane tabelay bazy danych (ekonomia, levele, cooldowny, warny, reputacja).',
+        main: 'Pozwala zresetować dane tabelay bazy danych (ekonomia, levele, cooldowny, warny, reputacja, pamięć IA).',
         short: 'Resetuje dane bazy danych.',
     },
     flags: CommandFlags.Important | CommandFlags.Unsafe,
@@ -37,8 +37,8 @@ export default {
         const table = api.getTypedArg('table', 'string')?.value?.toLowerCase();
         const targetUser = api.getTypedArg('user', 'user-mention')?.value as dsc.GuildMember | dsc.User | undefined;
 
-        if (!table || !['economy', 'leveling', 'cooldowns', 'warns', 'music', 'all', 'prestige'].includes(table)) {
-            return api.log.replyError(api, 'Niepoprawna tabela', 'Poprawne tabele: economy, leveling, prestige, cooldowns, warns, music, all');
+        if (!table || !['economy', 'leveling', 'cooldowns', 'warns', 'music', 'all', 'ai_memories', 'prestige'].includes(table)) {
+            return api.log.replyError(api, 'Niepoprawna tabela', 'Poprawne tabele: economy, leveling, ai_memories, prestige, cooldowns, warns, music, all');
         }
 
         const userId = targetUser?.id;
@@ -97,6 +97,12 @@ export default {
                         break;
                     case 'prestige':
                         await db.reset.prestige(userId);
+                        break;
+                    case 'ai_memories':
+                        if (!userId)
+                            await db.runSql("DELETE FROM ai_memories");
+                        else 
+                            await db.runSql("DELETE FROM ai_memories WHERE instr(memory, ?) > 0", [ userId ]);
                         break;
                     case 'all':
                         await db.reset.all(userId);
