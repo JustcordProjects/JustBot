@@ -23,7 +23,7 @@ export default {
             optional: true,
         },
     ],
-    flags: CommandFlags.Important | CommandFlags.Unsafe,
+    flags: CommandFlags.Important | CommandFlags.Unsafe | CommandFlags.WorksInDM,
     permissions: {
         allowedRoles: cfg.hierarchy.developers.allowedRoles,
         allowedUsers: cfg.hierarchy.developers.allowedUsers,

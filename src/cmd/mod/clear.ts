@@ -12,7 +12,7 @@ export default {
         main: 'Ktoś spami? Ta komenda pomoże Ci ogarnąć usuwanie wiadomości!',
         short: 'Wywala wiadomości!',
     },
-    flags: CommandFlags.Important,
+    flags: CommandFlags.Important | CommandFlags.WorksInDM,
 
     expectedArgs: [
         {

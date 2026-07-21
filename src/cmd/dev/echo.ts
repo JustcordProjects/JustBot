@@ -27,7 +27,7 @@ export default {
             optional: false,
         },
     ],
-    flags: CommandFlags.Important,
+    flags: CommandFlags.Important | CommandFlags.WorksInDM,
     permissions: {
         allowedRoles: cfg.hierarchy.developers.allowedRoles,
         allowedUsers: cfg.hierarchy.developers.allowedUsers,

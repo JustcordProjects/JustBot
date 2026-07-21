@@ -25,7 +25,7 @@ export default {
         main: 'Wykonuje kod JavaScript. Jest naprawdę potencjalnie unsafe, dlatego to jest locknięte do granic możliwości.',
         short: 'Wykonuje kod JavaScript, więc jest bardzo unsafe.',
     },
-    flags: CommandFlags.Important | CommandFlags.Unsafe,
+    flags: CommandFlags.Important | CommandFlags.Unsafe | CommandFlags.WorksInDM,
 
     expectedArgs: [
         {

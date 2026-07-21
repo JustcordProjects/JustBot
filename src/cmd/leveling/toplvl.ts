@@ -21,7 +21,7 @@ export default {
         main: 'Czas popatrzeć na najlepszych użytkowników serwera...',
         short: 'Czas popatrzeć na najlepszych użytkowników serwera...',
     },
-    flags: CommandFlags.None,
+    flags: CommandFlags.WorksInDM,
 
     permissions: {
         allowedRoles: null,

@@ -67,7 +67,7 @@ export default {
         main: 'Idź do jakiegoś Times Square i kup jakiś bezsensowny bullshit 10 razy drożej niż gdzie indziej.',
         short: 'Odwiedź sklep.',
     },
-    flags: CommandFlags.Economy,
+    flags: CommandFlags.Economy | CommandFlags.WorksInDM,
 
     permissions: {
         allowedRoles: null,

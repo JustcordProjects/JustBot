@@ -12,7 +12,7 @@ export default {
     },
     aliases: [],
 
-    flags: CommandFlags.None | CommandFlags.WorksInDM,
+    flags: CommandFlags.WorksInDM,
     permissions: CommandPermissions.everyone(),
 
     expectedArgs: [

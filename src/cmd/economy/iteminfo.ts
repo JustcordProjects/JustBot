@@ -12,7 +12,7 @@ export default {
         main: 'Pokazuje szczegółowe informacje o itemie, w tym wszystkie możliwe dropy',
         short: 'Pokazuje info o itemie',
     },
-    flags: CommandFlags.Economy,
+    flags: CommandFlags.Economy | CommandFlags.WorksInDM,
 
     permissions: {
         allowedRoles: null,

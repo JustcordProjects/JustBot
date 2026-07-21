@@ -11,7 +11,7 @@ export default {
         main: 'Sprawdź swoje miejsce w rankingu levela, jeśli nie jesteś w topce (looser btw)',
         short: 'Sprawdź swoje miejsce w rankingu xp',
     },
-    flags: CommandFlags.None,
+    flags: CommandFlags.WorksInDM,
 
     expectedArgs: [
         {

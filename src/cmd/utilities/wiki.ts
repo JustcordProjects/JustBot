@@ -25,7 +25,7 @@ export default {
         short: 'Pobiera rzecz z Wikipedii!',
     },
 
-    flags: CommandFlags.None | CommandFlags.WorksInDM,
+    flags: CommandFlags.WorksInDM,
     permissions: CommandPermissions.everyone(),
 
     expectedArgs: [

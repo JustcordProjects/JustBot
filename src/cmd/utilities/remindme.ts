@@ -11,7 +11,7 @@ export default {
         short: "Ustawia przypomnienie."
     },
 
-    flags: CommandFlags.None | CommandFlags.WorksInDM,
+    flags: CommandFlags.WorksInDM,
     permissions: CommandPermissions.everyone(),
 
     expectedArgs: [
