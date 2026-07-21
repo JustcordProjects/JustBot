@@ -436,6 +436,14 @@ export class BotDatabase {
             }
         },
 
+        aiMem: async (userId?: string): Promise<void> => {
+            if (userId) {
+                await db.runSql(`DELETE FROM ai_memories WHERE instr(memory, ?) > 0`, [ userId ]);
+            } else {
+                await db.runSql(`DELETE FROM ai_memories`);
+            }
+        },
+
         all: async (userId?: string): Promise<void> => {
             await this.reset.economy(userId);
             await this.reset.inventory(userId);
@@ -443,6 +451,7 @@ export class BotDatabase {
             await this.reset.cooldowns(userId);
             await this.reset.warns(userId);
             await this.reset.prestige(userId);
+            await this.reset.aiMem(userId);
             // i think it's better not to do this for now
             //await this.reset.music(userId);
         },
@@ -450,3 +459,78 @@ export class BotDatabase {
 }
 
 export const db = new BotDatabase('bot.db');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// let the hamsters go free

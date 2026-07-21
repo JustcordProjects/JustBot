@@ -98,11 +98,8 @@ export default {
                     case 'prestige':
                         await db.reset.prestige(userId);
                         break;
-                    case 'ai_memories':
-                        if (!userId)
-                            await db.runSql("DELETE FROM ai_memories");
-                        else 
-                            await db.runSql("DELETE FROM ai_memories WHERE instr(memory, ?) > 0", [ userId ]);
+                    case 'ai': case 'ai-memories': case 'ai_memories':
+                        await db.reset.aiMem(userId);
                         break;
                     case 'all':
                         await db.reset.all(userId);
