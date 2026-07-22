@@ -37,7 +37,7 @@ export default {
         const table = api.getTypedArg('table', 'string')?.value?.toLowerCase();
         const targetUser = api.getTypedArg('user', 'user-mention')?.value as dsc.GuildMember | dsc.User | undefined;
 
-        if (!table || !['economy', 'leveling', 'cooldowns', 'warns', 'music', 'all', 'ai_memories', 'prestige'].includes(table)) {
+        if (!table || !['economy', 'leveling', 'cooldowns', 'warns', 'music', 'all', 'ai_memories', 'ai', 'ai-memories', 'prestige'].includes(table)) {
             return api.log.replyError(api, 'Niepoprawna tabela', 'Poprawne tabele: economy, leveling, ai_memories, prestige, cooldowns, warns, music, all');
         }
 
