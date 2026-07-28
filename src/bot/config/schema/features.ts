@@ -82,6 +82,11 @@ export default interface Features {
         allowPhilosophy: boolean;
         contextDefaultMessages: number;
         contextMaxMessages: number;
+
+        redditEnabled:   boolean;
+        githubEnabled:   boolean;
+        memoriesEnabled: boolean;
+        compilerEnabled: boolean;
     };
     contentDatabases: ContentType[];
     actions: {

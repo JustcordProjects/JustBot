@@ -7,7 +7,7 @@ import * as dsc from 'discord.js';
 import { Buffer } from 'node:buffer';
 
 import { SystemPrompt } from '@/features/ei/models.ts';
-import { toolDeclarations } from '@/apis/gemini/ask.ts';
+import { getTools } from '@/apis/gemini/ask.ts';
 
 import { getCompilerForLang } from '@/apis/compile/auto.ts';
 import { sendLog } from '@/apis/log/send-log.ts';
@@ -410,7 +410,7 @@ export async function executeAsk(msg: dsc.Message, question: string, contextMsgs
                 role: 'system',
                 parts: [{ text: finalSystemInstruction }],
             },
-            tools: toolDeclarations,
+            tools: getTools(),
         });
     } catch (err) {
         const str = logError('stdwarn', err, 'Generate EI Response');
@@ -472,7 +472,7 @@ export async function executeAsk(msg: dsc.Message, question: string, contextMsgs
                 role: 'system',
                 parts: [{ text: finalSystemInstruction }],
             },
-            tools: toolDeclarations,
+            tools: getTools(),
         });
 
         candidate = result.response.candidates?.[0];

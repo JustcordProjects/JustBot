@@ -132,6 +132,11 @@ export const featuresCfg: config.Features = {
         allowPhilosophy: true,
         contextDefaultMessages: 15,
         contextMaxMessages: 30,
+
+        redditEnabled:   true,
+        githubEnabled:   true,
+        memoriesEnabled: false,
+        compilerEnabled: true,
     },
     contentDatabases: [
         {
