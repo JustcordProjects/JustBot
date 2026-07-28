@@ -138,7 +138,7 @@ export const featuresCfg: config.Features = {
         githubEnabled:   true,
         memoriesEnabled: false,
         compilerEnabled: true,
-        codeExecEnabled: true,
+        //codeExecEnabled: true,
     },
     contentDatabases: [
         {

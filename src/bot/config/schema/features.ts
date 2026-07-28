@@ -88,7 +88,7 @@ export default interface Features {
         githubEnabled:   boolean;
         memoriesEnabled: boolean;
         compilerEnabled: boolean;
-        codeExecEnabled: boolean;
+        //codeExecEnabled: boolean;
     };
     contentDatabases: ContentType[];
     actions: {
