@@ -27,7 +27,6 @@ import askCmd from '@/cmd/utilities/ask.ts';
 import User, { CooldownWaiting } from '@/apis/db/user.ts';
 
 // NOTE: duplicated logic with src/features/.../make-command-api.ts
-//       i'm too lazy to move it to some kind of helper so sorry
 //       it's only 4 lines anyway so maybe it's not a big deal.
 async function checkImageGenCooldown(member: dsc.GuildMember) {
     const cmdCfg = getCommandConfig(askCmd);
@@ -402,15 +401,14 @@ export async function executeAsk(msg: dsc.Message, question: string, contextMsgs
         msg.channel.sendTyping();
     }
 
-    let result: gemini.GenerateContentResult;
+    let response: gemini.GenerateContentResponse;
     try {
-        result = await gemini.generateContent('ask-cmd', {
+        response = await gemini.generateContent('ask-cmd', {
             contents,
-            systemInstruction: {
-                role: 'system',
-                parts: [{ text: finalSystemInstruction }],
+            config: {
+                systemInstruction: finalSystemInstruction,
+                tools: getTools(),
             },
-            tools: getTools(),
         });
     } catch (err) {
         const str = logError('stdwarn', err, 'Generate EI Response');
@@ -432,17 +430,17 @@ export async function executeAsk(msg: dsc.Message, question: string, contextMsgs
         );
     }
 
-    let candidate = result.response.candidates?.[0];
+    let candidate = response.candidates?.[0];
 
     const toolExecutionHistory: { name: string; args: unknown; result: unknown }[] = [];
 
-    while (candidate?.content.parts.some((p) => p.functionCall)) {
+    while (candidate?.content?.parts?.some((p) => p.functionCall)) {
         contents.push(candidate.content);
 
         const functionResponses: gemini.Part[] = [];
         for (const part of candidate.content.parts) {
             if (part.functionCall) {
-                const originalName = part.functionCall.name;
+                const originalName = part.functionCall.name ?? '';
                 const cleanName = originalName.split(':').pop()!;
 
                 // deno-lint-ignore no-explicit-any
@@ -466,19 +464,18 @@ export async function executeAsk(msg: dsc.Message, question: string, contextMsgs
 
         contents.push({ role: 'function', parts: functionResponses });
 
-        result = await gemini.generateContent('ask-cmd', {
+        response = await gemini.generateContent('ask-cmd', {
             contents,
-            systemInstruction: {
-                role: 'system',
-                parts: [{ text: finalSystemInstruction }],
+            config: {
+                systemInstruction: finalSystemInstruction,
+                tools: getTools(),
             },
-            tools: getTools(),
         });
 
-        candidate = result.response.candidates?.[0];
+        candidate = response.candidates?.[0];
     }
 
-    let content = result.response.text();
+    let content = response.text ?? '';
     if (content.trim().length > 0 || attachments.length > 0) {
         if (content.trim().length > 0 && !prefixChecked) {
             if (allPrefixes.some((p) => content.startsWith(p))) {

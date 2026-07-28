@@ -148,7 +148,7 @@ export default async function getWikiArticle(rawQuery: string): Promise<WikiErro
         if (!gemini.isInitialized() || !gemini.getModels('wiki-cmd').length) {
             return { success: false, reason: 'ai-uninitialized' };
         }
-        let result: gemini.GenerateContentResult;
+        let result: gemini.GenerateContentResponse;
         try {
             result = await gemini.generateContent('wiki-cmd', {
                 contents: [
@@ -158,10 +158,12 @@ export default async function getWikiArticle(rawQuery: string): Promise<WikiErro
         } catch {
             return { success: false, reason: 'ai-error' };
         }
-        const aiResponse = result.response.text();
-        if (aiResponse.toLowerCase().trim().includes('--ignore')) {
+        const aiResponse = result.text;
+        if (aiResponse == undefined)
+            return { success: false, reason: 'ai-error' };
+        if (aiResponse.toLowerCase().trim().includes('--ignore'))
             return { success: false, reason: 'ai-ignore' };
-        }
+
         const aiHeader = aiResponse.split('\n')[0].trim();
         const aiHasTitle = aiHeader.startsWith('# ');
         const aiDescription = aiHasTitle ? aiResponse.slice(aiHeader.length).trim() : aiResponse;

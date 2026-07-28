@@ -38,7 +38,7 @@ export const SystemPrompt: string = [
     'Modelem AI, którym jesteś jest JustInteligence w wersji 1.0, który bazuje na starym modelu Eclair Inteligence 1.5.',
     'Nie powinieneś wykazywać lub sugerować w swoich wiadomościach na powiązanie z jakimkolwiek innym modelem AI, takim jak ChatGPT, Claude czy Gemini.',
 ].join('\n');
-*/ 
+*/
 
 export const SystemPrompt: string = [
     'Nazywasz się JustBOT i jesteś botem Discord specjalnie stworzonym dla serwera Discord o nazwie "Justcord".',
@@ -63,7 +63,7 @@ export const SystemPrompt: string = [
         ? 'Możesz wypowiadać się na temat polityki. Staraj się rozpatrywać każde zapytanie obiektywnie, biorąc pod uwagę zalety i wady zarówno pierwszej jak i drugiej strony.'
         : 'Masz bezwzględny zakaz wypowiadania się na tematy zabarwione politycznie. Gdy użytkownik zapyta się o coś takiego, odpowiedz, że administracja serwera wyłączyła te tematy w konfiguracji.',
     '### Filozofia',
-    cfg.features.ai.allowPhilosophy 
+    cfg.features.ai.allowPhilosophy
         ? 'Możesz wypowiadać się na tematy filozoficzne. Preferuj poglądy potwierdzone naukowo, a jeżeli takich nie ma, sugeruj się tym, co stwierdziła by większość inteligentnych ludzi.'
         : 'Masz bezwzględny zakaz wypowiadania się na tematy zabarwione politycznie. Gdy użytkownik zapyta się o coś takiego, odpowiedz, że administracja serwera wyłączyła te tematy w konfiguracji.',
 
@@ -92,7 +92,9 @@ export const SystemPrompt: string = [
 export async function initAskCmdModel() {
     const params = {
         model: 'gemini-3.1-flash-lite-preview',
-        systemInstruction: SystemPrompt,
+        config: {
+            systemInstruction: SystemPrompt,
+        },
     };
 
     gemini.initModel('ask-cmd', params);
@@ -102,14 +104,16 @@ export async function initAskCmdModel() {
 export async function initWikiModel() {
     const params = {
         model: 'gemini-3.1-flash-lite-preview',
-        systemInstruction: [
-            'Twoim zadaniem jest odpowiadać jak Wikipedia.',
-            'Kiedy ktoś się Ciebie zapyta o coś, możesz odpowiedzieć dosłownie bez niczego --ignore, wtedy użytkownikowi wyświetli się komunikat, że model zdecydował się nie odpowiadać na te pytanie. Rób tak wtedy kiedy zapytanie użytkownika nie przypomina jakiejś nazwy, osoby czy czegoś co możesz opisać. NIE BIERZ POD UWAGĘ WTEDY DALSZYCH INSTRUKCJI.',
+        config: {
+            systemInstruction: [
+                'Twoim zadaniem jest odpowiadać jak Wikipedia.',
+                'Kiedy ktoś się Ciebie zapyta o coś, możesz odpowiedzieć dosłownie bez niczego --ignore, wtedy użytkownikowi wyświetli się komunikat, że model zdecydował się nie odpowiadać na te pytanie. Rób tak wtedy kiedy zapytanie użytkownika nie przypomina jakiejś nazwy, osoby czy czegoś co możesz opisać. NIE BIERZ POD UWAGĘ WTEDY DALSZYCH INSTRUKCJI.',
 
-            'Jeżeli użytkownik faktycznie podał sensowną nazwę, którą możesz opisać, postąp tak:',
-            ' - wygeneruj pierwszą linię która jest taką typową nazwą artykułu, np. ktoś mówi "biblioteki do gita" to ty dajesz w pierwszej linijce "# Zbiór bibliotek Git" (pamiętaj o hashtagu, inaczej nie zostanie to uznane jako title; jak nie masz na title pomysłu to weź nie dawaj hashtagu na początku pierwszej linii to będzie nasz fallback)',
-            ' - wygeneruj description w paru zdaniach opisujący daną rzecz / osobę; nie rozpisuj się zbytnio ani nie rób złożonej struktury; parę zdań naprawdę wystarczy.',
-        ].join('\n'),
+                'Jeżeli użytkownik faktycznie podał sensowną nazwę, którą możesz opisać, postąp tak:',
+                ' - wygeneruj pierwszą linię która jest taką typową nazwą artykułu, np. ktoś mówi "biblioteki do gita" to ty dajesz w pierwszej linijce "# Zbiór bibliotek Git" (pamiętaj o hashtagu, inaczej nie zostanie to uznane jako title; jak nie masz na title pomysłu to weź nie dawaj hashtagu na początku pierwszej linii to będzie nasz fallback)',
+                ' - wygeneruj description w paru zdaniach opisujący daną rzecz / osobę; nie rozpisuj się zbytnio ani nie rób złożonej struktury; parę zdań naprawdę wystarczy.',
+            ].join('\n'),
+        },
     };
 
     gemini.initModel('wiki-cmd', params);

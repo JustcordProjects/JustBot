@@ -7,12 +7,16 @@ class ModelNotInitializedError extends Error {
     }
 }
 
-let genai: gemini.GoogleGenerativeAI | null = null;
-let models: Record<string, gemini.GenerativeModel[]> = {};
+export type BaseModelParams = Omit<gemini.GenerateContentParameters, 'contents'> & { contents?: gemini.GenerateContentParameters['contents'] };
+type PromptResolvable = string | string[] | gemini.Part[] | gemini.Content[] | Omit<BaseModelParams, 'model'>;
+
+let genai: gemini.GoogleGenAI | null = null;
+let models: Record<string, BaseModelParams[]> = {};
 
 export async function init() {
-    if (Deno.env.get('JB_GEMINI_API_KEY')) {
-        genai = new gemini.GoogleGenerativeAI(Deno.env.get('JB_GEMINI_API_KEY')!);
+    const apiKey = Deno.env.get('JB_GEMINI_API_KEY');
+    if (apiKey) {
+        genai = new gemini.GoogleGenAI({ apiKey });
         models = {};
     }
 }
@@ -21,35 +25,47 @@ export function isInitialized(): boolean {
     return genai != null;
 }
 
-export function initModel(id: string, params: gemini.ModelParams): gemini.GenerativeModel | null {
-    const model = genai?.getGenerativeModel(params) ?? null;
-    if (model) {
-        if (!models[id]) models[id] = [];
-        models[id].push(model);
-    }
-    return model;
+export function initModel(id: string, params: BaseModelParams): BaseModelParams | null {
+    if (!models[id]) models[id] = [];
+    models[id].push(params);
+    return params;
 }
 
-export function getModels(id: string): gemini.GenerativeModel[] {
+export function getModels(id: string): BaseModelParams[] {
     return models[id] ?? [];
 }
 
-export function getModel(id: string): gemini.GenerativeModel | null {
+export function getModel(id: string): BaseModelParams | null {
     return models[id]?.[0] ?? null;
 }
 
-type PromptResolvable = string | gemini.GenerateContentRequest | (string | gemini.Part)[];
-
-export async function askModel(id: string, prompt: PromptResolvable): Promise<gemini.GenerateContentStreamResult> {
-    const fallbackModels = models[id];
-    if (!fallbackModels || fallbackModels.length === 0) {
+// (don't ask me what this type even is)
+type Payload = PromptResolvable | (Partial<gemini.GenerateContentParameters> & { contents: gemini.Content[] | string });
+async function executeWithFallback<T>(
+    id: string,
+    payload: Payload,
+    action: (params: gemini.GenerateContentParameters) => Promise<T>
+): Promise<T> {
+    const fallbackConfigs = models[id];
+    if (!fallbackConfigs?.length) {
         throw new ModelNotInitializedError(id);
     }
 
+    // also don't ask me how this works
+    const isObj = typeof payload === 'object' && payload !== null && !Array.isArray(payload) && 'contents' in payload;
+    const inputParams: Partial<gemini.GenerateContentParameters> = isObj
+        ? payload as Partial<gemini.GenerateContentParameters>
+        : { contents: payload as gemini.GenerateContentParameters['contents'] };
+
     let lastError: unknown;
-    for (const model of fallbackModels) {
+    for (const baseParams of fallbackConfigs) {
         try {
-            return await model.generateContentStream(prompt);
+            const mergedParams: gemini.GenerateContentParameters = {
+                ...baseParams,
+                ...inputParams,
+                config: { ...baseParams.config, ...(inputParams.config || {}) }
+            } as gemini.GenerateContentParameters;
+            return await action(mergedParams);
         } catch (err) {
             lastError = err;
         }
@@ -57,19 +73,16 @@ export async function askModel(id: string, prompt: PromptResolvable): Promise<ge
     throw lastError;
 }
 
-export async function generateContent(id: string, params: gemini.GenerateContentRequest): Promise<gemini.GenerateContentResult> {
-    const fallbackModels = models[id];
-    if (!fallbackModels || fallbackModels.length === 0) {
-        throw new ModelNotInitializedError(id);
-    }
+export async function askModel(
+    id: string,
+    prompt: PromptResolvable
+): Promise<AsyncIterable<gemini.GenerateContentResponse>> {
+    return executeWithFallback(id, prompt, p => genai!.models.generateContentStream(p));
+}
 
-    let lastError: unknown;
-    for (const model of fallbackModels) {
-        try {
-            return await model.generateContent(params);
-        } catch (err) {
-            lastError = err;
-        }
-    }
-    throw lastError;
+export async function generateContent(
+    id: string,
+    params: PromptResolvable,
+): Promise<gemini.GenerateContentResponse> {
+    return executeWithFallback(id, params, p => genai!.models.generateContent(p));
 }
