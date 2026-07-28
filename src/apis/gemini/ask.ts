@@ -65,7 +65,7 @@ const basicTools: gemini.Tool = {
 };
 
 const searchTools: gemini.Tool = {
-    googleSearchRetrieval: {},
+    googleSearch: {},
 };
 //const codeExecTools: gemini.Tool = {
 //    codeExecution: {},

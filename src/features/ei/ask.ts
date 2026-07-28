@@ -411,7 +411,7 @@ export async function executeAsk(msg: dsc.Message, question: string, contextMsgs
             },
         });
     } catch (err) {
-        const str = logError('stdwarn', err, 'Generate EI Response');
+        const str = logError('stderr', err, 'Generate EI Response');
         if (str.includes('high demand')) {
             return msg.reply(
                 '❌ W skrócie to model którego używamy do EI jest on high demand, ' +
