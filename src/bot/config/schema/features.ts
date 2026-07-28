@@ -83,11 +83,11 @@ export default interface Features {
         contextDefaultMessages: number;
         contextMaxMessages: number;
 
-        searchEnabled:   boolean;
         redditEnabled:   boolean;
         githubEnabled:   boolean;
         memoriesEnabled: boolean;
         compilerEnabled: boolean;
+        //searchEnabled:   boolean;
         //codeExecEnabled: boolean;
     };
     contentDatabases: ContentType[];

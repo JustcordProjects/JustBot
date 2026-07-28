@@ -64,9 +64,9 @@ const basicTools: gemini.Tool = {
     ]
 };
 
-const searchTools: gemini.Tool = {
-    googleSearch: {},
-};
+//const searchTools: gemini.Tool = {
+//    googleSearch: {},
+//};
 //const codeExecTools: gemini.Tool = {
 //    codeExecution: {},
 //};
@@ -259,8 +259,9 @@ export function getTools(): gemini.Tool[] {
     return [
         basicTools,
         imageTools,
-        ...(conf.searchEnabled   ? [searchTools]   : []),
+        //...(conf.searchEnabled   ? [searchTools]   : []),
         //...(conf.codeExecEnabled ? [codeExecTools] : []),
+        //...let the hamsters go free!
         ...(conf.redditEnabled   ? [redditTools]   : []),
         ...(conf.githubEnabled   ? [githubTools]   : []),
         ...(conf.memoriesEnabled ? [memoriesTools] : []),
