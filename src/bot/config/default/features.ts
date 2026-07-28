@@ -133,10 +133,12 @@ export const featuresCfg: config.Features = {
         contextDefaultMessages: 15,
         contextMaxMessages: 30,
 
+        searchEnabled:   true,
         redditEnabled:   true,
         githubEnabled:   true,
         memoriesEnabled: false,
         compilerEnabled: true,
+        codeExecEnabled: true,
     },
     contentDatabases: [
         {

@@ -64,6 +64,13 @@ const basicTools: gemini.Tool = {
     ]
 };
 
+const searchTools: gemini.Tool = {
+    googleSearchRetrieval: {},
+};
+const codeExecTools: gemini.Tool = {
+    codeExecution: {},
+};
+
 const redditTools: gemini.Tool = {
     functionDeclarations: [
         {
@@ -252,6 +259,8 @@ export function getTools(): gemini.Tool[] {
     return [
         basicTools,
         imageTools,
+        ...(conf.searchEnabled   ? [searchTools]   : []),
+        ...(conf.codeExecEnabled ? [codeExecTools] : []),
         ...(conf.redditEnabled   ? [redditTools]   : []),
         ...(conf.githubEnabled   ? [githubTools]   : []),
         ...(conf.memoriesEnabled ? [memoriesTools] : []),
