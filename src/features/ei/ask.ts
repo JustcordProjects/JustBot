@@ -25,6 +25,7 @@ import { Hour } from '@/util/parse-timestamp.ts';
 
 import askCmd from '@/cmd/utilities/ask.ts';
 import User, { CooldownWaiting } from '@/apis/db/user.ts';
+import { isCommandDisallowed } from '@/util/cmd/is-disallowed.ts';
 
 // NOTE: duplicated logic with src/features/.../make-command-api.ts
 //       it's only 4 lines anyway so maybe it's not a big deal.
@@ -36,6 +37,13 @@ async function checkImageGenCooldown(member: dsc.GuildMember) {
 }
 
 export async function executeAsk(msg: dsc.Message, question: string, contextMsgs: number) {
+    if (isCommandDisallowed(askCmd, msg.author)) {
+        return log.replyError(
+            msg, 'Zablokowane',
+            'Ktoś mądry specjalnie pomyślał o tobie by zablokować ci tą opcje'
+        );
+    }
+
     const attachments: dsc.AttachmentBuilder[] = [];
     if (!gemini.isInitialized()) {
         return log.replyError(
