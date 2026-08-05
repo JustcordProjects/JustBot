@@ -1,8 +1,9 @@
 import * as dsc from 'discord.js';
 
+import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
 import { PredefinedColors } from '@/util/color.ts';
-import { sendLog } from '../log/send-log.ts';
-import { ReplyEmbed } from '../translations/reply-embed.ts';
+import { sendLog } from '@/log/send-log.ts';
+
 import User from '@/apis/db/user.ts';
 
 export default async function ban(

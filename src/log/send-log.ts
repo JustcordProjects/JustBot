@@ -3,7 +3,7 @@ import { LogData } from './log-defs.ts';
 import { cfg } from '@/bot/cfg.ts';
 import { PredefinedColors } from '@/util/color.ts';
 import { client } from '@/client.ts';
-import { ReplyEmbed } from '../translations/reply-embed.ts';
+import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
 
 export async function sendLog(logData: LogData, additionalChannels: dsc.Snowflake[] = []) {
     const where = logData.where ?? cfg.channels.mod.logs;

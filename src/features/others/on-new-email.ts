@@ -2,7 +2,7 @@ import { ReceivedNewEmail, ReceivedNewEmailEvent } from '@/apis/email/actions.ts
 import { cfg } from '@/bot/cfg.ts';
 import { client } from '@/client.ts';
 import { Action } from '@/features/actions.ts';
-import { sendLog } from '@/apis/log/send-log.ts';
+import { sendLog } from '@/log/send-log.ts';
 import { db } from '@/apis/db/bot-db.ts';
 import { AddressObject } from 'mailparser';
 import { PredefinedColors } from '@/util/color.ts';

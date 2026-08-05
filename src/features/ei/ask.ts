@@ -10,7 +10,7 @@ import { SystemPrompt } from '@/features/ei/models.ts';
 import { getTools } from '@/apis/gemini/ask.ts';
 
 import { getCompilerForLang } from '@/apis/compile/auto.ts';
-import { sendLog } from '@/apis/log/send-log.ts';
+import { sendLog } from '@/log/send-log.ts';
 import { PredefinedColors } from '@/util/color.ts';
 
 import { commands } from '@/cmd/list.ts';

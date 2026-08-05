@@ -2,7 +2,7 @@ import { Command } from '@/bot/command.ts';
 import { CommandFlags } from '@/bot/command/misc.ts';
 import { CommandPermissions } from '@/bot/command/permissions.ts';
 import { PredefinedColors } from '@/util/color.ts';
-import { sendLog } from '@/apis/log/send-log.ts';
+import { sendLog } from '@/log/send-log.ts';
 import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
 
 export default {

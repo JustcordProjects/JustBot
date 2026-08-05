@@ -3,7 +3,7 @@ import { CommandFlags } from '@/bot/command/misc.ts';
 import { db } from '@/apis/db/bot-db.ts';
 import { PredefinedColors } from '@/util/color.ts';
 import { output } from '@/bot/logging.ts';
-import { sendLog } from '@/apis/log/send-log.ts';
+import { sendLog } from '@/log/send-log.ts';
 import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
 import { CommandPermissions } from '@/bot/command/permissions.ts';
 import { WarnRaw } from '@/apis/db/db-defs.ts';

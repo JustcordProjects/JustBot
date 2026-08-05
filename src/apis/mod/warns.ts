@@ -4,7 +4,7 @@ import { scheduleWarnDeletion } from '@/features/delete-expired-warns.ts';
 import User from '@/apis/db/user.ts';
 import { client } from '@/client.ts';
 import { PredefinedColors } from '@/util/color.ts';
-import { sendLog } from '@/apis/log/send-log.ts';
+import { sendLog } from '@/log/send-log.ts';
 import { cfg } from '@/bot/cfg.ts';
 import { registerWarnInWatchdog } from '@/bot/watchdog.ts';
 

@@ -3,7 +3,7 @@ import AutoModRules from '@/features/mod/automod.ts';
 import { cfg } from '@/bot/cfg.ts';
 import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
 import { PredefinedColors } from '@/util/color.ts';
-import { sendLog } from '@/apis/log/send-log.ts';
+import { sendLog } from '@/log/send-log.ts';
 import warn from '@/apis/mod/warns.ts';
 import { mkMessageReferenceEmbed } from '@/bot/templates/message-reference.ts';
 import { client } from '@/client.ts';
@@ -46,7 +46,7 @@ export default function setupHoneypotAction() {
                     points: 2,
                     expiresAt: Math.floor((Date.now() + 7 * 24 * 60 * 60 * 1000) / 1000)
                 });
-                
+
                 let dmSendSuccessfull = true;
                 try {
                     const dmChannel = await msg.author.createDM();
@@ -56,7 +56,7 @@ export default function setupHoneypotAction() {
                                 .setTitle('📢 Masz mute za triggerowanie honeypota!')
                                 .setDescription(`Dostałeś mute na serwerze **Justcord** na **24 godziny**, ponieważ **wysłałeś wiadomość na kanale *honeypot***! Jest to zabezpieczenie przed self-botami spamiącymi różnego rodzaju scamami na serwerach Discord. Możesz zawsze skontaktować się z administracją pisząc na tego maila: \`${Deno.env.get('JB_EMAIL_USER')}\`.`)
                                 .setColor(PredefinedColors.Red)
-                        ]   
+                        ]
                     });
                 } catch {
                     dmSendSuccessfull = false;

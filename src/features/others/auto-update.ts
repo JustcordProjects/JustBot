@@ -1,4 +1,4 @@
-import { sendLog } from '@/apis/log/send-log.ts';
+import { sendLog } from '@/log/send-log.ts';
 import { PredefinedColors } from '@/util/color.ts';
 import { MessageEventCtx, PredefinedActionEventTypes } from '../actions.ts';
 import { Action } from '../actions.ts';

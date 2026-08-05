@@ -8,7 +8,7 @@ import { Hour, Timestamp } from '@/util/parse-timestamp.ts';
 
 import mute from '@/apis/mod/muting.ts';
 import { watchMute } from '@/bot/watchdog.ts';
-import { sendLog } from '@/apis/log/send-log.ts';
+import { sendLog } from '@/log/send-log.ts';
 import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
 import { CommandPermissions } from '@/bot/command/permissions.ts';
 
