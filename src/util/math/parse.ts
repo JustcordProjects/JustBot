@@ -6,7 +6,7 @@ export class NumberParseError extends Error {
     }
 }
 
-export function parseNumber(input: string): number {
+export function doParseNumber(input: string): number {
     const cleaned = input.trim().replace(/\s/g, '').replace(',', '.');
     if (!cleaned) throw new NumberParseError('Input is empty');
 
@@ -27,7 +27,7 @@ export function parseNumber(input: string): number {
     return value * multiplier;
 }
 
-export function parseBigint(input: string, decimals: number): bigint {
+export function doParseBigint(input: string, decimals: number): bigint {
     let cleaned = input.trim().replace(/\s/g, '').replace(',', '.');
     if (!cleaned) throw new NumberParseError('Input is empty');
 

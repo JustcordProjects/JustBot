@@ -8,7 +8,7 @@ import { sendLog } from '@/log/send-log.ts';
 import { cfg } from '@/bot/cfg.ts';
 import { registerWarnInWatchdog } from '@/bot/watchdog.ts';
 
-export default async function warn(
+export default async function doWarn(
     member: dsc.GuildMember,
     data: { reason: string; expiresAt: number | null; points: number; mod?: dsc.Snowflake },
 ): Promise<{ id: number }> {

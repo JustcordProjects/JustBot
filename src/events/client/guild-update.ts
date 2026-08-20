@@ -8,7 +8,7 @@ setInterval(() => {
     recentBoostMessages = [];
 }, 60_000);
 
-function levelToBoosts(level: number) {
+function doLevelToBoosts(level: number) {
     switch (level) {
         case 3:
             return 14;
@@ -21,7 +21,7 @@ function levelToBoosts(level: number) {
     }
 }
 
-export function buildBoostedUI(boostRemoved: boolean, totalBoosts: number, level: number, features: string[]) {
+export function doBuildBoostedUI(boostRemoved: boolean, totalBoosts: number, level: number, features: string[]) {
     const result: string[] = [];
 
     if (boostRemoved)
@@ -33,19 +33,19 @@ export function buildBoostedUI(boostRemoved: boolean, totalBoosts: number, level
     const enabledRoleColors = features.includes('ENHANCED_ROLE_COLORS');
 
     // Number (true) = 1    Number (false) = 0
-    const usableBoosts = totalBoosts - levelToBoosts(level) - (Number(enabledGuildTag) * 3) - (Number(enabledRoleColors) * 3);
+    const usableBoosts = totalBoosts - doLevelToBoosts(level) - (Number(enabledGuildTag) * 3) - (Number(enabledRoleColors) * 3);
 
     if (level == 3)
         result.push('JustCord jest na najwyższym poziomie (niemożliwe tbh).');
     else
-        result.push(`Do poziomu ${level + 1}: ${mkProgressBar(usableBoosts, levelToBoosts(level + 1))} ${usableBoosts}/${levelToBoosts(level + 1)}`);
+        result.push(`Do poziomu ${level + 1}: ${mkProgressBar(usableBoosts, doLevelToBoosts(level + 1))} ${usableBoosts}/${doLevelToBoosts(level + 1)}`);
 
     result.push(`Korzyści z boostów: ${enabledGuildTag ? '✅' : '❌'} tag serwera | ${enabledRoleColors ? '✅' : '❌'} ulepszone style ról`);
 
     return result.join('\n');
 }
 
-export function registerGuildUpdateDscEvents(client: Client) {
+export function doRegisterGuildUpdateDscEvents(client: Client) {
     client.on('guildUpdate', async (old_guild, guild) => {
         // because linux is better than linux, we need to hack windows in order to make
         // linux even better     ~ hacking group Anonymous
@@ -72,7 +72,7 @@ export function registerGuildUpdateDscEvents(client: Client) {
             }
 
             const reply = await general.send({
-                content: buildBoostedUI(oldBoosts > newBoosts, newBoosts, guild.premiumTier, guild.features),
+                content: doBuildBoostedUI(oldBoosts > newBoosts, newBoosts, guild.premiumTier, guild.features),
                 allowedMentions: {
                     parse: []
                 }

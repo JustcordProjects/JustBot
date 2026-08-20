@@ -14,7 +14,7 @@ import Money from '@/util/money.ts';
 import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
 import { MinimalActionsFormatter } from '@/apis/economy/format.ts';
 
-function buildSelectMenu(categories: config.economy.ShopCategory[]): dsc.StringSelectMenuBuilder {
+function doBuildSelectMenu(categories: config.economy.ShopCategory[]): dsc.StringSelectMenuBuilder {
     return new dsc.StringSelectMenuBuilder()
         .setCustomId('shop-select-category')
         .setPlaceholder('⚡ Wybierz kategorię...')
@@ -28,7 +28,7 @@ function buildSelectMenu(categories: config.economy.ShopCategory[]): dsc.StringS
         );
 }
 
-function buildCategoryEmbed(category: config.economy.ShopCategory, offers: config.economy.ShopOffer[], api: CommandAPI): ReplyEmbed {
+function doBuildCategoryEmbed(category: config.economy.ShopCategory, offers: config.economy.ShopOffer[], api: CommandAPI): ReplyEmbed {
     const embed = new ReplyEmbed()
         .setTitle(`${category.emoji ?? '💳'} ${category.name}`)
         .setDescription(category.desc)
@@ -87,7 +87,7 @@ export default {
         const allOffers = cfg.features.economy.offers;
 
         const sendInteractiveMenu = async () => {
-            const selectMenu = buildSelectMenu(categories);
+            const selectMenu = doBuildSelectMenu(categories);
             const row = new dsc.ActionRowBuilder<dsc.StringSelectMenuBuilder>().addComponents(selectMenu);
 
             const introEmbed = new ReplyEmbed()
@@ -124,7 +124,7 @@ export default {
                 }
                 categoryOffers.sort((a, b) => a.price - b.price);
 
-                const embed = buildCategoryEmbed(chosenCategory, categoryOffers, api);
+                const embed = doBuildCategoryEmbed(chosenCategory, categoryOffers, api);
                 await interaction.update({ embeds: [embed], components: [row] });
             });
 
@@ -171,7 +171,7 @@ export default {
             }
             categoryOffers = categoryOffers.sort((a, b) => a.price - b.price);
 
-            allEmbeds.push(buildCategoryEmbed(category, categoryOffers, api));
+            allEmbeds.push(doBuildCategoryEmbed(category, categoryOffers, api));
         }
 
         await api.reply({ embeds: allEmbeds });

@@ -5,7 +5,7 @@ import { CommandPermissions } from '@/bot/command/permissions.ts';
 import { translate } from '@vitalets/google-translate-api';
 import logError from '@/util/log-error.ts';
 
-function parseOpts(str: string): { from?: string; to?: string } {
+function doParseOpts(str: string): { from?: string; to?: string } {
     let from: string | undefined, to: string | undefined;
 
     if (str.includes(':')) {
@@ -49,7 +49,7 @@ export default {
     async execute(api) {
         const optsString = api.getTypedArg('opts', 'string').value;
         const text = api.getTypedArg('text', 'string').value;
-        const opts = parseOpts(optsString);
+        const opts = doParseOpts(optsString);
 
         if (opts.to && opts.to == opts.from) {
             return api.log.replyError(api, 'Co to ma być?', 'Wydaje się że tłumaczysz z języka x na język x? To nie ma sensu? Dlaczego tłumaczysz z jednego języka na ten sam?');

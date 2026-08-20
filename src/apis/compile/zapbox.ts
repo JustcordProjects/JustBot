@@ -1,13 +1,13 @@
 import * as compile from '@/apis/compile/driver.ts';
 import { output } from '@/bot/logging.ts';
 
-export function isAvailable(): boolean {
+export function doIsAvailable(): boolean {
     return Deno.env.get('JB_ZAPBOX_PATH') != undefined;
 }
 
 let initialized: boolean = false;
 
-export async function init() {
+export async function doInit() {
     const exePath = Deno.env.get('JB_ZAPBOX_PATH')
     if (!exePath) return;
 

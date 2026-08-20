@@ -9,7 +9,7 @@ import { mkMessageReferenceEmbed } from '@/bot/templates/message-reference.ts';
 import { client } from '@/client.ts';
 import { GuildTextBasedChannel } from 'discord.js';
 
-async function internal() {
+async function doInternal() {
     const channel = await client.channels.fetch(cfg.channels.important.honeypot) as GuildTextBasedChannel;
     const lastMsg = (await channel.messages.fetch({ limit: 1 })).first();
     if (lastMsg?.author.id != client.user?.id) channel.send({
@@ -24,8 +24,8 @@ async function internal() {
     });
 }
 
-export default function setupHoneypotAction() {
-    internal();
+export default function doSetupHoneypotAction() {
+    doInternal();
     return {
         name: 'mod/honeypot',
         activatesOn: PredefinedActionEventTypes.OnMessageCreate,

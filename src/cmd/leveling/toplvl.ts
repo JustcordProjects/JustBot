@@ -8,7 +8,7 @@ import { CommandFlags } from '@/bot/command/misc.ts';
 import { output } from '@/bot/logging.ts';
 import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
 
-function calculateLevel(xp: number, levelDivider: number): number {
+function doCalculateLevel(xp: number, levelDivider: number): number {
     return Math.floor(
         (1 + Math.sqrt(1 + 8 * xp / levelDivider)) / 2,
     );
@@ -55,7 +55,7 @@ export default {
                     const userLvlRole = lvlRoles.filter((id) => member.roles.cache.has(id)).at(-1);
                     fields.push({
                         name: `${absCounter} » ${member.user.username}`,
-                        value: `${userLvlRole ? `<@&${userLvlRole}>` : `<@&${cfg.features.welcomer.freeRolesForEveryone[0]}>`}\n**Lvl**: ${calculateLevel(row.xp, cfg.features.leveling.levelDivider)}\n**XP**: ${row.xp}`,
+                        value: `${userLvlRole ? `<@&${userLvlRole}>` : `<@&${cfg.features.welcomer.freeRolesForEveryone[0]}>`}\n**Lvl**: ${doCalculateLevel(row.xp, cfg.features.leveling.levelDivider)}\n**XP**: ${row.xp}`,
                         inline: true,
                     });
                 } catch (e) {
@@ -76,7 +76,7 @@ export default {
                         .setFields(fields)
                         .setColor('#1ebfd5')
                         .setFooter({
-                            text: `Poziom serwera: ${calculateLevel(serverXP, cfg.features.leveling.levelDivider)} LVL (XP: ${serverXP})`,
+                            text: `Poziom serwera: ${doCalculateLevel(serverXP, cfg.features.leveling.levelDivider)} LVL (XP: ${serverXP})`,
                         }),
                 ],
             });

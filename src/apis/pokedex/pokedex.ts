@@ -3,7 +3,7 @@ export type * from 'pokenode-ts';
 
 let client: pokenode.PokemonClient | null = null;
 
-export async function init() {
+export async function doInit() {
     client = new pokenode.PokemonClient();
 }
 
@@ -14,7 +14,7 @@ class PokedexNotInitializedError extends Error {
 }
 
 const api = new Proxy(
-    { init, ...pokenode },
+    { doInit, ...pokenode },
     {
         get(target, prop, receiver) {
             if (prop in target) {

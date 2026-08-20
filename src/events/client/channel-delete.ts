@@ -2,7 +2,7 @@ import { sendLog } from '@/log/send-log.ts';
 import { PredefinedColors } from '@/util/color.ts';
 import * as dsc from 'discord.js';
 
-export function registerChannelDeleteDscEvents(client: dsc.Client) {
+export function doRegisterChannelDeleteDscEvents(client: dsc.Client) {
     client.on('channelDelete', async (chan) => {
         sendLog({
             title: 'Usunięto kawał historii piekarnii!',

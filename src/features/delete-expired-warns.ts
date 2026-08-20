@@ -9,12 +9,12 @@ interface WarnRow {
     expires_at: number;
 }
 
-export function initExpiredWarnsDeleter() {
+export function doInitExpiredWarnsDeleter() {
     try {
-        restoreTimers();
+        doRestoreTimers();
 
         const interval = setInterval(
-            checkLongTermWarns,
+            doCheckLongTermWarns,
             EXPIRED_WARNS_CHECK_INTERVAL,
         );
 
@@ -24,7 +24,7 @@ export function initExpiredWarnsDeleter() {
     }
 }
 
-function checkLongTermWarns() {
+function doCheckLongTermWarns() {
     const now = Math.floor(Date.now() / 1000);
 
     db.runSql(
@@ -33,7 +33,7 @@ function checkLongTermWarns() {
     );
 }
 
-export function scheduleWarnDeletion(warnId: number, expiresAt: number) {
+export function doScheduleWarnDeletion(warnId: number, expiresAt: number) {
     const now = Math.floor(Date.now() / 1000);
     const delay = (expiresAt - now) * 1000;
 
@@ -47,7 +47,7 @@ export function scheduleWarnDeletion(warnId: number, expiresAt: number) {
     }
 }
 
-function restoreTimers() {
+function doRestoreTimers() {
     const now = Math.floor(Date.now() / 1000);
     const threshold = now + SHORT_TERM_THRESHOLD;
 

@@ -130,12 +130,12 @@ client.once('clientReady', async () => {
     await cache.init();
     output.verbose(`Cache initialized.`);
 
-    await main();
+    await doMain();
 });
 
 // --------------- SETUP ---------------
 
-function setUpActions() {
+function doSetUpActions() {
     actionsManager.addActions(
         // watchdog security features
         channelAddWatcher,
@@ -171,7 +171,7 @@ function setUpActions() {
     actionsManager.registerEvents(client);
 }
 
-function setUpEvents() {
+function doSetUpEvents() {
     registerChannelCreateDscEvents(client);
     registerChannelDeleteDscEvents(client);
     registerMsgEditDscEvents(client);
@@ -180,11 +180,11 @@ function setUpEvents() {
 }
 
 // --------------- MAIN ---------------
-async function main() {
+async function doMain() {
     initStatusGenerator();
     initExpiredWarnsDeleter();
-    setUpActions();
-    setUpEvents();
+    doSetUpActions();
+    doSetUpEvents();
 
     let memoryIssuesTimes = 0;
 

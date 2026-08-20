@@ -5,7 +5,7 @@ import { PredefinedColors } from '@/util/color.ts';
 import { client } from '@/client.ts';
 import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
 
-export async function sendLog(logData: LogData, additionalChannels: dsc.Snowflake[] = []) {
+export async function doSendLog(logData: LogData, additionalChannels: dsc.Snowflake[] = []) {
     const where = logData.where ?? cfg.channels.mod.logs;
     const color = logData.color ?? PredefinedColors.Grey;
     const header = logData.title;

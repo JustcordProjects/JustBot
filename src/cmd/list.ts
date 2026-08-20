@@ -8,7 +8,7 @@ import logError from '@/util/log-error.ts';
 
 export const commands: Map<Category, Command[]> = new Map();
 
-export async function registerCommands() {
+export async function doRegisterCommands() {
     for (const cat of Deno.readDirSync('./src/cmd')) {
         if (cat.isFile) continue;
 

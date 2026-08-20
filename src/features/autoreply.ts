@@ -30,7 +30,7 @@ export interface LogEmbedAutoReplyOptions {
 
 let globalCounter = 1;
 
-export function mkAutoreplyAction({ activationOptions, reply, additionalCallbacks, additionalConstraints, shallEndActionsLoop }: AutoReplyOptions): Action<MessageEventCtx> {
+export function doMkAutoreplyAction({ activationOptions, reply, additionalCallbacks, additionalConstraints, shallEndActionsLoop }: AutoReplyOptions): Action<MessageEventCtx> {
     const constraints: ConstraintCallback<MessageEventCtx>[] = [];
     for (const opt of activationOptions) {
         switch (opt.type) {
@@ -98,8 +98,8 @@ export function mkAutoreplyAction({ activationOptions, reply, additionalCallback
     };
 }
 
-export function mkAutoreplyErrorAction({ activationOptions, replyTitle, replyDesc, additionalCallbacks, additionalConstraints }: LogEmbedAutoReplyOptions): Action<MessageEventCtx> {
-    return mkAutoreplyAction({
+export function doMkAutoreplyErrorAction({ activationOptions, replyTitle, replyDesc, additionalCallbacks, additionalConstraints }: LogEmbedAutoReplyOptions): Action<MessageEventCtx> {
+    return doMkAutoreplyAction({
         activationOptions,
         reply: log.getErrorEmbed(replyTitle, replyDesc),
         additionalCallbacks,
@@ -107,8 +107,8 @@ export function mkAutoreplyErrorAction({ activationOptions, replyTitle, replyDes
     });
 }
 
-export function mkAutoreplyWarnAction({ activationOptions, replyTitle, replyDesc, additionalCallbacks, additionalConstraints }: LogEmbedAutoReplyOptions): Action<MessageEventCtx> {
-    return mkAutoreplyAction({
+export function doMkAutoreplyWarnAction({ activationOptions, replyTitle, replyDesc, additionalCallbacks, additionalConstraints }: LogEmbedAutoReplyOptions): Action<MessageEventCtx> {
+    return doMkAutoreplyAction({
         activationOptions,
         reply: log.getWarnEmbed(replyTitle, replyDesc),
         additionalCallbacks,
@@ -116,8 +116,8 @@ export function mkAutoreplyWarnAction({ activationOptions, replyTitle, replyDesc
     });
 }
 
-export function mkAutoreplyInfoAction({ activationOptions, replyTitle, replyDesc, additionalCallbacks, additionalConstraints }: LogEmbedAutoReplyOptions): Action<MessageEventCtx> {
-    return mkAutoreplyAction({
+export function doMkAutoreplyInfoAction({ activationOptions, replyTitle, replyDesc, additionalCallbacks, additionalConstraints }: LogEmbedAutoReplyOptions): Action<MessageEventCtx> {
+    return doMkAutoreplyAction({
         activationOptions,
         reply: log.getInfoEmbed(replyTitle, replyDesc),
         additionalCallbacks,
@@ -125,8 +125,8 @@ export function mkAutoreplyInfoAction({ activationOptions, replyTitle, replyDesc
     });
 }
 
-export function mkAutoreplySuccessAction({ activationOptions, replyTitle, replyDesc, additionalCallbacks, additionalConstraints }: LogEmbedAutoReplyOptions): Action<MessageEventCtx> {
-    return mkAutoreplyAction({
+export function doMkAutoreplySuccessAction({ activationOptions, replyTitle, replyDesc, additionalCallbacks, additionalConstraints }: LogEmbedAutoReplyOptions): Action<MessageEventCtx> {
+    return doMkAutoreplyAction({
         activationOptions,
         reply: log.getSuccessEmbed(replyTitle, replyDesc),
         additionalCallbacks,
@@ -134,8 +134,8 @@ export function mkAutoreplySuccessAction({ activationOptions, replyTitle, replyD
     });
 }
 
-export function mkAutoreplyTipAction({ activationOptions, replyTitle, replyDesc, additionalCallbacks, additionalConstraints }: LogEmbedAutoReplyOptions): Action<MessageEventCtx> {
-    return mkAutoreplyAction({
+export function doMkAutoreplyTipAction({ activationOptions, replyTitle, replyDesc, additionalCallbacks, additionalConstraints }: LogEmbedAutoReplyOptions): Action<MessageEventCtx> {
+    return doMkAutoreplyAction({
         activationOptions,
         reply: log.getTipEmbed(replyTitle, replyDesc),
         additionalCallbacks,

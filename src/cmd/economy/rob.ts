@@ -16,11 +16,11 @@ const MinPercent = 0.05;
 const MaxPercent = 0.25;
 const MinStealable = Money.fromDollars(50);
 
-function randomPercentBetween(min: number, max: number): number {
+function doRandomPercentBetween(min: number, max: number): number {
     return getRandomFloat(min, max);
 }
 
-async function tryRob(attacker: User, target: User): Promise<{ ok: boolean; amount?: Money; success?: boolean; percent?: number; reason?: string }> {
+async function doTryRob(attacker: User, target: User): Promise<{ ok: boolean; amount?: Money; success?: boolean; percent?: number; reason?: string }> {
     if (attacker.id === target.id) return { ok: false, reason: 'self' };
 
     await attacker.ensureExists();
@@ -33,7 +33,7 @@ async function tryRob(attacker: User, target: User): Promise<{ ok: boolean; amou
     }
 
     const success = getRandomFloat(0, 1) < BaseSuccessChance;
-    const percent = randomPercentBetween(MinPercent, MaxPercent);
+    const percent = doRandomPercentBetween(MinPercent, MaxPercent);
 
     const amountCents = (targetBalance.wallet.asCents() * BigInt(Math.round(percent * 100))) / 100n;
     const amount = Money.fromCents(amountCents < 1n ? 1n : amountCents);
@@ -108,7 +108,7 @@ export default {
             }
 
             const target = new User(targetMember.id);
-            const result = await tryRob(api.executor, target);
+            const result = await doTryRob(api.executor, target);
 
             if (!result.ok) {
                 if (result.reason === 'too-poor') {

@@ -1,6 +1,6 @@
 import suffixes from './num-suffixes.ts';
 
-export function formatNumber(value: number): string {
+export function doFormatNumber(value: number): string {
     const abs = Math.abs(value);
 
     for (const { limit, suffix } of suffixes) {
@@ -17,7 +17,7 @@ export function formatNumber(value: number): string {
     return rounded.replace('.', ',');
 }
 
-export function formatBigint(value: bigint, decimals: number): string {
+export function doFormatBigint(value: bigint, decimals: number): string {
     const base = 10n ** BigInt(decimals);
 
     const sign = value < 0n ? '-' : '';

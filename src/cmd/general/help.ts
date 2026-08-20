@@ -11,7 +11,7 @@ import * as dsc from 'discord.js';
 import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
 import { Category } from '@/bot/categories.ts';
 
-function buildSelectMenu(commands: Map<Category, Command[]>): dsc.StringSelectMenuBuilder {
+function doBuildSelectMenu(commands: Map<Category, Command[]>): dsc.StringSelectMenuBuilder {
     return new dsc.StringSelectMenuBuilder()
         .setCustomId('help_select')
         .setPlaceholder('⚡ Wybierz kategorię...')
@@ -25,7 +25,7 @@ function buildSelectMenu(commands: Map<Category, Command[]>): dsc.StringSelectMe
         );
 }
 
-function buildIntroEmbed(): ReplyEmbed {
+function doBuildIntroEmbed(): ReplyEmbed {
     return new ReplyEmbed()
         .setTitle('📢 Moje komendy, władzco!')
         .setDescription(
@@ -34,7 +34,7 @@ function buildIntroEmbed(): ReplyEmbed {
         .setColor(PredefinedColors.Cyan);
 }
 
-function buildCategoryEmbed(
+function doBuildCategoryEmbed(
     category: Category,
     cmds: Command[],
     blockedCmds: string[] = [],
@@ -73,7 +73,7 @@ function buildCategoryEmbed(
     return embed;
 }
 
-function getBlockedCommands(
+function doGetBlockedCommands(
     commands: Map<Category, Command[]>,
     categories: Set<Category>,
     member: dsc.GuildMember | dsc.User,
@@ -121,10 +121,10 @@ export default {
         const argCategory = api.getTypedArg('category', 'string');
 
         const sendInteractiveMenu = async () => {
-            const selectMenu = buildSelectMenu(commands);
+            const selectMenu = doBuildSelectMenu(commands);
             const row = new dsc.ActionRowBuilder<dsc.StringSelectMenuBuilder>().addComponents(selectMenu);
 
-            const introEmbed = buildIntroEmbed();
+            const introEmbed = doBuildIntroEmbed();
             const replyMsg = await api.reply({ embeds: [introEmbed], components: [row] });
 
             const collector = replyMsg.createMessageComponentCollector({
@@ -140,7 +140,7 @@ export default {
                     return;
 
                 const cmds = commands.get(chosenCategory) ?? [];
-                const embed = buildCategoryEmbed(chosenCategory, cmds, []);
+                const embed = doBuildCategoryEmbed(chosenCategory, cmds, []);
 
                 await interaction.update({ embeds: [embed], components: [row] });
             });
@@ -170,9 +170,9 @@ export default {
 
         categoriesToShow.add(category);
 
-        const blockedCmds = getBlockedCommands(commands, categoriesToShow, api.invoker.member ?? api.invoker.user);
+        const blockedCmds = doGetBlockedCommands(commands, categoriesToShow, api.invoker.member ?? api.invoker.user);
 
-        const introEmbed = buildIntroEmbed();
+        const introEmbed = doBuildIntroEmbed();
 
         if (blockedCmds.length > 0) {
             introEmbed.addFields({
@@ -185,7 +185,7 @@ export default {
 
         for (const category of categoriesToShow) {
             const cmds = commands.get(category) ?? [];
-            allEmbeds.push(buildCategoryEmbed(category, cmds, blockedCmds));
+            allEmbeds.push(doBuildCategoryEmbed(category, cmds, blockedCmds));
         }
 
         await api.reply({ embeds: allEmbeds });

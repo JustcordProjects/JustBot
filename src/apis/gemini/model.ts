@@ -13,7 +13,7 @@ type PromptResolvable = string | string[] | gemini.Part[] | gemini.Content[] | O
 let genai: gemini.GoogleGenAI | null = null;
 let models: Record<string, BaseModelParams[]> = {};
 
-export async function init() {
+export async function doInit() {
     const apiKey = Deno.env.get('JB_GEMINI_API_KEY');
     if (apiKey) {
         genai = new gemini.GoogleGenAI({ apiKey });
@@ -21,27 +21,27 @@ export async function init() {
     }
 }
 
-export function isInitialized(): boolean {
+export function doIsInitialized(): boolean {
     return genai != null;
 }
 
-export function initModel(id: string, params: BaseModelParams): BaseModelParams | null {
+export function doInitModel(id: string, params: BaseModelParams): BaseModelParams | null {
     if (!models[id]) models[id] = [];
     models[id].push(params);
     return params;
 }
 
-export function getModels(id: string): BaseModelParams[] {
+export function doGetModels(id: string): BaseModelParams[] {
     return models[id] ?? [];
 }
 
-export function getModel(id: string): BaseModelParams | null {
+export function doGetModel(id: string): BaseModelParams | null {
     return models[id]?.[0] ?? null;
 }
 
 // (don't ask me what this type even is)
 type Payload = PromptResolvable | (Partial<gemini.GenerateContentParameters> & { contents: gemini.Content[] | string });
-async function executeWithFallback<T>(
+async function doExecuteWithFallback<T>(
     id: string,
     payload: Payload,
     action: (params: gemini.GenerateContentParameters) => Promise<T>
@@ -73,16 +73,16 @@ async function executeWithFallback<T>(
     throw lastError;
 }
 
-export async function askModel(
+export async function doAskModel(
     id: string,
     prompt: PromptResolvable
 ): Promise<AsyncIterable<gemini.GenerateContentResponse>> {
-    return executeWithFallback(id, prompt, p => genai!.models.generateContentStream(p));
+    return doExecuteWithFallback(id, prompt, p => genai!.models.generateContentStream(p));
 }
 
-export async function generateContent(
+export async function doGenerateContent(
     id: string,
     params: PromptResolvable,
 ): Promise<gemini.GenerateContentResponse> {
-    return executeWithFallback(id, params, p => genai!.models.generateContent(p));
+    return doExecuteWithFallback(id, params, p => genai!.models.generateContent(p));
 }

@@ -1,6 +1,6 @@
 import { Action, AnyAction, MessageEventCtx, PredefinedActionCallbacks } from '../actions.ts';
 
-import { mkAutoreplyAction } from '../autoreply.ts';
+import { doMkAutoreplyAction } from '../autoreply.ts';
 
 import { cfg } from '@/bot/cfg.ts';
 import { client } from '@/client.ts';
@@ -14,7 +14,7 @@ export default class AutoModRules {
         return msg.author.id !== client.user!.id;
     };
 
-    static readonly EveryoneAutoreply: Action<MessageEventCtx> = mkAutoreplyAction({
+    static readonly EveryoneAutoreply: Action<MessageEventCtx> = doMkAutoreplyAction({
         activationOptions: [
             { type: 'contains', keyword: '@everyone' },
             { type: 'contains', keyword: 'małpa everyone' },
@@ -26,7 +26,7 @@ export default class AutoModRules {
         additionalCallbacks: [PredefinedActionCallbacks.deleteMsgAutomod],
     });
 
-    static readonly BlockInvites: Action<MessageEventCtx> = mkAutoreplyAction({
+    static readonly BlockInvites: Action<MessageEventCtx> = doMkAutoreplyAction({
         activationOptions: [
             {
                 type: 'matches-regex',
@@ -42,7 +42,7 @@ export default class AutoModRules {
         additionalConstraints: [AutoModRules.msgAuthorIsNotImmuneToAutomod, (ctx) => !(ctx.channel.isThread() && ctx.channel.parentId == '1510999452192866485')],
     });
 
-    static readonly BlockNWords: Action<MessageEventCtx> = mkAutoreplyAction({
+    static readonly BlockNWords: Action<MessageEventCtx> = doMkAutoreplyAction({
         activationOptions: [
             { type: 'contains', keyword: 'nigger' },
             { type: 'contains', keyword: 'nigga' },
@@ -52,7 +52,7 @@ export default class AutoModRules {
         additionalConstraints: [AutoModRules.msgAuthorIsNotImmuneToAutomod],
     });
 
-    static readonly GitHubAutoreply: Action<MessageEventCtx> = mkAutoreplyAction({
+    static readonly GitHubAutoreply: Action<MessageEventCtx> = doMkAutoreplyAction({
         activationOptions: [
             { type: 'is-equal-to', keyword: 'git' },
         ],

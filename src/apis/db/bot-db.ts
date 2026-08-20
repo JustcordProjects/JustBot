@@ -3,11 +3,11 @@ import { DB, QueryParameterSet } from 'sqlite';
 import type { AIMemory, ContentEntry, ContentEntryRaw, Reminder, UserDataRaw, Warn, WarnRaw } from './db-defs.ts';
 
 import type { Balance, Cooldown, Cooldowns } from './db-defs.ts';
-import { contentFromRaw, warnFromRaw } from './db-defs.ts';
+import { doContentFromRaw, doWarnFromRaw } from './db-defs.ts';
 
 export type { ContentEntry, ContentEntryRaw, UserDataRaw, Warn, WarnRaw };
 export type { Balance, Cooldown, Cooldowns };
-export { contentFromRaw, warnFromRaw };
+export { doContentFromRaw, doWarnFromRaw };
 
 import User from './user.ts';
 import { output } from '@/bot/logging.ts';
@@ -287,7 +287,7 @@ export class BotDatabase {
                 `SELECT * FROM warns ${max ? 'LIMIT ?' : ''}`,
                 max ? [max] : [],
             );
-            return rows.map(warnFromRaw);
+            return rows.map(doWarnFromRaw);
         },
     };
 
@@ -328,7 +328,7 @@ export class BotDatabase {
                 `SELECT * FROM content_database WHERE key = ? ORDER BY RANDOM() LIMIT 1`,
                 [key],
             );
-            return row ? contentFromRaw(row) : undefined;
+            return row ? doContentFromRaw(row) : undefined;
         },
 
         getEntriesByUser: async (userId: string, key: string): Promise<ContentEntry[]> => {
@@ -336,7 +336,7 @@ export class BotDatabase {
                 `SELECT * FROM content_database WHERE author_id = ? AND key = ?`,
                 [userId, key],
             );
-            return rows.map(contentFromRaw);
+            return rows.map(doContentFromRaw);
         },
 
         batchAddEntries: async (entries: ContentEntry[]): Promise<void> => {

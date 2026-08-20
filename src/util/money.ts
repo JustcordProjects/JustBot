@@ -1,6 +1,6 @@
 import { cfg } from '@/bot/cfg.ts';
-import { formatBigint } from './math/format.ts';
-import { parseBigint } from './math/parse.ts';
+import { doFormatBigint } from './math/format.ts';
+import { doParseBigint } from './math/parse.ts';
 
 export default class Money {
     static readonly SCALE = 100n;
@@ -43,7 +43,7 @@ export default class Money {
             cleaned = cleaned.slice(0, -sign.length).trim();
         }
 
-        return new Money(parseBigint(cleaned, Money.DECIMALS));
+        return new Money(doParseBigint(cleaned, Money.DECIMALS));
     }
 
     add(other: Money): Money {
@@ -118,7 +118,7 @@ export default class Money {
     }
 
     format(): string {
-        const formatted = formatBigint(this.value, Money.DECIMALS);
+        const formatted = doFormatBigint(this.value, Money.DECIMALS);
         switch (cfg.features.economy.currencySignPlacement) {
             case 'left':
                 return cfg.features.economy.currencySign + formatted;

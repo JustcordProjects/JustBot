@@ -29,14 +29,14 @@ import { isCommandDisallowed } from '@/util/cmd/is-disallowed.ts';
 
 // NOTE: duplicated logic with src/features/.../make-command-api.ts
 //       it's only 4 lines anyway so maybe it's not a big deal.
-async function checkImageGenCooldown(member: dsc.GuildMember) {
+async function doCheckImageGenCooldown(member: dsc.GuildMember) {
     const cmdCfg = getCommandConfig(askCmd);
     if (cmdCfg.cooldownBypassUsers?.includes(member.id)) return { can: true };
     if (cmdCfg.cooldownBypassRoles && cmdCfg.cooldownBypassRoles.some((r) => member.roles.cache.has(r))) return { can: true };
     return await new User(member.user.id).cooldowns.check('image-gen', Hour * 1000);
 }
 
-export async function executeAsk(msg: dsc.Message, question: string, contextMsgs: number) {
+export async function doExecuteAsk(msg: dsc.Message, question: string, contextMsgs: number) {
     if (isCommandDisallowed(askCmd, msg.author)) {
         return log.replyError(
             msg, 'Zablokowane',
@@ -279,7 +279,7 @@ export async function executeAsk(msg: dsc.Message, question: string, contextMsgs
             }
         },
         generate_image: async (args: { prompt: string; resolution: '1:1' | '16:9' }) => {
-            const cooldown = await checkImageGenCooldown(msg.member!);
+            const cooldown = await doCheckImageGenCooldown(msg.member!);
             if (!cooldown.can) {
                 return { message: 'image generation on cooldown for this user', waitSec: (cooldown as CooldownWaiting).waitSec };
             }

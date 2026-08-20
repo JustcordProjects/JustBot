@@ -7,8 +7,8 @@ export interface ReceivedNewEmail {
 }
 export const ReceivedNewEmailEvent = actionsManager.mkEvent('ReceivedNewEmailEvent');
 
-export async function initEmailActionsIntegration() {
-    email.listenForNewEmails((email) => {
+export async function doInitEmailActionsIntegration() {
+    email.doListenForNewEmails((email) => {
         actionsManager.emit<ReceivedNewEmail>(ReceivedNewEmailEvent, { email });
     });
 }

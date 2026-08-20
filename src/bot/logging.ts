@@ -2,7 +2,7 @@ import { GuildTextBasedChannel } from 'discord.js';
 import { cfg } from './cfg.ts';
 import { client } from '@/client.ts';
 
-function getLogFileName(): string {
+function doGetLogFileName(): string {
     return new Date().toISOString().replaceAll(':', '-').replace('T', '_').split('.')[0] + '.log';
 }
 
@@ -86,7 +86,7 @@ export namespace output {
         try {
             if (cfg.bot.logsDirPath != null) {
                 await Deno.mkdir(cfg.bot.logsDirPath, { recursive: true });
-                logFile = await Deno.open(`${cfg.bot.logsDirPath}/${getLogFileName()}`, {
+                logFile = await Deno.open(`${cfg.bot.logsDirPath}/${doGetLogFileName()}`, {
                     create: true,
                     write: true,
                     append: true,

@@ -1,5 +1,5 @@
 import { APIEmbed, APIEmbedField, APIEmbedFooter, EmbedAuthorOptions, EmbedBuilder, RestOrArray } from 'discord.js';
-import { t } from './translate.ts';
+import { doTranslate } from './translate.ts';
 
 import * as dsc from 'discord.js';
 
@@ -7,7 +7,7 @@ export class ReplyEmbed {
     private embedBuilder: EmbedBuilder = new EmbedBuilder();
 
     setAuthor(author: EmbedAuthorOptions) {
-        this.embedBuilder.setAuthor(t(author));
+        this.embedBuilder.setAuthor(doTranslate(author));
         return this;
     }
 
@@ -17,42 +17,42 @@ export class ReplyEmbed {
     }
 
     setDescription(desc: string) {
-        this.embedBuilder.setDescription(t(desc));
+        this.embedBuilder.setDescription(doTranslate(desc));
         return this;
     }
 
     setTitle(title: string) {
-        this.embedBuilder.setTitle(t(title));
+        this.embedBuilder.setTitle(doTranslate(title));
         return this;
     }
 
     setFields(...fields: RestOrArray<APIEmbedField>) {
-        this.embedBuilder.setFields(...t(fields));
+        this.embedBuilder.setFields(...doTranslate(fields));
         return this;
     }
 
     addFields(...fields: RestOrArray<APIEmbedField>) {
-        this.embedBuilder.addFields(...t(fields));
+        this.embedBuilder.addFields(...doTranslate(fields));
         return this;
     }
 
     setFooter(footer: APIEmbedFooter) {
-        this.embedBuilder.setFooter(t(footer));
+        this.embedBuilder.setFooter(doTranslate(footer));
         return this;
     }
 
     setImage(img: string) {
-        this.embedBuilder.setImage(t(img));
+        this.embedBuilder.setImage(doTranslate(img));
         return this;
     }
 
     setThumbnail(img: string) {
-        this.embedBuilder.setThumbnail(t(img));
+        this.embedBuilder.setThumbnail(doTranslate(img));
         return this;
     }
 
     setURL(url: string) {
-        this.embedBuilder.setURL(t(url));
+        this.embedBuilder.setURL(doTranslate(url));
         return this;
     }
 

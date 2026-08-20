@@ -12,7 +12,7 @@ import { output } from '@/bot/logging.ts';
 
 const MAX_LEN = 600;
 
-function findBestImage(imgs: tfwiki.Image[], title: string): dsc.APIEmbedImage | undefined {
+function doFindBestImage(imgs: tfwiki.Image[], title: string): dsc.APIEmbedImage | undefined {
     if (imgs.length == 0) return undefined;
 
     const matches = imgs.filter(img => 
@@ -85,7 +85,7 @@ export default {
                         .setURL(result.link)
                         .setDescription(desc)
                         .toJSON(),
-                    thumbnail: findBestImage(result.images, result.title),
+                    thumbnail: doFindBestImage(result.images, result.title),
                 }
             ]
         })

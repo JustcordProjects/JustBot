@@ -22,7 +22,7 @@ interface WikiSummaryResponse {
     extract_html: string;
 }
 
-async function getDisambiguationTitles(title: string, lang: string): Promise<string[]> {
+async function doGetDisambiguationTitles(title: string, lang: string): Promise<string[]> {
     const url = `https://${lang}.wikipedia.org/w/api.php?action=parse&page=${encodeURIComponent(title)}&prop=links&format=json`;
     const res = await fetch(url);
     const data = await res.json() as { parse?: { links: { ns: number; '*': string }[] } };
@@ -38,7 +38,7 @@ interface WikiPageResult {
     index: number;
 }
 
-function bfetch(url: string) {
+function doBfetch(url: string) {
     const bytes = new Uint8Array(32);
     crypto.getRandomValues(bytes);
 
@@ -52,7 +52,7 @@ function bfetch(url: string) {
     });
 }
 
-async function searchWikipedia(lang: string, query: string, limit = 10) {
+async function doSearchWikipedia(lang: string, query: string, limit = 10) {
     const url =
         `https://${lang}.wikipedia.org/w/api.php` +
         `?action=query` +
@@ -65,7 +65,7 @@ async function searchWikipedia(lang: string, query: string, limit = 10) {
         `&format=json` +
         `&origin=*`;
 
-    const res = await bfetch(url);
+    const res = await doBfetch(url);
     if (!res.ok) return [];
 
     const data = await res.json();
@@ -83,7 +83,7 @@ async function searchWikipedia(lang: string, query: string, limit = 10) {
         .sort((a, b) => a.index - b.index);
 }
 
-async function downloadFromWikipedia(
+async function doDownloadFromWikipedia(
     languageVersions: string[],
     args: string[]
 ) {
@@ -91,7 +91,7 @@ async function downloadFromWikipedia(
     const lowerQuery = query.toLowerCase();
 
     for (const lang of languageVersions) {
-        const results = await searchWikipedia(lang, query);
+        const results = await doSearchWikipedia(lang, query);
 
         for (const res of results) {
             const lowerTitle = res.title.toLowerCase();
@@ -104,7 +104,7 @@ async function downloadFromWikipedia(
                     `https://${lang}.wikipedia.org/api/rest_v1/page/summary/` +
                     encodeURIComponent(res.title);
 
-                const fetched = await bfetch(summaryUrl);
+                const fetched = await doBfetch(summaryUrl);
 
                 if (fetched.ok) {
                     return { fetched, lang, title: res.title };
@@ -138,10 +138,10 @@ export interface WikiDisamiguition {
     url: string;
 }
 
-export default async function getWikiArticle(rawQuery: string): Promise<WikiError | WikiResponse | WikiDisamiguition> {
+export default async function doGetWikiArticle(rawQuery: string): Promise<WikiError | WikiResponse | WikiDisamiguition> {
     const query = rawQuery == 'hubix' ? 'Niepełnosprawność intelektualna w stopniu głębokim' : rawQuery;
 
-    const fetchedRaw = await downloadFromWikipedia(['pl', 'simple', 'en'], [query]);
+    const fetchedRaw = await doDownloadFromWikipedia(['pl', 'simple', 'en'], [query]);
     const fetched = fetchedRaw?.fetched;
 
     if (!fetched || !fetched.ok) {
@@ -179,7 +179,7 @@ export default async function getWikiArticle(rawQuery: string): Promise<WikiErro
     const extrdesc = (json.extract ?? '') + (json.description ?? '');
 
     if (extrdesc?.includes('strona ujednoznaczniająca') || extrdesc?.includes('may refer to')) {
-        const titles = await getDisambiguationTitles(json.title, fetchedRaw.lang);
+        const titles = await doGetDisambiguationTitles(json.title, fetchedRaw.lang);
         return {
             success: true, isDisamiguition: true,
             url: json.content_urls.desktop.page,

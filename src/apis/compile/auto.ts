@@ -5,10 +5,10 @@ import { ZapCompilerDriver } from './zapbox.ts';
 
 import { cfg } from '@/bot/cfg.ts';
 
-const getReplaceMap = () => cfg.features.compilation.replaceCompilerMap;
+const doGetReplaceMap = () => cfg.features.compilation.replaceCompilerMap;
 
-function findWandboxCompilerName(lang: string): string {
-    const replaceMap = Object.entries(getReplaceMap());
+function doFindWandboxCompilerName(lang: string): string {
+    const replaceMap = Object.entries(doGetReplaceMap());
     const langNormalized = lang.trim().toLowerCase();
     for (const [compiler, aliases] of replaceMap) {
         const compilerNormalized = compiler.toLowerCase();
@@ -19,18 +19,18 @@ function findWandboxCompilerName(lang: string): string {
     return lang;
 }
 
-async function isWandbox(lang: string): Promise<boolean> {
+async function doIsWandbox(lang: string): Promise<boolean> {
     const available = await WandboxCompilerDriver.fetchCompilerNames();
-    const isInReplaceMap = Object.values(getReplaceMap()).some(s => s.includes(lang));
+    const isInReplaceMap = Object.values(doGetReplaceMap()).some(s => s.includes(lang));
     return available.includes(lang) || isInReplaceMap;
 }
 
-export async function getCompilerForLang(lang: string): Promise<compile.Driver> {
+export async function doGetCompilerForLang(lang: string): Promise<compile.Driver> {
     if (['zap', 'zp', 'zapc'].includes(lang)) {
         return new ZapCompilerDriver();
     }
-    if (await isWandbox(lang)) {
-        return new WandboxCompilerDriver({ compiler: findWandboxCompilerName(lang) });
+    if (await doIsWandbox(lang)) {
+        return new WandboxCompilerDriver({ compiler: doFindWandboxCompilerName(lang) });
     }
     return new GodBoltCompilerDriver(lang);
 }

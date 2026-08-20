@@ -7,11 +7,11 @@ export interface ChannelName {
     leaveSpaces?: boolean;
 }
 
-function makeEmojiForChannelName(emoji: string) {
+function doMakeEmojiForChannelName(emoji: string) {
     return `${cfg.channels.settings.characters.beforeEmoji}${emoji.replace(' ', cfg.channels.settings.spaceReplacement ?? '-')}${cfg.channels.settings.characters.afterEmoji}`;
 }
 
-export function makeChannelName(data: ChannelName) {
+export function doMakeChannelName(data: ChannelName) {
     if (data.emoji.trim().length > 4) {
         output.warn(`Suspicious channel emoji at makeChannelName (data: ${JSON.stringify(data)})`);
     }
@@ -22,7 +22,7 @@ export function makeChannelName(data: ChannelName) {
     let channel_name = '';
 
     if (cfg.channels.settings.emojiPlacement == 'before-name')
-        channel_name += makeEmojiForChannelName(data.emoji);
+        channel_name += doMakeEmojiForChannelName(data.emoji);
 
     channel_name += data.name
         .replaceAll(
@@ -33,7 +33,7 @@ export function makeChannelName(data: ChannelName) {
         );
 
     if (cfg.channels.settings.emojiPlacement == 'after-name')
-        channel_name += makeEmojiForChannelName(data.emoji);
+        channel_name += doMakeEmojiForChannelName(data.emoji);
 
     return channel_name;
 }

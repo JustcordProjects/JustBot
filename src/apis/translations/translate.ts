@@ -4,7 +4,7 @@ import { cfg } from '@/bot/cfg.ts';
 export type TranslateableObject = { [key: string | number | symbol]: any } | any[];
 export type Translateable = TranslateableObject | string | number;
 
-function translatePatternToRegex(input: string): { regex: RegExp; groups: number } {
+function doTranslatePatternToRegex(input: string): { regex: RegExp; groups: number } {
     let escaped = input.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
     let groups = 0;
@@ -19,12 +19,12 @@ function translatePatternToRegex(input: string): { regex: RegExp; groups: number
     return { regex, groups };
 }
 
-function translateString(what: string) {
+function doTranslateString(what: string) {
     const translation = cfg.features.translations.find((val) => {
         const inputs = typeof val.input === 'string' ? [val.input] : val.input;
 
         return inputs.some((pattern: string) => {
-            const { regex } = translatePatternToRegex(pattern);
+            const { regex } = doTranslatePatternToRegex(pattern);
             return regex.test(what);
         });
     });
@@ -34,7 +34,7 @@ function translateString(what: string) {
     const inputs = typeof translation.input === 'string' ? [translation.input] : translation.input;
 
     for (const pattern of inputs) {
-        const { regex, groups } = translatePatternToRegex(pattern);
+        const { regex, groups } = doTranslatePatternToRegex(pattern);
         const match = what.match(regex);
 
         if (match) {
@@ -51,31 +51,31 @@ function translateString(what: string) {
     return translation.output;
 }
 
-function translateObj<T extends TranslateableObject>(what: T): T {
+function doTranslateObj<T extends TranslateableObject>(what: T): T {
     if (Array.isArray(what)) {
-        return what.map((v) => translate(v)) as T;
+        return what.map((v) => doTranslate(v)) as T;
     }
 
     // deno-lint-ignore no-explicit-any
     const output: Record<string, any> = { ...what };
 
     for (const key of Object.keys(output)) {
-        output[key] = translate(output[key]);
+        output[key] = doTranslate(output[key]);
     }
 
     return output as T;
 }
 
-function translate(what: string): string;
-function translate(what: number): number;
-function translate<T extends TranslateableObject>(what: T): T;
-function translate(what: Translateable): Translateable {
+function doTranslate(what: string): string;
+function doTranslate(what: number): number;
+function doTranslate<T extends TranslateableObject>(what: T): T;
+function doTranslate(what: Translateable): Translateable {
     switch (typeof what) {
         case 'object':
-            return translateObj(what);
+            return doTranslateObj(what);
 
         case 'string':
-            return translateString(what);
+            return doTranslateString(what);
 
         case 'number':
         case 'bigint':
@@ -84,4 +84,4 @@ function translate(what: Translateable): Translateable {
     }
 }
 
-export { translate, translate as t };
+export { doTranslate, doTranslate as t };

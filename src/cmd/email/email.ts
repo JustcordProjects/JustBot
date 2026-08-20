@@ -9,7 +9,7 @@ import * as email from '@/apis/email/mail.ts';
 
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
 
-function parseEmailMessage(input: string): { subject: string; content: string } {
+function doParseEmailMessage(input: string): { subject: string; content: string } {
     let index = -1;
 
     for (let i = 0; i < input.length; i++) {
@@ -155,7 +155,7 @@ export default {
         msg.edit({ embeds: [api.log.getTipEmbed('Wysyłanie... ', 'Poczekaj, to chwile potrwa!')], components: [] });
 
         try {
-            let { subject, content } = parseEmailMessage(contentArg);
+            let { subject, content } = doParseEmailMessage(contentArg);
             subject = `Wiadomość od ${api.invoker.user.displayName}: ${(subject == '') ? ((await api.executor.email.getDefaultTitle()) ?? 'brak tematu') : subject}`;
             if (content == '') {
                 return msg.edit({

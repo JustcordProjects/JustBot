@@ -1,4 +1,4 @@
-export function findLowerClosestKey(obj: object, num: number) {
+export function doFindLowerClosestKey(obj: object, num: number) {
     const keys = Object.keys(obj)
         .map(Number)
         .filter((k) => k <= num)

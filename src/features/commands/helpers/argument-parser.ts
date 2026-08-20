@@ -9,17 +9,17 @@ import Money from '@/util/money.ts';
 import { NumberParseError } from '@/util/math/parse.ts';
 
 import { ArgMustBeSomeTypeError, MissingRequiredArgError } from '../defs/errors.ts';
-import { flatTypesToUnion } from './flat-types.ts';
+import { doFlatTypesToUnion } from './flat-types.ts';
 
 export type ParsedRawArgument =
     | { type: 'text'; precedingWhitespace: string; value: string }
     | { type: 'code'; precedingWhitespace: string; value: string; lang?: string };
 
-function getTrailingValue(args: ParsedRawArgument[]): string {
+function doGetTrailingValue(args: ParsedRawArgument[]): string {
     return args.map((arg) => arg.precedingWhitespace + arg.value).join('').trimStart();
 }
 
-async function parseUser(raw: string, name: string, context?: ParserContext): Promise<dsc.GuildMember | null> {
+async function doParseUser(raw: string, name: string, context?: ParserContext): Promise<dsc.GuildMember | null> {
     try {
         if (context?.interaction) {
             const memberStr = (context.interaction as dsc.ChatInputCommandInteraction).options.getString(name);
@@ -36,8 +36,8 @@ async function parseUser(raw: string, name: string, context?: ParserContext): Pr
     return null;
 }
 
-async function tryParseUserMentionOrRef(_decl: CommandArgument, context?: ParserContext): Promise<dsc.GuildMember | null> {
-    const refMessage = await tryParseMessageRef(context);
+async function doTryParseUserMentionOrRef(_decl: CommandArgument, context?: ParserContext): Promise<dsc.GuildMember | null> {
+    const refMessage = await doTryParseMessageRef(context);
     if (refMessage && context?.msg?.guild) {
         return await context.msg.guild.members.fetch(refMessage.author.id).catch(() => null);
     }
@@ -45,7 +45,7 @@ async function tryParseUserMentionOrRef(_decl: CommandArgument, context?: Parser
     return null;
 }
 
-async function parseMessage(raw: string, context?: ParserContext): Promise<dsc.Message | null> {
+async function doParseMessage(raw: string, context?: ParserContext): Promise<dsc.Message | null> {
     try {
         const match = raw.match(/https?:\/\/(?:ptb\.|canary\.)?discord(?:app)?\.com\/channels\/(\d+)\/(\d+)\/(\d+)/);
         if (!match) return null;
@@ -64,7 +64,7 @@ async function parseMessage(raw: string, context?: ParserContext): Promise<dsc.M
     }
 }
 
-async function tryParseMessageRef(context?: ParserContext): Promise<dsc.Message | null> {
+async function doTryParseMessageRef(context?: ParserContext): Promise<dsc.Message | null> {
     if (context?.msg && context.msg.reference) {
         try {
             const refMessageId = context.msg.reference.messageId;
@@ -91,7 +91,7 @@ export interface ParserContext {
     commands?: Map<Category, Command[]>;
 }
 
-async function tryParseArg(
+async function doTryParseArg(
     type: CommandArgType,
     raw: ParsedRawArgument,
     argIndex: number,
@@ -112,11 +112,11 @@ async function tryParseArg(
 
     switch (type.base) {
         case 'string': {
-            const val = type.trailing ? getTrailingValue(rawArgs.slice(argIndex)) : raw.value;
+            const val = type.trailing ? doGetTrailingValue(rawArgs.slice(argIndex)) : raw.value;
             return { ...decl, type, value: val } as CommandValuableArgument;
         }
         case 'enum': {
-            const val = type.trailing ? getTrailingValue(rawArgs.slice(argIndex)) : raw.value;
+            const val = type.trailing ? doGetTrailingValue(rawArgs.slice(argIndex)) : raw.value;
             const found = type.options.find((o) => o.toLowerCase() == val.toLowerCase());
             if (!found) {
                 return null;
@@ -126,7 +126,7 @@ async function tryParseArg(
 
         case 'code': {
             const lang = raw.type == 'code' ? raw.lang : undefined;
-            const src = type.trailing ? getTrailingValue(rawArgs.slice(argIndex)) : raw.value;
+            const src = type.trailing ? doGetTrailingValue(rawArgs.slice(argIndex)) : raw.value;
             return { ...decl, type, value: { lang, src } } as CommandValuableArgument;
         }
 
@@ -188,7 +188,7 @@ async function tryParseArg(
         }
 
         case 'user-mention': {
-            const user = await parseUser(raw.value, decl.name, context);
+            const user = await doParseUser(raw.value, decl.name, context);
             if (!user) return null;
             return { ...decl, type, value: user } as CommandValuableArgument;
         }
@@ -230,7 +230,7 @@ async function tryParseArg(
         }
 
         case 'message-ref': {
-            const msg = await parseMessage(raw.value, context);
+            const msg = await doParseMessage(raw.value, context);
             if (!msg) return null;
             return { ...decl, type, value: msg } as CommandValuableArgument;
         }
@@ -240,7 +240,7 @@ async function tryParseArg(
     }
 }
 
-export async function parseArgs(
+export async function doParseArgs(
     rawArgs: ParsedRawArgument[],
     declaredArgs: CommandArgument[],
     context?: ParserContext,
@@ -253,7 +253,7 @@ export async function parseArgs(
         const decl: CommandArgument = declaredArgs[declIndex];
         const raw: ParsedRawArgument | undefined = rawArgs[argIndex];
 
-        const types = flatTypesToUnion(decl.type);
+        const types = doFlatTypesToUnion(decl.type);
         let success = false;
         let consumedRaw = false;
 
@@ -270,16 +270,16 @@ export async function parseArgs(
             };
 
             if (typeObj.base === 'user-mention' && typeObj.includeRefMessageAuthor) {
-                const userFromRaw = raw ? await parseUser(raw.value, decl.name, context) : null;
-                const user = userFromRaw ?? await tryParseUserMentionOrRef(decl, context);
+                const userFromRaw = raw ? await doParseUser(raw.value, decl.name, context) : null;
+                const user = userFromRaw ?? await doTryParseUserMentionOrRef(decl, context);
 
                 if (user) {
                     handleParsed(user, !!userFromRaw);
                     break;
                 }
             } else if (typeObj.base === 'message-ref' && typeObj.includeRefMessage) {
-                const msgFromRaw = raw ? await parseMessage(raw.value, context) : null;
-                const msg = msgFromRaw ?? await tryParseMessageRef(context);
+                const msgFromRaw = raw ? await doParseMessage(raw.value, context) : null;
+                const msg = msgFromRaw ?? await doTryParseMessageRef(context);
 
                 if (msg) {
                     handleParsed(msg, !!msgFromRaw);
@@ -288,7 +288,7 @@ export async function parseArgs(
             } else {
                 if (!raw) continue;
 
-                const result = await tryParseArg(typeObj, raw, argIndex, rawArgs, decl, context);
+                const result = await doTryParseArg(typeObj, raw, argIndex, rawArgs, decl, context);
                 if (result) {
                     parsedArgs.push(result);
                     if ('trailing' in typeObj && typeObj.trailing) {

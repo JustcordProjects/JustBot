@@ -8,10 +8,10 @@ import { cfg } from '@/bot/cfg.ts';
 import { CommandFlags } from '@/bot/command/misc.ts';
 import { client } from '@/client.ts';
 import { commands } from '@/cmd/list.ts';
-import { handleError } from './helpers/error-handler.ts';
-import { makeCommandApi } from './helpers/make-command-api.ts';
-import { makeSlashCommandDesc, makeSlashCommandOptionDesc } from './helpers/make-slash-command-descs.ts';
-import { formatArgType } from './helpers/fmt-arg-type.ts';
+import { doHandleError } from './helpers/error-handler.ts';
+import { doMakeCommandApi } from './helpers/make-command-api.ts';
+import { doMakeSlashCommandDesc, doMakeSlashCommandOptionDesc } from './helpers/make-slash-command-descs.ts';
+import { doFormatArgType } from './helpers/fmt-arg-type.ts';
 
 import findCommand from '@/util/cmd/find-command.ts';
 import canExecuteCmd from '@/util/cmd/can-execute.ts';
@@ -23,7 +23,7 @@ import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
 import { PredefinedColors } from '@/util/color.ts';
 import { CommandArgType } from '@/bot/command.ts';
 
-function waitForButton(int: dsc.ChatInputCommandInteraction, buttonId: string, time = 15000) {
+function doWaitForButton(int: dsc.ChatInputCommandInteraction, buttonId: string, time = 15000) {
     return new Promise((resolve, reject) => {
         const collector = int.channel!.createMessageComponentCollector({
             filter: function (i) {
@@ -56,7 +56,7 @@ client.on('interactionCreate', async (int: Interaction) => {
         const arg = command.expectedArgs.find((a) => a.name === focusedOption.name);
         if (!arg) return;
 
-        const type = fixType(arg.type);
+        const type = doFixType(arg.type);
         if (type.base == 'command-ref') {
             const allCommands = new Set<string>();
             for (const [, cmds] of commands) {
@@ -145,7 +145,7 @@ client.on('interactionCreate', async (int: Interaction) => {
         });
 
         try {
-            await waitForButton(int, 'confirm', 20000);
+            await doWaitForButton(int, 'confirm', 20000);
             await int.editReply({ components: [], embeds: [], content: '⏳' });
         } catch {
             return;
@@ -171,7 +171,7 @@ client.on('interactionCreate', async (int: Interaction) => {
             }
         }
 
-        const api = await makeCommandApi(command, argsRaw, {
+        const api = await doMakeCommandApi(command, argsRaw, {
             interaction: int,
             cmd: command,
             guild: int.guild ?? undefined,
@@ -180,23 +180,23 @@ client.on('interactionCreate', async (int: Interaction) => {
         await command.execute(api);
     } catch (err) {
         // deno-lint-ignore no-explicit-any
-        handleError(err, { reply: (options: any) => int.editReply(options as any) });
+        doHandleError(err, { reply: (options: any) => int.editReply(options as any) });
     }
 });
 
-function typeThatImpliesAllUnionVariants(_union: CommandArgType & { base: 'union' }): CommandArgType {
+function doTypeThatImpliesAllUnionVariants(_union: CommandArgType & { base: 'union' }): CommandArgType {
     // TODO
     return { base: 'string' };
 }
 
-function fixType(type: CommandArgType): CommandArgType {
+function doFixType(type: CommandArgType): CommandArgType {
     if (type.base == 'union') {
-        return typeThatImpliesAllUnionVariants(type);
+        return doTypeThatImpliesAllUnionVariants(type);
     }
     return type;
 }
 
-export async function init() {
+export async function doInit() {
     const commandsArray: dsc.RESTPostAPIApplicationCommandsJSONBody[] = [];
     const rest = new dsc.REST({ version: '10' })
         .setToken(Deno.env.get('JB_TOKEN')!);
@@ -205,7 +205,7 @@ export async function init() {
         for (const cmd of cmds) {
             const scb = new dsc.SlashCommandBuilder()
                 .setName(cmd.name)
-                .setDescription(makeSlashCommandDesc(cmd))
+                .setDescription(doMakeSlashCommandDesc(cmd))
                 .setContexts((cmd.flags & CommandFlags.WorksInDM) ? dsc.InteractionContextType.BotDM : dsc.InteractionContextType.Guild);
 
             const sortedArgs = [];
@@ -217,7 +217,7 @@ export async function init() {
             }
 
             for (const arg of sortedArgs) {
-                const type = fixType(arg.type);
+                const type = doFixType(arg.type);
 
                 switch (type.base) {
                     case 'timestamp':
@@ -228,7 +228,7 @@ export async function init() {
                         scb.addStringOption((option) =>
                             option
                                 .setName(arg.name)
-                                .setDescription(makeSlashCommandOptionDesc(arg, defaultDesc))
+                                .setDescription(doMakeSlashCommandOptionDesc(arg, defaultDesc))
                                 .setRequired(!arg.optional)
                         );
                         break;
@@ -241,7 +241,7 @@ export async function init() {
                         scb.addNumberOption((option) =>
                             option
                                 .setName(arg.name)
-                                .setDescription(makeSlashCommandOptionDesc(arg, defaultDesc))
+                                .setDescription(doMakeSlashCommandOptionDesc(arg, defaultDesc))
                                 .setRequired(!arg.optional)
                         );
                         break;
@@ -251,7 +251,7 @@ export async function init() {
                         scb.addUserOption((option) =>
                             option
                                 .setName(arg.name)
-                                .setDescription(makeSlashCommandOptionDesc(arg, 'Wskaż użytkownika'))
+                                .setDescription(doMakeSlashCommandOptionDesc(arg, 'Wskaż użytkownika'))
                                 .setRequired(!arg.optional)
                         );
                         break;
@@ -259,7 +259,7 @@ export async function init() {
                         scb.addRoleOption((option) =>
                             option
                                 .setName(arg.name)
-                                .setDescription(makeSlashCommandOptionDesc(arg, 'Wskaż rolę'))
+                                .setDescription(doMakeSlashCommandOptionDesc(arg, 'Wskaż rolę'))
                                 .setRequired(!arg.optional)
                         );
                         break;
@@ -267,7 +267,7 @@ export async function init() {
                         scb.addChannelOption((option) =>
                             option
                                 .setName(arg.name)
-                                .setDescription(makeSlashCommandOptionDesc(arg, 'Wskaż kanał'))
+                                .setDescription(doMakeSlashCommandOptionDesc(arg, 'Wskaż kanał'))
                                 .setRequired(!arg.optional)
                         );
                         break;
@@ -276,7 +276,7 @@ export async function init() {
                         scb.addStringOption((option) =>
                             option
                                 .setName(arg.name)
-                                .setDescription(makeSlashCommandOptionDesc(arg, 'Wskaż komendę'))
+                                .setDescription(doMakeSlashCommandOptionDesc(arg, 'Wskaż komendę'))
                                 .setRequired(!arg.optional)
                                 .setAutocomplete(true)
                         );
@@ -285,7 +285,7 @@ export async function init() {
                         scb.addStringOption((option) => {
                             option
                                 .setName(arg.name)
-                                .setDescription(makeSlashCommandOptionDesc(arg, 'Wybierz opcję, ' + formatArgType(type)))
+                                .setDescription(doMakeSlashCommandOptionDesc(arg, 'Wybierz opcję, ' + doFormatArgType(type)))
                                 .setRequired(!arg.optional);
 
                             if (type.options.length <= 25) {
