@@ -2,7 +2,7 @@ import { CommandFlags } from '@/bot/command/misc.ts';
 import { CommandPermissions } from '@/bot/command/permissions.ts';
 import { cfg } from '@/bot/cfg.ts';
 import { Command } from '@/bot/command.ts';
-import { executeAsk } from '../../features/ei/ask.ts';
+import { doExecuteAsk } from '../../features/ei/ask.ts';
 
 export default {
     name: 'ask',
@@ -38,6 +38,6 @@ export default {
             return api.log.replyError(api, 'Błąd', 'Nie możesz używać tej super komendy w slash commands jeszcze.');
         }
 
-        executeAsk(api.raw.msg, question, Number(ctxMsgs));
+        doExecuteAsk(api.raw.msg, question, Number(ctxMsgs));
     },
 } satisfies Command;

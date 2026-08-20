@@ -1,5 +1,5 @@
 // don't ask me how this works; made by ai (and polished by one)
-export function wikitext2markdown(rawText: string): string {
+export function doWikitext2markdown(rawText: string): string {
   let text = rawText;
 
   // 1. Remove recursive {{Templates}} like Infoboxes and Era tags

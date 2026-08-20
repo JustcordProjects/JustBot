@@ -5,7 +5,7 @@ import mp from 'mailparser';
 let transporter: nm.Transporter | null = null;
 let imapClient: im.ImapFlow | null = null;
 
-export async function init() {
+export async function doInit() {
     transporter = nm.createTransport({
         service: 'gmail',
         auth: {
@@ -34,7 +34,7 @@ export interface SendEmail {
 
 export type ReceivedEmail = mp.ParsedMail;
 
-export async function sendMessage({ receiver, subject, content }: SendEmail) {
+export async function doSendMessage({ receiver, subject, content }: SendEmail) {
     if (transporter == null) {
         throw new Error('Email not initialized');
     }
@@ -49,7 +49,7 @@ export async function sendMessage({ receiver, subject, content }: SendEmail) {
 
 export type NewMailCallback = (mail: ReceivedEmail) => void;
 
-export async function listenForNewEmails(onNewMail: NewMailCallback) {
+export async function doListenForNewEmails(onNewMail: NewMailCallback) {
     if (imapClient == null) {
         throw new Error('IMAP not initialized');
     }
@@ -76,7 +76,7 @@ export async function listenForNewEmails(onNewMail: NewMailCallback) {
     lock.release();
 }
 
-export async function stopListening() {
+export async function doStopListening() {
     if (imapClient) {
         await imapClient.logout();
     }

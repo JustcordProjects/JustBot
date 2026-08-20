@@ -10,7 +10,7 @@ import { db } from '@/apis/db/bot-db.ts';
 import { addLvlRole, xpToLevel } from '@/bot/level.ts';
 import User from '@/apis/db/user.ts';
 
-function getMainAccount(id: string) {
+function doGetMainAccount(id: string) {
     try {
         return client.users.fetch(id);
     } catch {
@@ -36,7 +36,7 @@ export default {
             (await api.executor.fetchAlternativeAccounts())
                 .map(async (id) => { try { return await client.users.fetch(id); } catch (e) { logError('stdwarn', e, 'Alternative account fetching'); return null; } })
         )).filter((u) => u !== null);
-        const main_account = await getMainAccount(api.executor.id);
+        const main_account = await doGetMainAccount(api.executor.id);
 
         const msg = await api.reply({
             embeds: [

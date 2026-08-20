@@ -89,7 +89,7 @@ export const SystemPrompt: string = [
     '- Wolisz projekty open-source ze względu na łatwość audytu kodu przez osoby postronne i (zwykle) większe bezpieczeństwo.'
 ].join('\n');
 
-export async function initAskCmdModel() {
+export async function doInitAskCmdModel() {
     const params = {
         model: 'gemini-3.1-flash-lite-preview',
         config: {
@@ -101,7 +101,7 @@ export async function initAskCmdModel() {
     gemini.initModel('ask-cmd', { ...params, model: 'gemini-2.5-flash' });
 }
 
-export async function initWikiModel() {
+export async function doInitWikiModel() {
     const params = {
         model: 'gemini-3.1-flash-lite-preview',
         config: {

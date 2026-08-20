@@ -4,7 +4,7 @@ import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
 import { PredefinedColors } from '@/util/color.ts';
 import { sendLog } from '@/log/send-log.ts';
 
-export default async function kick(
+export default async function doKick(
     member: dsc.GuildMember,
     data: { reason: string; mod: dsc.Snowflake },
 ): Promise<dsc.GuildMember> {

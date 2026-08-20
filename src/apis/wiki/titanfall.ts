@@ -1,4 +1,4 @@
-import { wikitext2markdown } from './utils.ts';
+import { doWikitext2markdown } from './utils.ts';
 
 export interface Image {
     title: string;
@@ -63,7 +63,7 @@ export const BASE_URL   = 'https://titanfall.wiki.gg/api.php';
 export const HTML_BASE  = 'https://titanfall.wiki.gg/wiki/';
 export const USER_AGENT = 'JustBot/1.0';
 
-async function request<T>(params: Record<string, string>): Promise<T> {
+async function doRequest<T>(params: Record<string, string>): Promise<T> {
     const queryParams = new URLSearchParams({
         ...params,
         format: 'json',
@@ -82,8 +82,8 @@ async function request<T>(params: Record<string, string>): Promise<T> {
     return response.json() as Promise<T>;
 }
 
-export async function getPageRaw(query: string): Promise<Page> {
-    const data = await request<QueryResponse>({
+export async function doGetPageRaw(query: string): Promise<Page> {
+    const data = await doRequest<QueryResponse>({
         action: 'query',
         prop: 'revisions|images',
         titles: query,
@@ -128,14 +128,14 @@ export async function getPageRaw(query: string): Promise<Page> {
     const match = wikitext.match(redirectRegex);
     if (match != null) {
         const redirectToTitle = match[1].trim();
-        return getPageRaw(redirectToTitle);
+        return doGetPageRaw(redirectToTitle);
     }
 
     const imageTitles = pages[pageId].images?.map(i => i.title) ?? [];
 
     let images: Image[] = [];
     if (imageTitles.length > 0) {
-        const imageData = await request<QueryResponse>({
+        const imageData = await doRequest<QueryResponse>({
             action: 'query',
             prop: 'imageinfo',
             titles: imageTitles.join('|'),
@@ -169,10 +169,10 @@ export async function getPageRaw(query: string): Promise<Page> {
     };
 }
 
-export async function getPage(query: string): Promise<Page> {
-    const result = await getPageRaw(query);
+export async function doGetPage(query: string): Promise<Page> {
+    const result = await doGetPageRaw(query);
     return {
-        content: wikitext2markdown(result.content),
+        content: doWikitext2markdown(result.content),
         ...(({ content: _, ...args }) => args)(result),
     } satisfies Page;
 }

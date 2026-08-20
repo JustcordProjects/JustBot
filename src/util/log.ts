@@ -18,7 +18,7 @@ enum LogType {
     Error,
 }
 
-function getEmbed(type: LogType, title: string, desc: string) {
+function doGetEmbed(type: LogType, title: string, desc: string) {
     const settings = {
         [LogType.Success]: { emoji: '✅', color: PredefinedColors.Green },
         [LogType.Info]: { emoji: 'ℹ️', color: PredefinedColors.Cyan },
@@ -34,62 +34,62 @@ function getEmbed(type: LogType, title: string, desc: string) {
         .setDescription(desc);
 }
 
-export function getErrorEmbed(title: string, desc: string) {
-    return getEmbed(LogType.Error, t(title), t(desc));
+export function doGetErrorEmbed(title: string, desc: string) {
+    return doGetEmbed(LogType.Error, t(title), t(desc));
 }
 
-export function getWarnEmbed(title: string, desc: string) {
-    return getEmbed(LogType.Warn, t(title), t(desc));
+export function doGetWarnEmbed(title: string, desc: string) {
+    return doGetEmbed(LogType.Warn, t(title), t(desc));
 }
 
-export function getInfoEmbed(title: string, desc: string) {
-    return getEmbed(LogType.Info, t(title), t(desc));
+export function doGetInfoEmbed(title: string, desc: string) {
+    return doGetEmbed(LogType.Info, t(title), t(desc));
 }
 
-export function getSuccessEmbed(title: string, desc: string) {
-    return getEmbed(LogType.Success, t(title), t(desc));
+export function doGetSuccessEmbed(title: string, desc: string) {
+    return doGetEmbed(LogType.Success, t(title), t(desc));
 }
 
-export function getTipEmbed(title: string, desc: string) {
-    return getEmbed(LogType.Tip, t(title), t(desc));
+export function doGetTipEmbed(title: string, desc: string) {
+    return doGetEmbed(LogType.Tip, t(title), t(desc));
 }
 
-export async function replyError(msg: Replyable, title: string, desc: string) {
-    return msg.reply({ embeds: [getErrorEmbed(title, desc)] });
+export async function doReplyError(msg: Replyable, title: string, desc: string) {
+    return msg.reply({ embeds: [doGetErrorEmbed(title, desc)] });
 }
 
-export async function replyWarn(msg: Replyable, title: string, desc: string) {
-    return msg.reply({ embeds: [getWarnEmbed(title, desc)] });
+export async function doReplyWarn(msg: Replyable, title: string, desc: string) {
+    return msg.reply({ embeds: [doGetWarnEmbed(title, desc)] });
 }
 
-export async function replyInfo(msg: Replyable, title: string, desc: string) {
-    return msg.reply({ embeds: [getInfoEmbed(title, desc)] });
+export async function doReplyInfo(msg: Replyable, title: string, desc: string) {
+    return msg.reply({ embeds: [doGetInfoEmbed(title, desc)] });
 }
 
-export async function replySuccess(msg: Replyable, title: string, desc: string) {
-    return msg.reply({ embeds: [getSuccessEmbed(title, desc)] });
+export async function doReplySuccess(msg: Replyable, title: string, desc: string) {
+    return msg.reply({ embeds: [doGetSuccessEmbed(title, desc)] });
 }
 
-export async function replyTip(msg: Replyable, title: string, desc: string) {
-    return msg.reply({ embeds: [getTipEmbed(title, desc)] });
+export async function doReplyTip(msg: Replyable, title: string, desc: string) {
+    return msg.reply({ embeds: [doGetTipEmbed(title, desc)] });
 }
 
-export async function sendError(channel: SendableChannel, title: string, desc: string) {
-    return channel.send({ embeds: [getErrorEmbed(title, desc)] });
+export async function doSendError(channel: SendableChannel, title: string, desc: string) {
+    return channel.send({ embeds: [doGetErrorEmbed(title, desc)] });
 }
 
-export async function sendWarn(channel: SendableChannel, title: string, desc: string) {
-    return channel.send({ embeds: [getWarnEmbed(title, desc)] });
+export async function doSendWarn(channel: SendableChannel, title: string, desc: string) {
+    return channel.send({ embeds: [doGetWarnEmbed(title, desc)] });
 }
 
-export async function sendInfo(channel: SendableChannel, title: string, desc: string) {
-    return channel.send({ embeds: [getInfoEmbed(title, desc)] });
+export async function doSendInfo(channel: SendableChannel, title: string, desc: string) {
+    return channel.send({ embeds: [doGetInfoEmbed(title, desc)] });
 }
 
-export async function sendSuccess(channel: SendableChannel, title: string, desc: string) {
-    return channel.send({ embeds: [getSuccessEmbed(title, desc)] });
+export async function doSendSuccess(channel: SendableChannel, title: string, desc: string) {
+    return channel.send({ embeds: [doGetSuccessEmbed(title, desc)] });
 }
 
-export async function sendTip(channel: SendableChannel, title: string, desc: string) {
-    return channel.send({ embeds: [getTipEmbed(title, desc)] });
+export async function doSendTip(channel: SendableChannel, title: string, desc: string) {
+    return channel.send({ embeds: [doGetTipEmbed(title, desc)] });
 }

@@ -6,7 +6,7 @@ import * as dsc from 'discord.js';
 import getWikiArticle from '@/apis/wiki/wikipedia.ts';
 import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
 
-async function replyAIModelErr(err: string, msg: dsc.Message) {
+async function doReplyAIModelErr(err: string, msg: dsc.Message) {
     return await msg.edit({
         embeds: [{
             author: { name: 'JustBOT' },
@@ -48,7 +48,7 @@ export default {
 
         const result = await getWikiArticle(query);
         if (result.success == false) {
-            return await replyAIModelErr(
+            return await doReplyAIModelErr(
                 result.reason == "ai-ignore"
                     ? "świadomie postanowił Cię zlać"
                     : (result.reason == "ai-uninitialized"

@@ -11,7 +11,7 @@ import * as config from '@/bot/config/schema.ts';
 
 import Money from '@/util/money.ts';
 
-export function formatAction(api: CommandAPI, action: config.economy.Action): ReplyEmbed | null {
+export function doFormatAction(api: CommandAPI, action: config.economy.Action): ReplyEmbed | null {
     const SuccessColor = PredefinedColors.Green;
     const LossColor = PredefinedColors.Red;
 
@@ -133,7 +133,7 @@ export default {
 
             let embeds: ReplyEmbed[] = [];
             for (const action of executed) {
-                const embed = formatAction(api, action);
+                const embed = doFormatAction(api, action);
                 if (!embed) continue;
                 embeds.push(embed);
             }

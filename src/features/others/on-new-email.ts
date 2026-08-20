@@ -7,7 +7,7 @@ import { db } from '@/apis/db/bot-db.ts';
 import { AddressObject } from 'mailparser';
 import { PredefinedColors } from '@/util/color.ts';
 
-async function isSpam(subject: string, text: string, sender: string) {
+async function doIsSpam(subject: string, text: string, sender: string) {
     // blacklist check
     const blacklist_row = await db.selectOne(
         'SELECT 1 FROM email_blacklist WHERE email = ? LIMIT 1',
@@ -109,7 +109,7 @@ export const onReceivedEmailAction: Action<ReceivedNewEmail> = {
                 });
             }
 
-            const spam = await isSpam(ctx.email.subject ?? '', ctx.email.text ?? '', sender ?? '');
+            const spam = await doIsSpam(ctx.email.subject ?? '', ctx.email.text ?? '', sender ?? '');
 
             sendLog({
                 where: spam ? undefined : cfg.channels.justbot.email,

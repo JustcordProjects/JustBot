@@ -1,11 +1,11 @@
 import { client } from '@/client.ts';
 import { ActivityType, PresenceUpdateStatus } from 'discord.js';
-import { getRandomInt } from './math/rand.ts';
+import { doGetRandomInt } from './math/rand.ts';
 import { cfg } from '@/bot/cfg.ts';
 
-function changeStatusToRandomOne(prev?: number): number {
+function doChangeStatusToRandomOne(prev?: number): number {
     while (true) {
-        const idx = getRandomInt(0, cfg.bot.activities.length - 1);
+        const idx = doGetRandomInt(0, cfg.bot.activities.length - 1);
         if (prev != undefined && idx == prev) continue;
 
         const status = cfg.bot.activities[idx];
@@ -37,12 +37,12 @@ function changeStatusToRandomOne(prev?: number): number {
     }
 }
 
-export function initStatusGenerator() {
+export function doInitStatusGenerator() {
     let prev: number | undefined;
 
     setInterval(() => {
-        prev = changeStatusToRandomOne(prev);
+        prev = doChangeStatusToRandomOne(prev);
     }, 2 * 60 * 1000);
 
-    prev = changeStatusToRandomOne();
+    prev = doChangeStatusToRandomOne();
 }

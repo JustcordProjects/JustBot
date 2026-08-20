@@ -1,6 +1,6 @@
 class CdeclError extends Error {}
 
-export default async function cdecl(query: string): Promise<string> {
+export default async function doCdecl(query: string): Promise<string> {
     const [mode, actualQuery]
         = query.startsWith('declare ')
         ? ['declare', query.slice(8)]

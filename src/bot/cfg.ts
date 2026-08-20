@@ -7,7 +7,7 @@ import defaultCfg from '@/bot/config/default.ts';
 
 export let overrideCfg: Partial<Config> = {};
 
-function existsSync(path: string): boolean {
+function doExistsSync(path: string): boolean {
     try {
         Deno.statSync(path);
         return true;
@@ -19,8 +19,8 @@ function existsSync(path: string): boolean {
     }
 }
 
-function readConfigurationChanges() {
-    if (!existsSync('bot/config.js')) return {};
+function doReadConfigurationChanges() {
+    if (!doExistsSync('bot/config.js')) return {};
     let file = Deno.readTextFileSync('bot/config.js');
     file = file.trim();
     while (file.startsWith('(')) file = file.slice(1);
@@ -28,18 +28,18 @@ function readConfigurationChanges() {
     return JSON5.parse(file);
 }
 
-export function saveConfigurationChanges() {
+export function doSaveConfigurationChanges() {
     Deno.writeTextFileSync(
         'bot/config.js',
         `(${JSON5.stringify(overrideCfg, null, 4)})`
     );
 }
 
-function makeConfig(): Config {
-    overrideCfg = readConfigurationChanges();
+function doMakeConfig(): Config {
+    overrideCfg = doReadConfigurationChanges();
     const chosenCfg = defaultCfg;
     return deepMerge(chosenCfg, overrideCfg);
 }
 
-export const cfg = makeConfig();
+export const cfg = doMakeConfig();
 export type { Config };

@@ -1,11 +1,11 @@
 import * as log from '@/util/log.ts';
 import { ArgMustBeSomeTypeError, ArgParseError, ArgViolatesRules, MissingRequiredArgError } from '../defs/errors.ts';
-import { formatArgType } from './fmt-arg-type.ts';
+import { doFormatArgType } from './fmt-arg-type.ts';
 import { DiscordAPIError } from 'discord.js';
 import { CommandViolatedRule } from '@/bot/command.ts';
 import logError from '@/util/log-error.ts';
 
-function handleViolatedRule(v: CommandViolatedRule) {
+function doHandleViolatedRule(v: CommandViolatedRule) {
     switch (v) {
         case 'used-infinity':
             return 'podał nieskończonność jako argument';
@@ -14,28 +14,28 @@ function handleViolatedRule(v: CommandViolatedRule) {
     }
 }
 
-export function handleError(err: Error | unknown, msg: log.Replyable) {
+export function doHandleError(err: Error | unknown, msg: log.Replyable) {
     if (err instanceof ArgParseError) {
         if (err instanceof MissingRequiredArgError) {
             return log.replyError(
                 msg,
                 'Błąd!',
-                `No ten, jest problem! Ta komenda **oczekiwała argumentu ${err.argName}** który powinien być ${formatArgType(err.argType)}` +
+                `No ten, jest problem! Ta komenda **oczekiwała argumentu ${err.argName}** który powinien być ${doFormatArgType(err.argType)}` +
                     ` ale jesteś zbyt głupi i go **nie podałeś!**`,
             );
         } else if (err instanceof ArgMustBeSomeTypeError) {
             return log.replyError(
                 msg,
                 'Błąd!',
-                `No ten, jest problem! Ta komenda **oczekiwała argumentu ${err.argName}** który powinien być ${formatArgType(err.argType)}` +
+                `No ten, jest problem! Ta komenda **oczekiwała argumentu ${err.argName}** który powinien być ${doFormatArgType(err.argType)}` +
                     ` ale oczywście jesteś pacanem i **nie podałeś oczekiwanego formatu!** Nic tylko gratulować.`,
             );
         } else if (err instanceof ArgViolatesRules) {
             return log.replyError(
                 msg,
                 'Błąd',
-                `No ten, jest problem! Ta komenda **oczekiwała argumentu ${err.argName}** który powinien być ${formatArgType(err.argType)}` +
-                    ` ale oczywście jesteś pacanem, który nadużył mojego zaufania i **${handleViolatedRule(err.violatedRules)}**!`,
+                `No ten, jest problem! Ta komenda **oczekiwała argumentu ${err.argName}** który powinien być ${doFormatArgType(err.argType)}` +
+                    ` ale oczywście jesteś pacanem, który nadużył mojego zaufania i **${doHandleViolatedRule(err.violatedRules)}**!`,
             );
         } else {
             return log.replyError(

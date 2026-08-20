@@ -1,9 +1,9 @@
 import { Command } from '@/bot/command.ts';
-import { getCommandConfig } from './get-command-config.ts';
+import { doGetCommandConfig } from './get-command-config.ts';
 import * as dsc from 'discord.js';
 
-export function isCommandDisallowed(cmd: Command, user: dsc.GuildMember | dsc.User): boolean {
-    const cmdCfg = getCommandConfig(cmd);
+export function doIsCommandDisallowed(cmd: Command, user: dsc.GuildMember | dsc.User): boolean {
+    const cmdCfg = doGetCommandConfig(cmd);
 
     if (cmdCfg.disallowedUsers?.includes(user.id)) {
         return true;

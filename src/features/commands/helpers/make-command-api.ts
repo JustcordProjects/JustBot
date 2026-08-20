@@ -4,12 +4,12 @@ import * as log from '@/util/log.ts';
 import User from '@/apis/db/user.ts';
 
 import { Command, CommandAPI, CommandArgType } from '@/bot/command.ts';
-import { parseArgs, ParsedRawArgument } from './argument-parser.ts';
+import { doParseArgs, ParsedRawArgument } from './argument-parser.ts';
 import { t } from '@/apis/translations/translate.ts';
 import { deepMerge } from '@/util/objects/objects.ts';
 import { commands } from '@/cmd/list.ts';
 import { EconomyExecutor } from '@/apis/economy/action.ts';
-import { flatTypesToUnion } from './flat-types.ts';
+import { doFlatTypesToUnion } from './flat-types.ts';
 import { getCommandConfig } from '@/util/cmd/get-command-config.ts';
 
 type FirstArg<T> = T extends { (...args: infer A): unknown } ? A extends [infer F, ...unknown[]] ? F : never
@@ -21,7 +21,7 @@ type FirstArg<T> = T extends { (...args: infer A): unknown } ? A extends [infer 
 
 type ContentReply<T> = T & { content: string };
 
-function makeOptions(options: FirstArg<CommandAPI['reply']>): object {
+function doMakeOptions(options: FirstArg<CommandAPI['reply']>): object {
     let result: dsc.MessageReplyOptions;
 
     switch (typeof options) {
@@ -43,8 +43,8 @@ function makeOptions(options: FirstArg<CommandAPI['reply']>): object {
     return result;
 }
 
-export async function makeCommandApi(commandObj: Command, argsRaw: ParsedRawArgument[], context: { msg?: dsc.Message; guild?: dsc.Guild; interaction?: dsc.CommandInteraction; cmd?: Command; invokedviaalias: string }): Promise<CommandAPI> {
-    const parsedArgs = await parseArgs(argsRaw, commandObj.expectedArgs, { ...context, commands });
+export async function doMakeCommandApi(commandObj: Command, argsRaw: ParsedRawArgument[], context: { msg?: dsc.Message; guild?: dsc.Guild; interaction?: dsc.CommandInteraction; cmd?: Command; invokedviaalias: string }): Promise<CommandAPI> {
+    const parsedArgs = await doParseArgs(argsRaw, commandObj.expectedArgs, { ...context, commands });
     const rawMember = context.msg?.member ??
         (context.interaction?.member as dsc.GuildMember) ??
         null;
@@ -57,7 +57,7 @@ export async function makeCommandApi(commandObj: Command, argsRaw: ParsedRawArgu
             return api.getTypedArg(name, { base: 'enum', options });
         },
         getTypedArg: (name: string, type: CommandArgType) => {
-            const types = flatTypesToUnion(Array.isArray(type) ? { base: 'union', variants: type.map((t) => ({ base: t })) } : (typeof type == 'string' ? { base: type } : type));
+            const types = doFlatTypesToUnion(Array.isArray(type) ? { base: 'union', variants: type.map((t) => ({ base: t })) } : (typeof type == 'string' ? { base: type } : type));
             // deno-lint-ignore no-explicit-any
             return parsedArgs.find((a) => a.name == name && types.some((t) => t.base == a.type.base))! as any;
         },
@@ -73,7 +73,7 @@ export async function makeCommandApi(commandObj: Command, argsRaw: ParsedRawArgu
         economy: new EconomyExecutor({ user: user, member: rawMember ?? undefined }),
 
         // misc
-        reply: context.interaction ? ((options) => context.interaction!.editReply(makeOptions(options))) : ((options) => context.msg!.reply(makeOptions(options))),
+        reply: context.interaction ? ((options) => context.interaction!.editReply(doMakeOptions(options))) : ((options) => context.msg!.reply(doMakeOptions(options))),
         commands: commands,
         log,
         executor: user,

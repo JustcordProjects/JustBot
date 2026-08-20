@@ -42,7 +42,7 @@ for (const unit in timeUnits) {
     timeUnits[unit].aliases.sort((a, b) => b.length - a.length);
 }
 
-export default function parseTimestamp(timestampStr: string): Timestamp | null {
+export default function doParseTimestamp(timestampStr: string): Timestamp | null {
     const str = timestampStr.trim().toLowerCase();
 
     const regex = /(\d+(?:\.\d+)?)([a-ząćęłńóśźż]+)/gi;

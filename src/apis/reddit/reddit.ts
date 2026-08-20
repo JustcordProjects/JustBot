@@ -6,7 +6,7 @@ export interface RedditPost {
     comments: string[];
 }
 
-export async function fetchPost(url: string, maxComments: number = 5): Promise<RedditPost | null> {
+export async function doFetchPost(url: string, maxComments: number = 5): Promise<RedditPost | null> {
     try {
         const initialRes = await fetch(url, {
             headers: { 'User-Agent': 'justbot/1.0' },

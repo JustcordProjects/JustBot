@@ -2,7 +2,7 @@ import { sendLog } from '@/log/send-log.ts';
 import { PredefinedColors } from '@/util/color.ts';
 import * as dsc from 'discord.js';
 
-export function registerChannelCreateDscEvents(client: dsc.Client) {
+export function doRegisterChannelCreateDscEvents(client: dsc.Client) {
     client.on('channelCreate', async (chan) => {
         sendLog({
             title: 'Nowy kanał na piekarnii!',

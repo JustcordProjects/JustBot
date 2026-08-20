@@ -1,6 +1,6 @@
 import * as path from "@std/path";
 
-function getCacheDir(): string {
+function doGetCacheDir(): string {
     const cacheHome = Deno.env.get('XDG_CACHE_HOME');
     if (cacheHome) {
         return path.join(cacheHome, 'justbot');
@@ -14,15 +14,15 @@ function getCacheDir(): string {
     return path.join('/', 'tmp', 'jb-cache');
 }
 
-export async function init() {
-    await Deno.mkdir(getCacheDir(), { recursive: true });
+export async function doInit() {
+    await Deno.mkdir(doGetCacheDir(), { recursive: true });
 }
 
-function getBoxFilepath(box: string): string {
-    return path.join(getCacheDir(), box + '.json');
+function doGetBoxFilepath(box: string): string {
+    return path.join(doGetCacheDir(), box + '.json');
 }
 
-async function readBox(boxpath: string): Promise<Record<string, unknown>> {
+async function doReadBox(boxpath: string): Promise<Record<string, unknown>> {
     try {
         const content = await Deno.readTextFile(boxpath);
         return JSON.parse(content);
@@ -34,26 +34,26 @@ async function readBox(boxpath: string): Promise<Record<string, unknown>> {
     }
 }
 
-export async function store<T>(box: string, key: string, value: T) {
-    const boxpath = getBoxFilepath(box);
+export async function doStore<T>(box: string, key: string, value: T) {
+    const boxpath = doGetBoxFilepath(box);
 
-    const json = await readBox(boxpath);
+    const json = await doReadBox(boxpath);
     json[key] = value;
 
     await Deno.writeTextFile(boxpath, JSON.stringify(json, null, 2));
 }
 
-export async function load<T>(box: string, key: string): Promise<T | undefined> {
-    const boxpath = getBoxFilepath(box);
+export async function doLoad<T>(box: string, key: string): Promise<T | undefined> {
+    const boxpath = doGetBoxFilepath(box);
 
-    const json = await readBox(boxpath);
+    const json = await doReadBox(boxpath);
     return json[key] as T | undefined;
 }
 
-export async function del(box: string, key: string) {
-    const boxpath = getBoxFilepath(box);
+export async function doDel(box: string, key: string) {
+    const boxpath = doGetBoxFilepath(box);
 
-    const json = await readBox(boxpath);
+    const json = await doReadBox(boxpath);
     delete json[key];
 
     await Deno.writeTextFile(boxpath, JSON.stringify(json, null, 2));

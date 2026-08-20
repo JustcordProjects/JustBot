@@ -1,9 +1,9 @@
 import { CommandArgType } from '@/bot/command.ts';
 
-export function formatArgType(argType: CommandArgType): string | undefined {
+export function doFormatArgType(argType: CommandArgType): string | undefined {
     switch (argType.base) {
     case 'union': {
-        const names = [...new Set(argType.variants.map((t) => formatArgType(t)))].filter((n): n is string => !!n);
+        const names = [...new Set(argType.variants.map((t) => doFormatArgType(t)))].filter((n): n is string => !!n);
         const last = names.pop();
         if (names.length > 0) {
             return `${names.join(', ')} lub ${last}`;

@@ -14,14 +14,14 @@ interface SearchResults {
     }[];
 }
 
-function buildSearchURL(instance: string, query: string, json: boolean) {
+function doBuildSearchURL(instance: string, query: string, json: boolean) {
     return `${instance}/search?q=${encodeURIComponent(query)}${json ? '&format=json' : ''}`;
 }
 
-async function getSearchResults(query: string): Promise<SearchResults | undefined> {
+async function doGetSearchResults(query: string): Promise<SearchResults | undefined> {
     for (const instanceUrl of searchingInstances) {
         try {
-            const fetched = await fetch(buildSearchURL(instanceUrl, query, true));
+            const fetched = await fetch(doBuildSearchURL(instanceUrl, query, true));
             if (fetched.status !== 200) continue;
 
             return await fetched.json();
@@ -53,13 +53,13 @@ export default {
 
     async execute(api) {
         const searchQuery = api.getTypedArg('query', 'string').value;
-        const searchResults = await getSearchResults(searchQuery);
+        const searchResults = await doGetSearchResults(searchQuery);
         if (!searchResults || searchResults.results.length == 0) {
             return await api.log.replyError(
                 api,
                 'Problem jest',
                 `Niestety żadna instancja nie zwróciła wyników dla twojego wyszukiwania. ` +
-                    `[Może poszukaj w Google](${buildSearchURL('https://google.com', searchQuery, false)})`,
+                    `[Może poszukaj w Google](${doBuildSearchURL('https://google.com', searchQuery, false)})`,
             );
         }
 

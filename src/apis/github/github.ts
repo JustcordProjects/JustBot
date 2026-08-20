@@ -12,11 +12,11 @@ export type Repo = {
 
 let token: string | null;
 
-export async function init(tok?: string) {
+export async function doInit(tok?: string) {
     token = tok ?? Deno.env.get('JB_GITHUB_TOKEN') ?? null;
 }
 
-async function request(url: string, method?: string) {
+async function doRequest(url: string, method?: string) {
     const res = await fetch(url, {
         headers: {
             Accept: 'application/vnd.github+json',
@@ -41,7 +41,7 @@ async function request(url: string, method?: string) {
     return { ...resps, httpResponseCode: res.status } as Record<PropertyKey, any> & { httpResponseCode: number };
 }
 
-function shouldIgnore(path: string): boolean {
+function doShouldIgnore(path: string): boolean {
     const ignored = [
         'node_modules/',
         '.git/',
@@ -57,25 +57,25 @@ function shouldIgnore(path: string): boolean {
     return ignored.some((i) => path.includes(i));
 }
 
-function getBranch(ref: Repo) {
+function doGetBranch(ref: Repo) {
     return ref.branch ?? 'main';
 }
 
-export async function getRepoTree(ref: Repo): Promise<string[]> {
-    const branch = getBranch(ref);
+export async function doGetRepoTree(ref: Repo): Promise<string[]> {
+    const branch = doGetBranch(ref);
 
-    const data = await request(
+    const data = await doRequest(
         `${BaseUrl}/repos/${ref.owner}/${ref.repo}/git/trees/${branch}?recursive=1`,
     );
 
     return data.tree
         .filter((item: { type: string }) => item.type == 'blob')
         .map((item: { path: string }) => item.path)
-        .filter((path: string) => !shouldIgnore(path));
+        .filter((path: string) => !doShouldIgnore(path));
 }
 
-export async function getFileContent(ref: Repo, path: string): Promise<string> {
-    const branch = getBranch(ref);
+export async function doGetFileContent(ref: Repo, path: string): Promise<string> {
+    const branch = doGetBranch(ref);
     const url = `https://raw.githubusercontent.com/${ref.owner}/${ref.repo}/${branch}/${path}`;
     const res = await fetch(url);
 
@@ -86,9 +86,9 @@ export async function getFileContent(ref: Repo, path: string): Promise<string> {
     return res.text();
 }
 
-export async function search(ref: Repo, query: string) {
+export async function doSearch(ref: Repo, query: string) {
     const q = encodeURIComponent(`${query} repo:${ref.owner}/${ref.repo}`);
-    const data = await request(
+    const data = await doRequest(
         `${BaseUrl}/search/code?q=${q}`,
     );
 
@@ -98,26 +98,26 @@ export async function search(ref: Repo, query: string) {
     }));
 }
 
-export async function getReadme(ref: Repo): Promise<string> {
+export async function doGetReadme(ref: Repo): Promise<string> {
     const possiblePaths = ['README.md', 'readme.md', 'README'];
 
     for (const path of possiblePaths) {
         try {
-            return await getFileContent(ref, path);
+            return await doGetFileContent(ref, path);
         } catch (_) {}
     }
 
     throw new GithubError('README not found');
 }
 
-async function starred(org: string, repo: string) {
-    return (await request(`${BaseUrl}/user/starred/${org}/${repo}`)).httpResponseCode == 204;
+async function doStarred(org: string, repo: string) {
+    return (await doRequest(`${BaseUrl}/user/starred/${org}/${repo}`)).httpResponseCode == 204;
 }
 
-export async function starRepository(org: string, repo: string, unstar = false): Promise<boolean> {
+export async function doStarRepository(org: string, repo: string, unstar = false): Promise<boolean> {
     try {
-        if (await starred(org, repo) == true) return false;
-        await request(`${BaseUrl}/user/starred/${org}/${repo}`, unstar ? 'DELETE' : 'PUT');
+        if (await doStarred(org, repo) == true) return false;
+        await doRequest(`${BaseUrl}/user/starred/${org}/${repo}`, unstar ? 'DELETE' : 'PUT');
     } catch (e) {
         logError('stdwarn', e, 'GitHub repo starring service');
         return false;

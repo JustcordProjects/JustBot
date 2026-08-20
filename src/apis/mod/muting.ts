@@ -1,6 +1,6 @@
 import * as dsc from 'discord.js';
 
-export default function mute(
+export default function doMute(
     member: dsc.GuildMember,
     data: { reason: string; duration?: number },
 ): Promise<dsc.GuildMember> {

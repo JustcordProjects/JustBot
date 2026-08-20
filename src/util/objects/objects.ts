@@ -2,12 +2,12 @@
 
 import util from 'node:util';
 
-export function deepMerge<T>(base: T, override: Partial<T>): T {
+export function doDeepMerge<T>(base: T, override: Partial<T>): T {
     const result: any = { ...base };
     for (const key in override) {
         const overrideValue = override[key];
         if (overrideValue && typeof overrideValue === 'object' && !Array.isArray(overrideValue)) {
-            result[key] = deepMerge((result as any)[key], overrideValue as any);
+            result[key] = doDeepMerge((result as any)[key], overrideValue as any);
         } else if (overrideValue !== undefined) {
             (result as any)[key] = overrideValue;
         }
@@ -15,7 +15,7 @@ export function deepMerge<T>(base: T, override: Partial<T>): T {
     return result;
 }
 
-export function deepEqual<T>(a: T, b: T): boolean {
+export function doDeepEqual<T>(a: T, b: T): boolean {
     if (a === b) return true;
     if (typeof a !== 'object' || typeof b !== 'object' || a === null || b === null) return false;
 
@@ -25,7 +25,7 @@ export function deepEqual<T>(a: T, b: T): boolean {
     if (keysA.length !== keysB.length) return false;
 
     for (const key of keysA) {
-        if (!keysB.includes(key) || !deepEqual((a as any)[key], (b as any)[key])) {
+        if (!keysB.includes(key) || !doDeepEqual((a as any)[key], (b as any)[key])) {
             return false;
         }
     }
@@ -33,6 +33,6 @@ export function deepEqual<T>(a: T, b: T): boolean {
     return true;
 }
 
-export function prettyPrint(obj: any): string {
+export function doPrettyPrint(obj: any): string {
     return util.inspect(obj, { colors: true, depth: null });
 }

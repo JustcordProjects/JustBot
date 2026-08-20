@@ -7,7 +7,7 @@ import { RenameableChannel } from '@/defs.ts';
 
 import * as dsc from 'discord.js';
 
-export async function getChannel(id: dsc.Snowflake, client: dsc.Client): Promise<dsc.Channel> {
+export async function doGetChannel(id: dsc.Snowflake, client: dsc.Client): Promise<dsc.Channel> {
     let channel = client.channels.cache.get(id);
     if (channel == null) {
         channel = await client.channels.fetch(id) ?? undefined;
@@ -25,7 +25,7 @@ export interface TemplateChannel {
     additionalCallbacks?: ActionCallback<ChannelEventCtx>[];
 }
 
-export function mkTemplateChannelUpdateAction({ channel, updateOnEvents, format, additionalConstraints, additionalCallbacks }: TemplateChannel): AnyAction {
+export function doMkTemplateChannelUpdateAction({ channel, updateOnEvents, format, additionalConstraints, additionalCallbacks }: TemplateChannel): AnyAction {
     return {
         name: 'template-channels/' + channel.id,
         activatesOn: updateOnEvents,
@@ -42,6 +42,6 @@ export function mkTemplateChannelUpdateAction({ channel, updateOnEvents, format,
     };
 }
 
-export function addTemplateChannel(options: TemplateChannel) {
-    actionsManager.addAction(mkTemplateChannelUpdateAction(options));
+export function doAddTemplateChannel(options: TemplateChannel) {
+    actionsManager.addAction(doMkTemplateChannelUpdateAction(options));
 }

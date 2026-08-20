@@ -2,7 +2,7 @@ import { db } from '@/apis/db/bot-db.ts';
 
 import { Balance, UserDataRaw, Warn, WarnRaw } from './db-defs.ts';
 import { Cooldowns } from './db-defs.ts';
-import { warnFromRaw } from './db-defs.ts';
+import { doWarnFromRaw } from './db-defs.ts';
 import Money from '@/util/money.ts';
 import { output } from '@/bot/logging.ts';
 
@@ -439,7 +439,7 @@ export default class User {
                 `SELECT * FROM warns WHERE user_id = ? ORDER BY id DESC`,
                 [this.id],
             );
-            return rawWarns.map(warnFromRaw);
+            return rawWarns.map(doWarnFromRaw);
         },
 
         clearExpired: async () => {

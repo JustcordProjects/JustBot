@@ -47,7 +47,7 @@ export interface AIMemory {
     memory: string;
 };
 
-export function warnFromRaw(raw: WarnRaw): Warn {
+export function doWarnFromRaw(raw: WarnRaw): Warn {
     return {
         id: raw.id,
         moderatorId: raw.moderator_id,
@@ -69,7 +69,7 @@ export interface ContentEntry {
     contentUrl: string;
 }
 
-export function contentFromRaw(raw: ContentEntryRaw): ContentEntry {
+export function doContentFromRaw(raw: ContentEntryRaw): ContentEntry {
     return {
         authorId: raw.author_id,
         contentUrl: raw.content_url,

@@ -254,7 +254,7 @@ const compilerTools: gemini.Tool = {
     ],
 };
 
-export function getTools(): gemini.Tool[] {
+export function doGetTools(): gemini.Tool[] {
     const conf = cfg.features.ai;
     return [
         basicTools,

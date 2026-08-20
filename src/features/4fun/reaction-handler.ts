@@ -3,7 +3,7 @@ import User from '@/apis/db/user.ts';
 import { cfg } from '@/bot/cfg.ts';
 import { output } from '@/bot/logging.ts';
 
-function reactionMain(metadata: {
+function doReactionMain(metadata: {
     givenBy: User,
     givenTo: User,
     reaction: string,
@@ -40,7 +40,7 @@ export const reactionAddHandler: Action<ReactionEventCtx> = {
 
     constraints: [ () => true ],
     callbacks: [
-        (reaction) => reactionMain({
+        (reaction) => doReactionMain({
             givenBy: new User(reaction.user.id),
             givenTo: new User(reaction.reaction.message.author?.id ?? cfg.hierarchy.developers.allowedUsers[0]),
             reaction: reaction.reaction.emoji.name ?? '', removed: false
@@ -55,7 +55,7 @@ export const reactionRemoveHandler: Action<ReactionEventCtx> = {
 
     constraints: [ () => true ],
     callbacks: [
-        (reaction) => reactionMain({
+        (reaction) => doReactionMain({
             givenBy: new User(reaction.user.id),
             givenTo: new User(reaction.reaction.message.author?.id ?? cfg.hierarchy.developers.allowedUsers[0]),
             reaction: reaction.reaction.emoji.name ?? '', removed: true

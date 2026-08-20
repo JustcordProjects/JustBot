@@ -3,7 +3,7 @@ import { cfg } from '@/bot/cfg.ts';
 import { mkMessageReferenceEmbed } from '@/bot/templates/message-reference.ts';
 import { PredefinedColors } from '@/util/color.ts';
 
-export function registerMsgEditDscEvents(client: dsc.Client) {
+export function doRegisterMsgEditDscEvents(client: dsc.Client) {
     client.on('messageUpdate', async (oldMsg, msg) => {
         if (oldMsg.content?.trim() == msg.content?.trim()) return;
         if (oldMsg.partial) return;

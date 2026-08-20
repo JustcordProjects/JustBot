@@ -19,26 +19,26 @@ export interface XpEventCtx {
     amount: number;
 }
 
-export function xpToLevel(xp: number, levelDivider: number = cfg.features.leveling.levelDivider): number {
+export function doXpToLevel(xp: number, levelDivider: number = cfg.features.leveling.levelDivider): number {
     return Math.floor(
         (1 + Math.sqrt(1 + 8 * xp / levelDivider)) / 2,
     );
 }
 
-export function levelToXp(level: number, levelDivider: number = cfg.features.leveling.levelDivider): number {
+export function doLevelToXp(level: number, levelDivider: number = cfg.features.leveling.levelDivider): number {
     return Math.floor((level * (level - 1) / 2) * levelDivider);
 }
 
 export const lvlRoles = Object.values(cfg.features.leveling.milestoneRoles);
 
-function getMention(user: dsc.GuildMember) {
+function doGetMention(user: dsc.GuildMember) {
     return `<@${user.user.id}>`;
 }
 
-export function mkLvlProgressBar(xp: number, levelDivider: number, totalLength: number = 10): string {
-    const level = xpToLevel(xp, levelDivider);
-    const xpCurrentLevel = levelToXp(level, levelDivider);
-    const xpNextLevel = levelToXp(level + 1, levelDivider);
+export function doMkLvlProgressBar(xp: number, levelDivider: number, totalLength: number = 10): string {
+    const level = doXpToLevel(xp, levelDivider);
+    const xpCurrentLevel = doLevelToXp(level, levelDivider);
+    const xpNextLevel = doLevelToXp(level + 1, levelDivider);
 
     const progressXp = xp - xpCurrentLevel;
     const neededXp = xpNextLevel - xpCurrentLevel;
@@ -46,7 +46,7 @@ export function mkLvlProgressBar(xp: number, levelDivider: number, totalLength: 
     return `${mkProgressBar(progressXp, neededXp, totalLength)} ${progressXp}/${neededXp}xp`;
 }
 
-export async function addLvlRole(
+export async function doAddLvlRole(
     guild: dsc.Guild,
     newLevel: number,
     user: dsc.Snowflake,
@@ -99,7 +99,7 @@ export async function addLvlRole(
     return roleGiven;
 }
 
-export function computeLevelForMessage(msg: dsc.Message<boolean>) {
+export function doComputeLevelForMessage(msg: dsc.Message<boolean>) {
     let amount = cfg.features.leveling.xpPerMessage;
     if (msg.attachments.size > 0 && msg.content.length > 5) amount = Math.floor(amount * 1.5);
     if (msg.content.length > 100) amount = Math.floor(amount * 1.2);
@@ -111,7 +111,7 @@ export function computeLevelForMessage(msg: dsc.Message<boolean>) {
     return amount;
 }
 
-export async function addExperiencePoints(msg: dsc.OmitPartialGroupDMChannel<dsc.Message<boolean>>) {
+export async function doAddExperiencePoints(msg: dsc.OmitPartialGroupDMChannel<dsc.Message<boolean>>) {
     // check if eligible
     if (cfg.features.leveling.excludedChannels.includes(msg.channelId)) return;
     if (
@@ -120,25 +120,25 @@ export async function addExperiencePoints(msg: dsc.OmitPartialGroupDMChannel<dsc
     ) return;
 
     // amount
-    const amount = computeLevelForMessage(msg);
+    const amount = doComputeLevelForMessage(msg);
 
     // logic
     const user = new User(msg.author.id);
 
     const prevXp = await user.leveling.getXP();
     const newXp = prevXp + amount;
-    const prevLevel = xpToLevel(prevXp, cfg.features.leveling.levelDivider);
-    const newLevel = xpToLevel(newXp, cfg.features.leveling.levelDivider);
+    const prevLevel = doXpToLevel(prevXp, cfg.features.leveling.levelDivider);
+    const newLevel = doXpToLevel(newXp, cfg.features.leveling.levelDivider);
 
     await user.leveling.addXP(amount);
 
     if (newLevel > prevLevel) {
-        const gotNewRole = await addLvlRole(msg.guild!, newLevel, msg.author.id);
+        const gotNewRole = await doAddLvlRole(msg.guild!, newLevel, msg.author.id);
 
         const channelLvl = await msg.client.channels.fetch(cfg.channels.important.levels);
         if (!channelLvl || !channelLvl.isSendable()) return;
 
-        let content = `${getMention(msg.member!)} wbił poziom ${newLevel}! Wow co za osiągnięcie!`;
+        let content = `${doGetMention(msg.member!)} wbił poziom ${newLevel}! Wow co za osiągnięcie!`;
         if (gotNewRole) content += 'I btw nową rolę zdobyłeś!';
         channelLvl.send(cfg.features.leveling.shallPingWhenNewLevel ? content : { content, allowedMentions: { parse: [] } });
     }
@@ -178,22 +178,22 @@ const updateXpAction: Action<XpEventCtx> = {
 
             let content: string;
 
-            const prevLevel = xpToLevel(prevXp, cfg.features.leveling.levelDivider);
-            const newLevel = xpToLevel(newXp, cfg.features.leveling.levelDivider);
+            const prevLevel = doXpToLevel(prevXp, cfg.features.leveling.levelDivider);
+            const newLevel = doXpToLevel(newXp, cfg.features.leveling.levelDivider);
 
             if (newLevel > prevLevel) {
-                content = `Level użytkownika ${getMention(member)} został zmieniony i teraz ma aż ${newLevel} level!`;
-                await addLvlRole(member.guild, newLevel, member.id);
+                content = `Level użytkownika ${doGetMention(member)} został zmieniony i teraz ma aż ${newLevel} level!`;
+                await doAddLvlRole(member.guild, newLevel, member.id);
             } else if (newLevel < prevLevel) {
-                content = `Level użytkownika ${getMention(member)} został zmieniony, przez co cofnął się do levela ${newLevel}!`;
-                await addLvlRole(member.guild, newLevel, member.id);
+                content = `Level użytkownika ${doGetMention(member)} został zmieniony, przez co cofnął się do levela ${newLevel}!`;
+                await doAddLvlRole(member.guild, newLevel, member.id);
             } else {
                 if (prevXp == newXp) {
-                    content = `Administrator próbował zmienić level użytkownika ${getMention(member)}, ale ma autyzm i ustawił dokladnie taki sam jaki był wcześniej czyli ${prevLevel} level. Nic tylko pogratulować`;
+                    content = `Administrator próbował zmienić level użytkownika ${doGetMention(member)}, ale ma autyzm i ustawił dokladnie taki sam jaki był wcześniej czyli ${prevLevel} level. Nic tylko pogratulować`;
                 } else {
-                    content = `Level użytkownika ${getMention(member)} został zmieniony, co prawda dalej ma ${prevLevel} level, ale tym razem ${newXp}xp zamiast ${prevXp}xp?` +
+                    content = `Level użytkownika ${doGetMention(member)} został zmieniony, co prawda dalej ma ${prevLevel} level, ale tym razem ${newXp}xp zamiast ${prevXp}xp?` +
                         ` Dobra przestane yappowac tych nerdowskich liczb i dam ci progress bar do następnego levela:` +
-                        '\n' + mkLvlProgressBar(newXp, cfg.features.leveling.levelDivider);
+                        '\n' + doMkLvlProgressBar(newXp, cfg.features.leveling.levelDivider);
                 }
             }
 
@@ -208,7 +208,7 @@ const updateXpAction: Action<XpEventCtx> = {
 
 actionsManager.addAction(updateXpAction);
 
-export async function addVoiceExperience() {
+export async function doAddVoiceExperience() {
     for (const voice_channel of client.channels.cache.filter((c) => c.isVoiceBased()).values()) {
         const channel_members = voice_channel.members;
         const channel_users: User[] = [];
@@ -217,7 +217,7 @@ export async function addVoiceExperience() {
         // get erm
         for (const member of channel_members.values()) {
             const user = new User(member.id);
-            const lvl = xpToLevel(await user.leveling.getXP());
+            const lvl = doXpToLevel(await user.leveling.getXP());
 
             if (lvl >= cfg.features.leveling.voice.estimatedRealMembers.requiredLevel) {
                 erm++;
@@ -241,5 +241,5 @@ export async function addVoiceExperience() {
         }
     }
 
-    setTimeout(addVoiceExperience, 60 * 1000);
+    setTimeout(doAddVoiceExperience, 60 * 1000);
 }

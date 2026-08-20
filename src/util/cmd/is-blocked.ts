@@ -5,7 +5,7 @@ import { CommandFlags } from '@/bot/command/misc.ts';
 import { BlockCommandsRules } from '@/bot/config/schema/subtypes.ts';
 import { cfg } from '@/bot/cfg.ts';
 
-function isBlockedByRules(id: dsc.Snowflake, rules: BlockCommandsRules): boolean {
+function doIsBlockedByRules(id: dsc.Snowflake, rules: BlockCommandsRules): boolean {
     if (rules.default == 'allow') {
         return rules.deny?.includes(id) ?? false;
     } else if (rules.default == 'block') {
@@ -15,23 +15,23 @@ function isBlockedByRules(id: dsc.Snowflake, rules: BlockCommandsRules): boolean
     return false;
 }
 
-export default function isCommandBlockedOnChannel(command: Command, channelID: dsc.Snowflake, dm: boolean) {
+export default function doIsCommandBlockedOnChannel(command: Command, channelID: dsc.Snowflake, dm: boolean) {
     if (dm) return false;
 
     let result: boolean = false;
 
     if (command.flags & CommandFlags.Important) {
-        result ||= isBlockedByRules(channelID, cfg.commands.blocking.fullExceptImportant);
+        result ||= doIsBlockedByRules(channelID, cfg.commands.blocking.fullExceptImportant);
     } else {
-        result ||= isBlockedByRules(channelID, cfg.commands.blocking.full);
+        result ||= doIsBlockedByRules(channelID, cfg.commands.blocking.full);
     }
 
     if (command.flags & CommandFlags.Spammy) {
-        result ||= isBlockedByRules(channelID, cfg.commands.blocking.spammy);
+        result ||= doIsBlockedByRules(channelID, cfg.commands.blocking.spammy);
     }
 
     if (command.flags & CommandFlags.Economy) {
-        result ||= isBlockedByRules(channelID, cfg.commands.blocking.economy);
+        result ||= doIsBlockedByRules(channelID, cfg.commands.blocking.economy);
     }
 
     return result;

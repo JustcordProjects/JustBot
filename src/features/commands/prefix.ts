@@ -15,14 +15,14 @@ import actionsManager, { PredefinedActionEventTypes } from '../actions.ts';
 
 import { PredefinedColors } from '@/util/color.ts';
 
-import { handleError } from './helpers/error-handler.ts';
-import { makeCommandApi } from './helpers/make-command-api.ts';
+import { doHandleError } from './helpers/error-handler.ts';
+import { doMakeCommandApi } from './helpers/make-command-api.ts';
 import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
 import { CommandTokenizer } from './helpers/tokenizer.ts';
 
 import sleep from '@/util/sleep.ts';
 
-function waitForButton(interaction: dsc.Message, buttonId: string, time = 15000) {
+function doWaitForButton(interaction: dsc.Message, buttonId: string, time = 15000) {
     return new Promise((resolve, reject) => {
         const collector = interaction.channel.createMessageComponentCollector({
             filter: function (i) {
@@ -45,7 +45,7 @@ function waitForButton(interaction: dsc.Message, buttonId: string, time = 15000)
     });
 }
 
-async function tempReaction(msg: dsc.Message, reaction: string) {
+async function doTempReaction(msg: dsc.Message, reaction: string) {
     const react = await msg.react(reaction);
     await sleep(2000);
     try {
@@ -53,7 +53,7 @@ async function tempReaction(msg: dsc.Message, reaction: string) {
     } catch {}
 }
 
-async function prefixCommandsMessageHandler(msg: dsc.OmitPartialGroupDMChannel<dsc.Message<boolean>>) {
+async function doPrefixCommandsMessageHandler(msg: dsc.OmitPartialGroupDMChannel<dsc.Message<boolean>>) {
     if (!(msg instanceof dsc.Message)) return;
 
     const content = msg.content.trimStart();
@@ -80,7 +80,7 @@ async function prefixCommandsMessageHandler(msg: dsc.OmitPartialGroupDMChannel<d
             return;
         }
 
-        return await tempReaction(msg, '❌');
+        return await doTempReaction(msg, '❌');
     }
 
     const { command } = result;
@@ -100,7 +100,7 @@ async function prefixCommandsMessageHandler(msg: dsc.OmitPartialGroupDMChannel<d
 
     const isBlocked = isCommandBlockedOnChannel(command, msg.channelId, !msg.inGuild());
     if (isBlocked) {
-        return await tempReaction(msg, '❌');
+        return await doTempReaction(msg, '❌');
     }
 
     if (!msg.inGuild() && !(command.flags & CommandFlags.WorksInDM)) {
@@ -135,7 +135,7 @@ async function prefixCommandsMessageHandler(msg: dsc.OmitPartialGroupDMChannel<d
         });
 
         try {
-            await waitForButton(msg, 'confirm', 20000);
+            await doWaitForButton(msg, 'confirm', 20000);
             try {
                 reply.delete();
             } catch {}
@@ -146,7 +146,7 @@ async function prefixCommandsMessageHandler(msg: dsc.OmitPartialGroupDMChannel<d
 
     try {
         await msg.channel.sendTyping();
-        const api = await makeCommandApi(command, argsRaw, {
+        const api = await doMakeCommandApi(command, argsRaw, {
             msg,
             guild: msg.guild ?? undefined,
             cmd: command,
@@ -154,14 +154,14 @@ async function prefixCommandsMessageHandler(msg: dsc.OmitPartialGroupDMChannel<d
         });
         await command.execute(api);
     } catch (err) {
-        handleError(err, msg);
+        doHandleError(err, msg);
     }
 }
 
-export function init() {
+export function doInit() {
     actionsManager.addAction({
         name: 'commands/prefix',
-        callbacks: [prefixCommandsMessageHandler],
+        callbacks: [doPrefixCommandsMessageHandler],
         constraints: [
             (msg) => [cfg.commands.prefix, ...cfg.commands.alternativePrefixes].some((val) => msg.content.toLowerCase().startsWith(val.toLowerCase())),
         ],

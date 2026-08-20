@@ -6,7 +6,7 @@ import { CommandFlags } from '@/bot/command/misc.ts';
 import figlet from 'figlet';
 import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
 
-function tokenize(input: string): string[] {
+function doTokenize(input: string): string[] {
     const result: string[] = [];
     let current: string = '';
     for (const char of input) {
@@ -22,7 +22,7 @@ function tokenize(input: string): string[] {
     return result;
 }
 
-function figletFonts(): Promise<string[]> {
+function doFigletFonts(): Promise<string[]> {
     return new Promise((resolve, reject) => {
         figlet.fonts((err, fonts) => {
             if (err || !fonts) reject(err);
@@ -31,7 +31,7 @@ function figletFonts(): Promise<string[]> {
     });
 }
 
-function fmtArr(arr: string[]): string {
+function doFmtArr(arr: string[]): string {
     let result: string = '';
     for (let i = 0; i < arr.length - 1; ++i) {
         result += `\`${arr[i]}\``;
@@ -40,34 +40,34 @@ function fmtArr(arr: string[]): string {
     return result;
 }
 
-function renderWord(word: string, font: string = 'Standard') {
+function doRenderWord(word: string, font: string = 'Standard') {
     return figlet.textSync(word, { horizontalLayout: 'full', font }).split('\n');
 }
 
-function concatAsciiLine(lineA: string[], lineB: string[]): string[] {
+function doConcatAsciiLine(lineA: string[], lineB: string[]): string[] {
     const maxLen = Math.max(lineA.length, lineB.length);
     const a = [...lineA, ...Array(maxLen - lineA.length).fill('')];
     const b = [...lineB, ...Array(maxLen - lineB.length).fill('')];
     return a.map((row, i) => row + b[i]);
 }
 
-function asciiWidth(asciiBlock: string[]) {
+function doAsciiWidth(asciiBlock: string[]) {
     return Math.max(...asciiBlock.map((line) => line.length));
 }
 
-function renderFigletWrapped(words: string[], font: string, maxWidth: number = 40): string[][] {
+function doRenderFigletWrapped(words: string[], font: string, maxWidth: number = 40): string[][] {
     const lines: string[][] = [];
     let currentLine: string[] = [];
 
     const flushLine = () => {
-        if (currentLine.length > 0 && asciiWidth(currentLine) > 0) {
+        if (currentLine.length > 0 && doAsciiWidth(currentLine) > 0) {
             lines.push(currentLine);
         }
         currentLine = [];
     };
 
     const addToLine = (block: string[]) => {
-        if (asciiWidth(block) > maxWidth) {
+        if (doAsciiWidth(block) > maxWidth) {
             flushLine();
             lines.push(block);
             return;
@@ -76,8 +76,8 @@ function renderFigletWrapped(words: string[], font: string, maxWidth: number = 4
             currentLine = block;
             return;
         }
-        const testLine = concatAsciiLine(currentLine, block);
-        if (asciiWidth(testLine) > maxWidth) {
+        const testLine = doConcatAsciiLine(currentLine, block);
+        if (doAsciiWidth(testLine) > maxWidth) {
             flushLine();
             currentLine = block;
         } else {
@@ -87,9 +87,9 @@ function renderFigletWrapped(words: string[], font: string, maxWidth: number = 4
 
     for (const word of words) {
         if (!word) continue;
-        const renderedWord = renderWord(word, font);
-        if (asciiWidth(currentLine.concat(renderedWord)) > maxWidth) {
-            if (asciiWidth(renderedWord) <= maxWidth) {
+        const renderedWord = doRenderWord(word, font);
+        if (doAsciiWidth(currentLine.concat(renderedWord)) > maxWidth) {
+            if (doAsciiWidth(renderedWord) <= maxWidth) {
                 flushLine();
                 addToLine(renderedWord);
                 continue;
@@ -97,7 +97,7 @@ function renderFigletWrapped(words: string[], font: string, maxWidth: number = 4
 
             const letters = word.split('');
             for (const letter of letters) {
-                const renderedLetter = renderWord(letter, font);
+                const renderedLetter = doRenderWord(letter, font);
                 addToLine(renderedLetter);
             }
         } else {
@@ -109,8 +109,8 @@ function renderFigletWrapped(words: string[], font: string, maxWidth: number = 4
     return lines;
 }
 
-function renderFigletWrappedString(words: string[], font: string = 'Standard', maxWidth: number = 40): string {
-    const blocks: string[][] = renderFigletWrapped(words, font, maxWidth);
+function doRenderFigletWrappedString(words: string[], font: string = 'Standard', maxWidth: number = 40): string {
+    const blocks: string[][] = doRenderFigletWrapped(words, font, maxWidth);
     return blocks.map((block) => block.join('\n')).join('\n\n');
 }
 
@@ -148,17 +148,17 @@ export default {
 
         const text = textArg == 'hubix' ? 'pedał' : textArg == 'just bot' ? 'istota wyższa' : textArg;
 
-        const availableFonts = await figletFonts();
+        const availableFonts = await doFigletFonts();
         if (!availableFonts.includes(font)) {
             return api.log.replyError(
                 api,
                 'Nieznana czcionka!',
-                `Nie znam czionki o nazwie ${font}.\n**Spróbuj tak:** ${fmtArr(availableFonts)}`,
+                `Nie znam czionki o nazwie ${font}.\n**Spróbuj tak:** ${doFmtArr(availableFonts)}`,
             );
         }
 
-        const words = tokenize(text);
-        const result = renderFigletWrappedString(words, font, 40);
+        const words = doTokenize(text);
+        const result = doRenderFigletWrappedString(words, font, 40);
 
         return api.reply({
             embeds: [new ReplyEmbed().setTitle('Wynik').setDescription(`\`\`\`${result}\`\`\``)],

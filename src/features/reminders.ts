@@ -6,7 +6,7 @@ import { GuildTextBasedChannel } from 'discord.js';
 import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
 import { PredefinedColors } from '@/util/color.ts';
 
-export async function reminderHandler() {
+export async function doReminderHandler() {
     try {
         const general = await client.channels.fetch(cfg.channels.general.general) as GuildTextBasedChannel;
 
@@ -33,6 +33,6 @@ export async function reminderHandler() {
     } catch (e) {
         logError('stdwarn', e, 'Reminder handler');
     } finally {
-        setTimeout(reminderHandler, 30 * 1000);
+        setTimeout(doReminderHandler, 30 * 1000);
     }
 }

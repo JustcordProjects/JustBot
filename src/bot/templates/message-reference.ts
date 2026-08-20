@@ -4,7 +4,7 @@ import { GuildTextBasedChannel, HexColorString, Message, Poll } from 'discord.js
 import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
 import { client } from '@/client.ts';
 
-async function mkFormattedPoll(poll: Poll): Promise<string> {
+async function doMkFormattedPoll(poll: Poll): Promise<string> {
     try {
         if (poll.partial) poll = await poll.fetch();
     } catch {}
@@ -19,7 +19,7 @@ async function mkFormattedPoll(poll: Poll): Promise<string> {
     return output;
 }
 
-export async function mkMessageReferenceEmbed(
+export async function doMkMessageReferenceEmbed(
     source: {
         channelId: Snowflake, messageId: Snowflake,
     } | Message,
@@ -48,7 +48,7 @@ export async function mkMessageReferenceEmbed(
         .setDescription(
             quotedMsg.content ||
                 (quotedMsg.poll
-                    ? await mkFormattedPoll(quotedMsg.poll)
+                    ? await doMkFormattedPoll(quotedMsg.poll)
                     : (quotedMsg.embeds.length > 0
                         ? '*niestety cytowanie embedów nie jest jeszcze wspierane*'
                         : '*brak treści*'

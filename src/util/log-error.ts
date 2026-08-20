@@ -1,6 +1,6 @@
 import { output } from '@/bot/logging.ts';
 
-export default function logError(target: 'stdwarn' | 'stderr', error: unknown, from?: string) {
+export default function doLogError(target: 'stdwarn' | 'stderr', error: unknown, from?: string) {
     const details = error instanceof Error ? (error.stack ?? error.message) : String(error);
 
     const fullDetails = `From ${from ? `module "${from}"` : 'general error handler'}:\n\n${details}`;

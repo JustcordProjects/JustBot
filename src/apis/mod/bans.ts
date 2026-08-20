@@ -6,7 +6,7 @@ import { sendLog } from '@/log/send-log.ts';
 
 import User from '@/apis/db/user.ts';
 
-export default async function ban(
+export default async function doBan(
     member: dsc.GuildMember,
     data: { reason: string; mod: dsc.Snowflake },
 ): Promise<dsc.GuildMember> {

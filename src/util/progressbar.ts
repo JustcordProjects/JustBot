@@ -1,18 +1,18 @@
-import fmtEmoji from './fmt-emoji.ts';
+import doFmtEmoji from './fmt-emoji.ts';
 import { cfg } from '@/bot/cfg.ts';
 
-export function mkDualProgressBar(red: number, green: number, totalLength: number = 10) {
+export function doMkDualProgressBar(red: number, green: number, totalLength: number = 10) {
     const maxHalf = totalLength / 2;
     red = Math.min(red, maxHalf);
     green = Math.min(green, maxHalf);
 
-    return fmtEmoji(cfg.emojis.darkRedBlock).repeat(maxHalf - red) +
-        fmtEmoji(cfg.emojis.lightRedBlock).repeat(red) +
-        fmtEmoji(cfg.emojis.lightGreenBlock).repeat(green) +
-        fmtEmoji(cfg.emojis.darkGreenBlock).repeat(maxHalf - green);
+    return doFmtEmoji(cfg.emojis.darkRedBlock).repeat(maxHalf - red) +
+        doFmtEmoji(cfg.emojis.lightRedBlock).repeat(red) +
+        doFmtEmoji(cfg.emojis.lightGreenBlock).repeat(green) +
+        doFmtEmoji(cfg.emojis.darkGreenBlock).repeat(maxHalf - green);
 }
 
-export function mkProgressBar(fillLength: number, max: number, totalLength: number = 13) {
+export function doMkProgressBar(fillLength: number, max: number, totalLength: number = 13) {
     const progress = Math.min(fillLength / max, 1);
     const filledLength = Math.floor(totalLength * progress);
     const emptyLength = totalLength - filledLength;

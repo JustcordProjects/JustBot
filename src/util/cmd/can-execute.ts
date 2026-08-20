@@ -1,15 +1,15 @@
 import { Command } from '@/bot/command.ts';
-import { getCommandConfig } from './get-command-config.ts';
-import { isCommandDisallowed } from './is-disallowed.ts';
+import { doGetCommandConfig } from './get-command-config.ts';
+import { doIsCommandDisallowed } from './is-disallowed.ts';
 
 import * as dsc from 'discord.js';
 
-export default function canExecuteCmd(cmd: Command, user: dsc.GuildMember | dsc.User) {
-    if (isCommandDisallowed(cmd, user)) {
+export default function doCanExecuteCmd(cmd: Command, user: dsc.GuildMember | dsc.User) {
+    if (doIsCommandDisallowed(cmd, user)) {
         return false;
     }
 
-    const cmdCfg = getCommandConfig(cmd);
+    const cmdCfg = doGetCommandConfig(cmd);
 
     const allowedUsers = cmdCfg.allowedUsers ? cmdCfg.allowedUsers : cmd.permissions.allowedUsers;
     const allowedRoles = cmdCfg.allowedRoles ? cmdCfg.allowedRoles : cmd.permissions.allowedRoles;
