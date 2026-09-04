@@ -39,6 +39,11 @@ export default {
                 ? `do ponownego uruchomienia bota` 
                 : `do momentu usunięcia roli <@&${role}> przez adminów`;
 
+        const userName: string = 
+            action.startsWith('global')
+                ? `każdy użytkownik na serwerze`
+                : `użytkownik <@${user.id}>`;
+
         switch (action) {
         case 'rem':
             await user.roles.add(role); break;
@@ -54,7 +59,7 @@ export default {
         
         return api.log.replySuccess(
             api, "Sukces guys!",
-            `Od teraz użytkownik <@${user.id}> będzie torturowany banem na GIFy ${forTime}! To świetnie, wiem.`
+            `Od teraz ${userName} będzie torturowany banem na GIFy ${forTime}! To świetnie, wiem.`
         )
     },
 } satisfies Command;

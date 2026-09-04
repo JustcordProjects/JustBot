@@ -37,7 +37,7 @@ export const gifBanAction: Action<MessageEventCtx> = {
     callbacks: [
         async (msg) => {
             const reply = await msg.reply('masz bana na gify ;)');
-            setInterval(() => reply.delete());
+            setTimeout(() => reply.delete(), 2000);
 
             await msg.delete();
             return MagicSkipAllActions;
