@@ -26,6 +26,12 @@ export const featuresCfg: config.Features = {
     automod: {
         antiFloodEnabled: false,
         antiSpamEnabled: false,
+        gifban: {
+            enabled: true,
+            global: false,
+            role: "1545431916772327445",
+            websites: [ 'static.klipy.com', 'klipy.com', 'tenor.com/view' ]
+        }
     },
     welcomer: {
         enabled: true,

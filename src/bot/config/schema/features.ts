@@ -10,6 +10,13 @@ export default interface Features {
     automod: {
         antiFloodEnabled: boolean;
         antiSpamEnabled: boolean;
+        gifban: {
+            enabled: boolean;
+            role: string;
+            // delete from everyone, no matter whether they have the role 
+            global: boolean;
+            websites: string[]
+        }
     };
     welcomer: {
         enabled: boolean;

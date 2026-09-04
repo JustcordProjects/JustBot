@@ -72,6 +72,7 @@ import { reminderHandler } from '@/features/reminders.ts';
 import { autoUpdateAction } from './features/others/auto-update.ts';
 import { pollsModerator } from '@/features/mod/polls-mod.ts';
 import setupHoneypotAction from '@/features/mod/honeypot.ts';
+import { gifBanAction } from '@/features/mod/gifban.ts';
 
 // --------------- INIT ---------------
 client.once('clientReady', async () => {
@@ -147,6 +148,7 @@ function setUpActions() {
         // automod
         setupHoneypotAction(),
         ...AutoModRules.all(),
+        gifBanAction,
         pollsModerator,
         // msg-specific actions
         mediaChannelAction,
