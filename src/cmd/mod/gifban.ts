@@ -44,6 +44,11 @@ export default {
                 ? `każdy użytkownik na serwerze`
                 : `użytkownik <@${user.id}>`;
 
+        const generalText: string = 
+            action.includes('add')
+                ? 'będzie torturowany banem'
+                : 'będzie mógł cieszyć się brakiem bana';
+
         switch (action) {
         case 'rem':
             await user.roles.add(role); break;
@@ -59,7 +64,7 @@ export default {
         
         return api.log.replySuccess(
             api, "Sukces guys!",
-            `Od teraz ${userName} będzie torturowany banem na GIFy ${forTime}! To świetnie, wiem.`
+            `Od teraz ${userName} ${generalText} na GIFy ${forTime}! To świetnie, wiem.`
         )
     },
 } satisfies Command;
