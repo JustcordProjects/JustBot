@@ -46,8 +46,8 @@ export default {
 
         const generalText: string = 
             action.includes('add')
-                ? 'będzie torturowany banem'
-                : 'będzie mógł cieszyć się brakiem bana';
+                ? `będzie torturowany banem na GIFy ${forTime}`
+                : 'będzie mógł cieszyć się brakiem bana na GIFy';
 
         switch (action) {
         case 'rem':
@@ -64,7 +64,7 @@ export default {
         
         return api.log.replySuccess(
             api, "Sukces guys!",
-            `Od teraz ${userName} ${generalText} na GIFy ${forTime}! To świetnie, wiem.`
+            `Od teraz ${userName} ${generalText}! To świetnie, wiem.`
         )
     },
 } satisfies Command;
