@@ -43,7 +43,6 @@ import * as slashCommands from '@/features/commands/slash.ts';
 import * as prefixCommands from '@/features/commands/prefix.ts';
 
 // integrations
-import * as zapbox from '@/apis/compile/zapbox.ts';
 import * as pokedex from '@/apis/pokedex/pokedex.ts';
 import * as github from '@/apis/github/github.ts';
 import * as gemini from '@/apis/gemini/model.ts';
@@ -112,14 +111,6 @@ client.once('clientReady', async () => {
         initAskCmdModel();
         initWikiModel();
         output.verbose(`Gemini initialized.`);
-    }
-
-    if (!zapbox.isAvailable()) {
-        output.warn('You should set JB_ZAPBOX_PATH enviroment variable to path to the zapbox executable\nOtherwise, the zapbox compiler driver will not work');
-    } else {
-        zapbox.init().then(() => {
-            output.verbose(`Zapbox container initialized.`)
-        });
     }
 
     await pokedex.init();
