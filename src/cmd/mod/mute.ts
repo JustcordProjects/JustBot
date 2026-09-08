@@ -2,13 +2,11 @@ import * as dsc from 'discord.js';
 
 import { Command } from '@/bot/command.ts';
 import { CommandFlags } from '@/bot/command/misc.ts';
-import { cfg } from '@/bot/cfg.ts';
 import { PredefinedColors } from '@/util/color.ts';
 import { Hour, Timestamp } from '@/util/parse-timestamp.ts';
 
 import mute from '@/apis/mod/muting.ts';
 import { watchMute } from '@/bot/watchdog.ts';
-import { sendLog } from '@/log/send-log.ts';
 import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
 import { CommandPermissions } from '@/bot/command/permissions.ts';
 
@@ -64,15 +62,8 @@ export default {
         if (!reason)
             reason = 'Moderator nie poszczycił się znajomością komendy i nie podał powodu... Ale moze to i lepiej...';
 
-        await mute(targetUser, { reason, duration: (duration ?? 1) * 1000 });
+        await mute(targetUser, { reason, duration: (duration ?? 1) * 1000, moderator: api.invoker.id });
         if (api.invoker.member) watchMute(api.invoker.member!);
-
-        sendLog({
-            color: PredefinedColors.Purple,
-            title: 'Użytkownik dostał mute',
-            description: `Użytkownik <@${targetUser.id}> został wyciszony przez <@${api.invoker.id}>.`,
-            fields: [{ name: 'Powód', value: reason }, { name: 'Wygasa', value: `<t:${expiresAt}:R>` }],
-        }, [ cfg.channels.mod.punishments ]);
 
         return api.reply({
             embeds: [
