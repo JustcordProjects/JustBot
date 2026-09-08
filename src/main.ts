@@ -30,7 +30,7 @@ import { mediaChannelAction } from '@/features/4fun/media-channel-action.ts';
 import { basicMsgCreateActions } from '@/features/others/basic-msg-create-actions.ts';
 import { registerTemplateChannels } from '@/features/channels/register-template-channels.ts';
 import { channelAddWatcher, channelDeleteWatcher, onMuteGivenWatcher, setUpWatchdog } from '@/bot/watchdog.ts';
-import { actionPing } from '@/features/4fun/ping-death-chat.ts';
+import { actionPing } from '@/features/4fun/ping-dead-chat.ts';
 import { onReceivedEmailAction } from '@/features/others/on-new-email.ts';
 
 // events
@@ -87,7 +87,7 @@ client.once('clientReady', async () => {
             '------------------------------------------------'
         );
     }
-    
+
     await registerCommands();
     output.verbose('Commands registered');
 

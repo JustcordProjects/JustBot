@@ -119,6 +119,11 @@ export class BotDatabase {
                 reminder TEXT NOT NULL,
                 timestamp INTEGER NOT NULL
             );
+
+            CREATE TABLE IF NOT EXISTS dead_chat_messages (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                message TEXT NOT NULL
+            );
         `);
     }
 
@@ -371,6 +376,25 @@ export class BotDatabase {
         },
         deleteReminder: async (id: number) => {
             return db.runSql("DELETE FROM reminders WHERE id = ?", [id])
+        }
+    };
+
+    readonly deadchat = {
+        add: async (message: string) => {
+            await this.runSql(`INSERT INTO dead_chat_messages (message) VALUES (?)`, [message]);
+        },
+        had: async (message: string): Promise<boolean> => {
+            const row = await this.selectOne<{ message: string }>(
+                `SELECT message FROM dead_chat_messages WHERE message = ?`,
+                [message]
+            );
+            return !!row;
+        },
+        count: async (): Promise<number> => {
+            const row = await this.selectOne<{ count: number }>(
+                `SELECT COUNT(*) as count FROM dead_chat_messages`
+            );
+            return row?.count ?? 0;
         }
     };
 
