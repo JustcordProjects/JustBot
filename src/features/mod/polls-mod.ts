@@ -13,8 +13,10 @@ const ThreadNames = [
 ];
 
 const ThreadMessages = [
-    'Tu możecie odpowiedzi merytoryczne wysyłać',
-    'Tutaj dyskusje i rozmowy na temat ankiety',
+    'No napiszcie tu coś bo nudno ok?',
+    'Ja uważam, że prawidłową odpowiedzią jest żadna z nich',
+    'Czy autor tej ankiety w ogóle wie o czym mówi?',
+    'Co panowie szanowni myślą o ankiecie?'
 ];
 
 export const pollsModerator: Action<MessageEventCtx> = {
@@ -37,13 +39,23 @@ export const pollsModerator: Action<MessageEventCtx> = {
             }
 
             if (!msg.poll && !msg.content) return;
+            if (!msg.channel.isSendable()) return;
 
-            await msg.reply('<@&1511009438994141194>');
+            const lastMessage = (await msg.channel.messages.fetch({ limit: 2 })).at(1);
+            if (
+                !lastMessage ||
+                Date.now() - lastMessage.createdTimestamp >= 30 * 60 * 1000
+            ) {
+                await msg.channel.send(
+                    `${msg.poll?.question ?? 'nowa ankieta guys! ^^^'} <@&1511009438994141194>`
+                );
+            }
 
             const thread = await msg.startThread({
                 name: 
                     (msg.poll?.question.text ?? randomElement(ThreadNames))
-                        .slice(0, 100)
+                        .slice(0, 100),
+                reason: 'yes bum bum bum bum'
             });
             await thread.send(randomElement(ThreadMessages));
         },

@@ -11,7 +11,7 @@ export default function mute(
         color: PredefinedColors.Purple,
         title: 'Użytkownik dostał mute',
         description: `Użytkownik <@${member.id}> został wyciszony przez <@${data.moderator}>.`,
-        fields: [{ name: 'Powód', value: data.reason }, { name: 'Wygasa', value: `<t:${Date.now() + (data.duration ?? 1)}:R>` }],
+        fields: [{ name: 'Powód', value: data.reason }, { name: 'Wygasa', value: `<t:${(Date.now() + (data.duration ?? 1))/1000}:R>` }],
     }, [ cfg.channels.mod.punishments ]);
 
     return member.timeout(data.duration ?? null, data.reason);
