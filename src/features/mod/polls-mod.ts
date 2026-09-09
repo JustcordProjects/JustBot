@@ -47,7 +47,7 @@ export const pollsModerator: Action<MessageEventCtx> = {
                 Date.now() - lastMessage.createdTimestamp >= 30 * 60 * 1000
             ) {
                 await msg.channel.send(
-                    `${msg.poll?.question ?? 'nowa ankieta guys! ^^^'} <@&1511009438994141194>`
+                    `${msg.poll?.question.text ?? 'nowa ankieta guys! ^^^'} <@&1511009438994141194>`
                 );
             }
 
