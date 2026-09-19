@@ -1,4 +1,5 @@
 import { MessageEventCtx, PredefinedActionEventTypes } from '../actions.ts';
+import { MessageType } from 'discord.js';
 
 import { executeAsk } from '@/features/ei/ask.ts';
 
@@ -6,7 +7,7 @@ import { Action } from '../actions.ts';
 import { client } from '@/client.ts';
 import { cfg } from '@/bot/cfg.ts';
 
-import { MessageType } from 'discord.js';
+import m from '@/util/mentions.ts';
 
 export const askAction: Action<MessageEventCtx> = {
     name: '4fun/ask',
@@ -18,7 +19,7 @@ export const askAction: Action<MessageEventCtx> = {
             const referenced = typeof ctx.reference?.messageId == 'string' && typeof ctx.reference?.guildId == 'string' && !ctx.flags.has('HasSnapshot')
                 ? await ctx.fetchReference() : false;
 
-            return ctx.content.trim().startsWith(`<@${client.user?.id}>`) ||
+            return ctx.content.trim().startsWith(`${client.user?.id}>`) ||
                 (referenced
                     ? (
                         referenced.author.id == client.user?.id &&
@@ -37,7 +38,11 @@ export const askAction: Action<MessageEventCtx> = {
 
     callbacks: [
         (msg) => {
-            const question = msg.content.trim().startsWith(`<@${client.user!.id}>`) ? msg.content.trim().replace(`<@${client.user!.id}>`, '') : msg.content;
+            const question =
+                msg.content.trim().startsWith(m.user(client.user!))
+                    ? msg.content.trim().replace(m.user(client.user!), '')
+                    : msg.content;
+
             return executeAsk(msg, question, cfg.features.ai.contextDefaultMessages);
         },
     ],

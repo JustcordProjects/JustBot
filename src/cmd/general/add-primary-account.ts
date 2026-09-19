@@ -1,11 +1,14 @@
+import * as dsc from 'discord.js';
+
 import { Command } from '@/bot/command.ts';
 import { CommandFlags } from '@/bot/command/misc.ts';
 import { CommandPermissions } from '@/bot/command/permissions.ts';
 
-import * as dsc from 'discord.js';
 import { db } from '@/apis/db/bot-db.ts';
-import User from '@/apis/db/user.ts';
 import { addLvlRole, xpToLevel } from '@/bot/level.ts';
+
+import User from '@/apis/db/user.ts';
+import m    from '@/util/mentions.ts';
 
 export default {
     name: 'add-primary-account',
@@ -63,7 +66,7 @@ export default {
             embeds: [
                 api.log.getWarnEmbed(
                     'Ostrzeżenie',
-                    `Właśnie zamierzasz **ODDAĆ CAŁY SWÓJ PROGRESS NA RZECZ UŻYTKOWNIKA <@${primary.id}>!**. Zasoby będą współdzielone pomiędzy Tymi dwoma kontami, co oznacza, że będziesz w stanie z dwóch kont korzystać np. ze swoich pieniędzy na ekonomii. Po transferze, cały twój indywidualny postęp **zostanie bezpowrotnie usunięty** z bazy danych, sprawiając, że jeżeli będziesz chciał się odłączyć, będziesz musiał to przeprowadzić z pomocą administracji i zaczynać od nowa...\n\n` +
+                    `Właśnie zamierzasz **ODDAĆ CAŁY SWÓJ PROGRESS NA RZECZ UŻYTKOWNIKA ${m.user(primary)}!**. Zasoby będą współdzielone pomiędzy Tymi dwoma kontami, co oznacza, że będziesz w stanie z dwóch kont korzystać np. ze swoich pieniędzy na ekonomii. Po transferze, cały twój indywidualny postęp **zostanie bezpowrotnie usunięty** z bazy danych, sprawiając, że jeżeli będziesz chciał się odłączyć, będziesz musiał to przeprowadzić z pomocą administracji i zaczynać od nowa...\n\n` +
                         'Ta operacja jest **nieodwracalna**.',
                 ),
             ],
@@ -152,7 +155,7 @@ export default {
                     embeds: [
                         api.log.getSuccessEmbed(
                             'Sukces',
-                            `Od teraz <@${primary.id}> jest oficjalnie twym głównem kontem.\nJeżeli czegoś nie masz, poproś administrację o dodanie Ci tego na alcie.`,
+                            `Od teraz ${m.user(primary)} jest oficjalnie twym głównem kontem.\nJeżeli czegoś nie masz, poproś administrację o dodanie Ci tego na alcie.`,
                         ),
                     ],
                     components: [],

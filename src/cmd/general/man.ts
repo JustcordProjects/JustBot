@@ -3,8 +3,9 @@ import { CommandFlags } from '@/bot/command/misc.ts';
 import { PredefinedColors } from '@/util/color.ts';
 import { cfg } from '@/bot/cfg.ts';
 
-import findCommand from '@/util/cmd/find-command.ts';
+import findCommand   from '@/util/cmd/find-command.ts';
 import canExecuteCmd from '@/util/cmd/can-execute.ts';
+import m             from '@/util/mentions.ts';
 
 import { Category } from '@/bot/command.ts';
 import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
@@ -78,8 +79,8 @@ export default {
 
         const allowedRoles = command.permissions.allowedRoles == null ? null : [...new Set(command.permissions.allowedRoles)];
         const allowedUsers = command.permissions.allowedUsers == null ? null : [...new Set(command.permissions.allowedUsers)];
-        const formattedAllowedRoles: string[] = allowedRoles != null ? allowedRoles.map((role: string) => `<@&${role}>`) : ['każda rola'];
-        const formattedAllowedUsers: string[] = allowedUsers != null ? allowedUsers.map((user: string) => `<@${user}>`) : ['każdy użytkownik'];
+        const formattedAllowedRoles: string[] = allowedRoles != null ? allowedRoles.map(m.role) : ['każda rola'];
+        const formattedAllowedUsers: string[] = allowedUsers != null ? allowedUsers.map(m.user) : ['każdy użytkownik'];
 
         const canUseCommand = canExecuteCmd(command, api.invoker.member ?? api.invoker.user);
 

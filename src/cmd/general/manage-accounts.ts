@@ -1,14 +1,25 @@
+import {
+    ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle,
+    ComponentType, StringSelectMenuBuilder, StringSelectMenuInteraction,
+} from 'discord.js';
+
+import {
+    addLvlRole, xpToLevel
+} from '@/bot/level.ts';
+
 import { Command } from '@/bot/command.ts';
 import { CommandFlags } from '@/bot/command/misc.ts';
 import { CommandPermissions } from '@/bot/command/permissions.ts';
 import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
 import { PredefinedColors } from '@/util/color.ts';
-import { client } from '@/client.ts';
-import logError from '@/util/log-error.ts';
-import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, ComponentType, StringSelectMenuBuilder, StringSelectMenuInteraction } from 'discord.js';
+
 import { db } from '@/apis/db/bot-db.ts';
-import { addLvlRole, xpToLevel } from '@/bot/level.ts';
-import User from '@/apis/db/user.ts';
+import { client } from '@/client.ts';
+import { assert } from '@std/assert';
+
+import User     from '@/apis/db/user.ts';
+import logError from '@/util/log-error.ts';
+import m        from '@/util/mentions.ts';
 
 function getMainAccount(id: string) {
     try {
@@ -32,11 +43,13 @@ export default {
     permissions: CommandPermissions.everyone(),
 
     async execute(api) {
-        const alternative_accounts = (await Promise.all(
+        const altAccs = (await Promise.all(
             (await api.executor.fetchAlternativeAccounts())
                 .map(async (id) => { try { return await client.users.fetch(id); } catch (e) { logError('stdwarn', e, 'Alternative account fetching'); return null; } })
         )).filter((u) => u !== null);
-        const main_account = await getMainAccount(api.executor.id);
+
+        const mainAcc = await getMainAccount(api.executor.id);
+        assert(mainAcc != null);
 
         const msg = await api.reply({
             embeds: [
@@ -46,12 +59,12 @@ export default {
                     .setDescription([
                         'Oto wszystkie konta, które połączyłeś w naszym rewolucyjnym bocie. Współdzielisz pomiędzy nimi pieniądze na ekonomii, poziom i dużo różnego rodzaju stanu.',
                         '',
-                        `**Główne konto:** \`${main_account?.username ?? 'nieznane'}\``,
-                        alternative_accounts.length > 0
-                            ? `**Twoje multikonta:** \`${alternative_accounts.map((a) => a.username).join('`, `')}\``
+                        `**Główne konto:** \`${mainAcc.username ?? 'nieznane'}\``,
+                        altAccs.length > 0
+                            ? `**Twoje multikonta:** \`${altAccs.map((a) => a.username).join('`, `')}\``
                             : '**Nie posiadasz multikont.** Możesz je dodać za pomocą komendy `add-primary-account`.'
                     ].join('\n'))
-                    .setThumbnail(main_account?.displayAvatarURL() ?? client.user!.displayAvatarURL())
+                    .setThumbnail(mainAcc.displayAvatarURL() ?? client.user!.displayAvatarURL())
             ],
             components: [
                 new ActionRowBuilder<ButtonBuilder>()
@@ -68,7 +81,7 @@ export default {
             ]
         });
 
-        const filter = (i: ButtonInteraction | StringSelectMenuInteraction) => [...alternative_accounts, main_account].filter(Boolean).map(u => u!.id).includes(i.user.id);
+        const filter = (i: ButtonInteraction | StringSelectMenuInteraction) => [...altAccs, mainAcc].filter(Boolean).map(u => u!.id).includes(i.user.id);
         const collector = msg.createMessageComponentCollector<ComponentType.Button | ComponentType.StringSelect>({ filter, time: 90000 });
 
         collector.on('collect', async (i) => {
@@ -76,23 +89,36 @@ export default {
 
             if (
                 [ 'leave-group', 'leave-group-final', 'move-primary', 'move-primary-selected' ].includes(i.customId) &&
-                alternative_accounts.length <= 0
+                altAccs.length <= 0
             ) {
-                return await msg.edit({ embeds: [
-                    api.log.getErrorEmbed('Nie masz tu altów.', 'Te funkcje są dozwolone tylko dla osób, które posiadają tu alternatywne konta.')
-                ], components: [] });
+                return await msg.edit({
+                    embeds: [
+                        api.log.getErrorEmbed(
+                            'Nie masz tu altów.',
+                            'Te funkcje są dozwolone tylko dla osób, które posiadają tu alternatywne konta.')
+                    ],
+                    components: []
+                });
             }
 
             if (i.customId == 'leave-group' && i.isButton()) {
                 if (api.executor.id == i.user.id) {
-                    return await msg.edit({ embeds: [
-                        api.log.getErrorEmbed('Masz problem', 'Jako główne konto nie możesz opuścić grupy multikont. Najpierw musisz przenieść tę pozycję na inne konto.')
-                    ], components: [] })
+                    return await msg.edit({
+                        embeds: [
+                            api.log.getErrorEmbed(
+                                'Masz problem',
+                                'Jako główne konto nie możesz opuścić grupy multikont. Najpierw musisz przenieść tę pozycję na inne konto.')
+                        ],
+                        components: [],
+                    });
                 }
 
                 await msg.edit({
                     embeds: [
-                        api.log.getWarnEmbed('Zamierzasz zresetować cały swój progress!', `Kiedy dodałeś te konto jako alta użytkownika <@${main_account?.id}>, nieodwracalnie przekazałeś cały swój progress na rzecz tego konta. **Jeżeli teraz opuścisz grupę, stracisz dostęp do Twojego postępu i będziesz musiał zaczynać od nowa**. Czy na pewno chcesz to zrobić?`)
+                        api.log.getWarnEmbed(
+                            'Zamierzasz zresetować cały swój progress!',
+                            `Kiedy dodałeś te konto jako alta użytkownika ${m.user(mainAcc)}, nieodwracalnie przekazałeś cały swój progress na rzecz tego konta. **Jeżeli teraz opuścisz grupę, stracisz dostęp do Twojego postępu i będziesz musiał zaczynać od nowa**. Czy na pewno chcesz to zrobić?`
+                        ),
                     ],
                     components: [
                         new ActionRowBuilder<ButtonBuilder>()
@@ -116,7 +142,12 @@ export default {
                 addLvlRole(i.guild!, 1, i.user.id);
 
                 return await msg.edit({
-                    embeds: [ api.log.getSuccessEmbed('Proszę bardzo', `Pomyślnie opuściłeś grupę. Nie jesteś już uznawany za alta użytkownika <@${main_account?.id}>`) ],
+                    embeds: [
+                        api.log.getSuccessEmbed(
+                            'Proszę bardzo',
+                            `Pomyślnie opuściłeś grupę. Nie jesteś już uznawany za alta użytkownika ${m.user(mainAcc.id)}`,
+                        ),
+                    ],
                     components: []
                 });
             } else if (i.customId == 'move-primary' && i.isButton()) {
@@ -130,7 +161,7 @@ export default {
                                 new StringSelectMenuBuilder()
                                     .setPlaceholder('Wybierz konto')
                                     .setCustomId('move-primary-selected')
-                                    .setOptions(alternative_accounts.map((ac) => { return { label: ac.displayName, description: `${ac.username} (id: ${ac.id})`, value: ac.id }; }))
+                                    .setOptions(altAccs.map((ac) => { return { label: ac.displayName, description: `${ac.username} (id: ${ac.id})`, value: ac.id }; }))
                             ])
                     ]
                 });

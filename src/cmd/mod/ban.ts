@@ -8,6 +8,7 @@ import { PredefinedColors } from '@/util/color.ts';
 import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
 
 import ban from '@/apis/mod/bans.ts';
+import m   from '@/util/mentions.ts';
 
 export default {
     name: 'ban',
@@ -59,9 +60,9 @@ export default {
                     .setTitle(`📢 ${targetUser.user.username} został zbanowany!`)
                     .setDescription(`Multikonto? Już po nim... Wkurzający chłop? Uciszony na zawsze... Ktokolwiek? Nie może wbić, chyba że zrobi alta...`)
                     .addFields(
-                        { name: 'Moderator', value: `<@${api.invoker.id}>`, inline: true },
-                        { name: 'Użytkownik', value: `<@${targetUser.id}>`, inline: true },
-                        { name: 'Powód', value: reason, inline: false },
+                        { name: 'Moderator',  value: m.user(api.invoker), inline: true },
+                        { name: 'Użytkownik', value: m.user(targetUser),  inline: true },
+                        { name: 'Powód',      value: reason,              inline: false },
                     )
                     .setColor(PredefinedColors.Orange),
             ],

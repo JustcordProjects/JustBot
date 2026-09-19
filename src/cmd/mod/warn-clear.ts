@@ -1,12 +1,15 @@
 import { Command } from '@/bot/command.ts';
 import { CommandFlags } from '@/bot/command/misc.ts';
-import { db } from '@/apis/db/bot-db.ts';
 import { PredefinedColors } from '@/util/color.ts';
-import { output } from '@/bot/logging.ts';
-import { sendLog } from '@/log/send-log.ts';
 import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
 import { CommandPermissions } from '@/bot/command/permissions.ts';
 import { WarnRaw } from '@/apis/db/db-defs.ts';
+
+import { db } from '@/apis/db/bot-db.ts';
+import { output } from '@/bot/logging.ts';
+import { sendLog } from '@/log/send-log.ts';
+
+import m from '@/util/mentions.ts';
 
 export default {
     name: 'warn-clear',
@@ -56,15 +59,9 @@ export default {
                 title: 'Pozbyto się warna!',
                 description: `Usunięto warna o ID \`${warnId}\`.`,
                 fields: [
-                    {
-                        name: 'Powód', value: row.reason_string
-                    },
-                    {
-                        name: 'Dla', value: `<@${row.user_id}>`, inline: true
-                    },
-                    {
-                        name: 'Od', value: `<@${row.moderator_id}>`, inline: true
-                    }
+                    { name: 'Powód', value: row.reason_string,        inline: false },
+                    { name: 'Dla',   value: m.user(row.user_id),      inline: true  },
+                    { name: 'Od',    value: m.user(row.moderator_id), inline: true  },
                 ]
             });
 
@@ -75,15 +72,9 @@ export default {
                         .setTitle(':white_check_mark: Warn usunięty')
                         .setDescription(`Warn o ID \`${warnId}\` został pomyślnie usunięty.`)
                         .addFields([
-                            {
-                                name: 'Powód', value: row.reason_string
-                            },
-                            {
-                                name: 'Dla', value: `<@${row.user_id}>`
-                            },
-                            {
-                                name: 'Od', value: `<@${row.moderator_id}>`
-                            }
+                            { name: 'Powód', value: row.reason_string        },
+                            { name: 'Dla',   value: m.user(row.user_id)      },
+                            { name: 'Od',    value: m.user(row.moderator_id) },
                         ])
                         .setColor(PredefinedColors.Green),
                 ],

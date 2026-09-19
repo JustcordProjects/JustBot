@@ -4,6 +4,8 @@ import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
 import { PredefinedColors } from '@/util/color.ts';
 import { sendLog } from '@/log/send-log.ts';
 
+import m from '@/util/mentions.ts';
+
 export default async function kick(
     member: dsc.GuildMember,
     data: { reason: string; mod: dsc.Snowflake },
@@ -22,7 +24,7 @@ export default async function kick(
     sendLog({
         color: PredefinedColors.DarkGrey,
         title: 'Wywalono członka',
-        description: `Użytkownik <@${member.id}> (${member.user.username}) został wyrzucony z serwera przez <@${data.mod}>!`,
+        description: `Użytkownik ${m.user(member)} (${member.user.username}) został wyrzucony z serwera przez ${m.user(data.mod)}!`,
         fields: [{ name: 'Powód', value: data.reason }],
     });
     return bannedMember;

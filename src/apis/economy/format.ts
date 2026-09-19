@@ -4,6 +4,7 @@ import { EconomyExecutor } from './action.ts';
 import Money from '@/util/money.ts';
 import { Ternary } from '@/defs.ts';
 import { cfg } from '@/bot/cfg.ts';
+import m from '@/util/mentions.ts';
 
 export interface EconomyActionsFormatterConfig {
     indentStep?: string;
@@ -40,7 +41,7 @@ export class MinimalActionsFormatter implements EconomyActionsFormatter {
             case 'has-role': {
                 const role = this.ctx.getRoleById(cond.roleId);
                 if (!role) return null;
-                return `masz rolę <@&${role.discordRoleId}>`;
+                return `masz rolę ${m.role(role)}`;
             }
 
             case 'has-item': {
@@ -87,7 +88,7 @@ export class MinimalActionsFormatter implements EconomyActionsFormatter {
             case 'rem-role': {
                 const role = this.ctx.getRoleById(action.roleId);
                 if (!role) break;
-                return `${this.isGood(action) ? 'rolę' : '**usunięcie** roli'} <@&${role.discordRoleId}>`;
+                return `${this.isGood(action) ? 'rolę' : '**usunięcie** roli'} ${m.role(role)}`;
             }
 
             case 'add-item':

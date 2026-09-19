@@ -1,7 +1,9 @@
 import { Command } from '@/bot/command.ts';
 import { CommandFlags } from '@/bot/command/misc.ts';
 import { CommandPermissions } from '@/bot/command/permissions.ts';
+
 import { cfg } from '@/bot/cfg.ts';
+import m from '@/util/mentions.ts';
 
 export default {
     name: 'gifban',
@@ -13,7 +15,7 @@ export default {
 
     flags: CommandFlags.Important,
     permissions: CommandPermissions.adminPlus(),
-    
+
     expectedArgs: [
         {
             name: 'action', type: { base: 'enum', options: [ 'rem', 'add', 'global-rem', 'global-add' ] },
@@ -34,17 +36,17 @@ export default {
             return api.log.replyError(api, "Masz problem", "Wszystko co nie jest globalne, wymaga użytkownika.");
         }
 
-        const forTime: string = 
+        const forTime: string =
             action.startsWith('global')
-                ? `do ponownego uruchomienia bota` 
-                : `do momentu usunięcia roli <@&${role}> przez adminów`;
+                ? `do ponownego uruchomienia bota`
+                : `do momentu usunięcia roli ${m.role(role)} przez adminów`;
 
-        const userName: string = 
+        const userName: string =
             action.startsWith('global')
                 ? `każdy użytkownik na serwerze`
-                : `użytkownik <@${user.id}>`;
+                : `użytkownik ${m.user(user)}`;
 
-        const generalText: string = 
+        const generalText: string =
             action.includes('add')
                 ? `będzie torturowany banem na GIFy ${forTime}`
                 : 'będzie mógł cieszyć się brakiem bana na GIFy';
@@ -61,7 +63,7 @@ export default {
             cfg.features.automod.gifban.global = true;
             break;
         }
-        
+
         return api.log.replySuccess(
             api, "Sukces guys!",
             `Od teraz ${userName} ${generalText}! To świetnie, wiem.`

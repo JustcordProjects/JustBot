@@ -6,6 +6,8 @@ import { cfg } from '@/bot/cfg.ts';
 import { Hour } from '@/util/parse-timestamp.ts';
 import { db } from '@/apis/db/bot-db.ts';
 
+import m from '@/util/mentions.ts';
+
 let deadChatTimeout: ReturnType<typeof setTimeout>;
 
 const DEAD_CHAT_ROLE_ID = '1511009335877046364';
@@ -68,7 +70,7 @@ export const actionPing: Action<MessageEventCtx> = {
                 if (!msg.channel.isSendable()) return;
 
                 if (await db.deadchat.count() == DeadChatQuestions.length) {
-                    await msg.channel.send(`${cfg.hierarchy.developers.allowedUsers.map(id => `<@${id}>`).join(', ')} pytania się wam skończyły`);
+                    await msg.channel.send(`${cfg.hierarchy.developers.allowedUsers.map(m.role).join(', ')} pytania się wam skończyły`);
                     return;
                 }
 
@@ -90,7 +92,7 @@ export const actionPing: Action<MessageEventCtx> = {
                     } while (await db.deadchat.had(question));
 
                     await db.deadchat.add(question);
-                    msg.channel.send(`<@&${DEAD_CHAT_ROLE_ID}> ${capitalizeFirst(question)}${question.endsWith('?') ? '' : '?'}`);
+                    msg.channel.send(`${m.role(DEAD_CHAT_ROLE_ID)} ${capitalizeFirst(question)}${question.endsWith('?') ? '' : '?'}`);
                 }
             }, DEAD_CHAT_AUTO_WAIT_INTERVAL * 1000);
         },

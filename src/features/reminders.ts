@@ -1,10 +1,13 @@
-import logError from '@/util/log-error.ts';
-import { client } from '@/client.ts';
-import { cfg } from '@/bot/cfg.ts';
-import { db } from '@/apis/db/bot-db.ts';
 import { GuildTextBasedChannel } from 'discord.js';
 import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
 import { PredefinedColors } from '@/util/color.ts';
+
+import { client } from '@/client.ts';
+import { cfg } from '@/bot/cfg.ts';
+import { db } from '@/apis/db/bot-db.ts';
+
+import logError from '@/util/log-error.ts';
+import m        from '@/util/mentions.ts';
 
 export async function reminderHandler() {
     try {
@@ -26,7 +29,7 @@ export async function reminderHandler() {
                         )
                         .setColor(PredefinedColors.Gold)
                 ],
-                content: `<@${reminder.for_user}>`
+                content: m.user(reminder.for_user),
             });
             await db.reminders.deleteReminder(reminder.id);
         }

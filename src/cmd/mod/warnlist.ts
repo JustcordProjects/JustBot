@@ -1,11 +1,15 @@
+import * as dsc from 'discord.js';
+
 import { Command } from '@/bot/command.ts';
 import { CommandFlags } from '@/bot/command/misc.ts';
-import { db, WarnRaw } from '@/apis/db/bot-db.ts';
-import * as dsc from 'discord.js';
 import { PredefinedColors } from '@/util/color.ts';
-import { client as cl } from '../../client.ts';
 import { CommandPermissions } from '@/bot/command/permissions.ts';
+
+import { client } from '@/client.ts';
+import { db, WarnRaw } from '@/apis/db/bot-db.ts';
+
 import User from '@/apis/db/user.ts';
+import m    from '@/util/mentions.ts';
 
 export default {
     name: 'warnlist',
@@ -28,7 +32,6 @@ export default {
     permissions: CommandPermissions.everyone(),
 
     async execute(api) {
-        const client: dsc.Client = cl;
         const guild: dsc.Guild = api.guild!;
 
         const targetUser = api.getTypedArg('user', 'user-mention')?.value as dsc.GuildMember | undefined;
@@ -65,7 +68,7 @@ export default {
                 const moderator = row.moderator_id ? await guild.members.fetch(row.moderator_id).catch(() => null) : null;
 
                 let value = `\`${row.reason_string}\`\nWarn #${row.id}, punktów: \`${row.points}\` `;
-                if (moderator) value += `, od <@${moderator.id}>`;
+                if (moderator) value += `, od ${m.user(moderator)}`;
                 if (row.expires_at) value += ` (wygasa <t:${row.expires_at}:R>)`;
 
                 fields.push({

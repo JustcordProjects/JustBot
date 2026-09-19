@@ -2,11 +2,13 @@ import * as dsc from 'discord.js';
 
 import { Command } from '@/bot/command.ts';
 import { CommandFlags } from '@/bot/command/misc.ts';
+import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
 
 import { db } from '@/apis/db/bot-db.ts';
 import { output } from '@/bot/logging.ts';
-import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
 import { cfg } from '@/bot/cfg.ts';
+
+import m from '@/util/mentions.ts';
 
 const ecoRoles = cfg.features.economy.roles.filter((x) => x.id.includes('vip')).map((x) => x.discordRoleId);
 
@@ -47,7 +49,7 @@ export default {
                     fields.push({
                         name: `${i} » ${member.user.username}`,
                         value: [
-                            `${userEcoRole ? `<@&${userEcoRole}>` : `<@&${cfg.features.welcomer.freeRolesForEveryone[0]}>`}`,
+                            userEcoRole ? m.role(userEcoRole) : m.role(cfg.features.welcomer.freeRolesForEveryone[0]),
                             `**${balance.wallet.add(balance.bank).format()}**`,
                         ].join('\n'),
                         inline: true,
