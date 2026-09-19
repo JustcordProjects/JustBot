@@ -1,10 +1,12 @@
 import { cfg } from '@/bot/cfg.ts';
 import { db } from '@/apis/db/bot-db.ts';
+
 import { Command } from '@/bot/command.ts';
 import { CommandFlags } from '@/bot/command/misc.ts';
 
-import User from '@/apis/db/user.ts';
+import User  from '@/apis/db/user.ts';
 import Money from '@/util/money.ts';
+import m     from '@/util/mentions.ts';
 
 export default {
     name: 'ecomod',
@@ -88,6 +90,9 @@ export default {
             await targetUser.economy.setBalance(bal);
         });
 
-        return api.log.replySuccess(api, 'Operacja zakończona!', `Pomyślnie zmodyfikowałeś balans użytkownika <@${targetId}>, tak że ${actionToString()}. Przed tą operacją w tej lokalizacji miał ${before!.format()}.`)
+        return api.log.replySuccess(
+            api, 'Operacja zakończona!',
+            `Pomyślnie zmodyfikowałeś balans użytkownika ${m.user(targetId)}, tak że ${actionToString()}. Przed tą operacją w tej lokalizacji miał ${before!.format()}.`
+        )
     },
 } satisfies Command;

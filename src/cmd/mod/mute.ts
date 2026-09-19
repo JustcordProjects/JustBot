@@ -6,6 +6,8 @@ import { PredefinedColors } from '@/util/color.ts';
 import { Hour, Timestamp } from '@/util/parse-timestamp.ts';
 
 import mute from '@/apis/mod/muting.ts';
+import m    from '@/util/mentions.ts';
+
 import { watchMute } from '@/bot/watchdog.ts';
 import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
 import { CommandPermissions } from '@/bot/command/permissions.ts';
@@ -71,8 +73,8 @@ export default {
                     .setTitle(`📢 Na ${targetUser.user.username} przymusowo nałożono kłódkę na buzię!`)
                     .setDescription(`Ciekawe czy wyjdzie z serwera... A, racja! Mogłem tego nie mówić.`)
                     .addFields(
-                        { name: 'Moderator', value: `<@${api.invoker.id}>`, inline: true },
-                        { name: 'Użytkownik', value: `<@${targetUser.id}>`, inline: true },
+                        { name: 'Moderator',  value: m.user(api.invoker.id), inline: true },
+                        { name: 'Użytkownik', value: m.user(targetUser.id),  inline: true },
                         { name: 'Powód', value: reason },
                         { name: 'Czas', value: `<t:${expiresAt}:R>`, inline: true },
                     )

@@ -3,6 +3,8 @@ import { CommandFlags } from '@/bot/command/misc.ts';
 import { db, ContentEntry } from '@/apis/db/bot-db.ts';
 import { cfg } from '@/bot/cfg.ts';
 
+import m from '@/util/mentions.ts';
+
 export default {
     name: 'random',
     aliases: ['rand'],
@@ -54,7 +56,7 @@ export default {
         }
 
         return api.reply({
-            content: `polecam zasugerowane przez <@${content.authorId}> ${content.contentUrl}`,
+            content: `polecam zasugerowane przez ${m.user(content.authorId)}: ${content.contentUrl}`,
             allowedMentions: {
                 parse: [],
             },

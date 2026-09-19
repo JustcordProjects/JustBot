@@ -3,9 +3,11 @@ import * as dsc from 'discord.js';
 import { Command } from '@/bot/command.ts';
 import { CommandFlags } from '@/bot/command/misc.ts';
 import { PredefinedColors } from '@/util/color.ts';
-import kick from '@/apis/mod/kicks.ts';
 import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
 import { CommandPermissions } from '@/bot/command/permissions.ts';
+
+import kick from '@/apis/mod/kicks.ts';
+import m    from '@/util/mentions.ts'
 
 export default {
     name: 'kick',
@@ -62,9 +64,9 @@ export default {
                     .setTitle(`📢 ${targetUser.user.username} został wywalony!`)
                     .setDescription(`Ukróciłem jego zagrania! Miejmy nadzieję, że nie wbije znowu...`)
                     .addFields(
-                        { name: 'Moderator', value: `<@${api.invoker.id}>`, inline: true },
-                        { name: 'Użytkownik', value: `<@${targetUser.id}>`, inline: true },
-                        { name: 'Powód', value: reason, inline: false },
+                        { name: 'Moderator',  value: m.user(api.invoker), inline: true },
+                        { name: 'Użytkownik', value: m.user(targetUser),  inline: true },
+                        { name: 'Powód',      value: reason,              inline: false },
                     )
                     .setColor(PredefinedColors.Orange),
             ],

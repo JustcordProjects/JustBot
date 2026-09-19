@@ -1,7 +1,5 @@
 import * as dsc from 'discord.js';
 
-import User from '@/apis/db/user.ts';
-
 import actionsManager, { Action } from '@/features/actions.ts';
 import { mkProgressBar } from '@/util/progressbar.ts';
 import { findLowerClosestKey } from '@/util/objects/lower-closest-key.ts';
@@ -9,6 +7,9 @@ import { findLowerClosestKey } from '@/util/objects/lower-closest-key.ts';
 import { cfg } from '@/bot/cfg.ts';
 import { client } from '@/client.ts';
 import { output } from './logging.ts';
+
+import User from '@/apis/db/user.ts';
+import m    from '@/util/mentions.ts';
 
 export const OnSetXpEvent = actionsManager.mkEvent('OnSetXpEvent');
 export interface XpEventCtx {
@@ -30,10 +31,6 @@ export function levelToXp(level: number, levelDivider: number = cfg.features.lev
 }
 
 export const lvlRoles = Object.values(cfg.features.leveling.milestoneRoles);
-
-function getMention(user: dsc.GuildMember) {
-    return `<@${user.user.id}>`;
-}
 
 export function mkLvlProgressBar(xp: number, levelDivider: number, totalLength: number = 10): string {
     const level = xpToLevel(xp, levelDivider);
@@ -138,7 +135,7 @@ export async function addExperiencePoints(msg: dsc.OmitPartialGroupDMChannel<dsc
         const channelLvl = await msg.client.channels.fetch(cfg.channels.important.levels);
         if (!channelLvl || !channelLvl.isSendable()) return;
 
-        let content = `${getMention(msg.member!)} wbił poziom ${newLevel}! Wow co za osiągnięcie!`;
+        let content = `${m.user(msg.member!)} wbił poziom ${newLevel}! Wow co za osiągnięcie!`;
         if (gotNewRole) content += 'I btw nową rolę zdobyłeś!';
         channelLvl.send(cfg.features.leveling.shallPingWhenNewLevel ? content : { content, allowedMentions: { parse: [] } });
     }
@@ -182,16 +179,16 @@ const updateXpAction: Action<XpEventCtx> = {
             const newLevel = xpToLevel(newXp, cfg.features.leveling.levelDivider);
 
             if (newLevel > prevLevel) {
-                content = `Level użytkownika ${getMention(member)} został zmieniony i teraz ma aż ${newLevel} level!`;
+                content = `Level użytkownika ${m.user(member)} został zmieniony i teraz ma aż ${newLevel} level!`;
                 await addLvlRole(member.guild, newLevel, member.id);
             } else if (newLevel < prevLevel) {
-                content = `Level użytkownika ${getMention(member)} został zmieniony, przez co cofnął się do levela ${newLevel}!`;
+                content = `Level użytkownika ${m.user(member)} został zmieniony, przez co cofnął się do levela ${newLevel}!`;
                 await addLvlRole(member.guild, newLevel, member.id);
             } else {
                 if (prevXp == newXp) {
-                    content = `Administrator próbował zmienić level użytkownika ${getMention(member)}, ale ma autyzm i ustawił dokladnie taki sam jaki był wcześniej czyli ${prevLevel} level. Nic tylko pogratulować`;
+                    content = `Administrator próbował zmienić level użytkownika ${m.user(member)}, ale ma autyzm i ustawił dokladnie taki sam jaki był wcześniej czyli ${prevLevel} level. Nic tylko pogratulować`;
                 } else {
-                    content = `Level użytkownika ${getMention(member)} został zmieniony, co prawda dalej ma ${prevLevel} level, ale tym razem ${newXp}xp zamiast ${prevXp}xp?` +
+                    content = `Level użytkownika ${m.user(member)} został zmieniony, co prawda dalej ma ${prevLevel} level, ale tym razem ${newXp}xp zamiast ${prevXp}xp?` +
                         ` Dobra przestane yappowac tych nerdowskich liczb i dam ci progress bar do następnego levela:` +
                         '\n' + mkLvlProgressBar(newXp, cfg.features.leveling.levelDivider);
                 }

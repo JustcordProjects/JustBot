@@ -4,6 +4,7 @@ import { replyWarn } from '@/util/log.ts';
 
 import randomElement from '@/util/random-element.ts';
 import sleep from '@/util/sleep.ts';
+import m from '@/util/mentions.ts';
 
 const ThreadNames = [
     'Kanał commentary na YT',
@@ -47,12 +48,12 @@ export const pollsModerator: Action<MessageEventCtx> = {
                 Date.now() - lastMessage.createdTimestamp >= 30 * 60 * 1000
             ) {
                 await msg.channel.send(
-                    `${msg.poll?.question.text ?? 'nowa ankieta guys! ^^^'} <@&1511009438994141194>`
+                    `${msg.poll?.question.text ?? 'nowa ankieta guys! ^^^'} ${m.role('1511009438994141194')}`
                 );
             }
 
             const thread = await msg.startThread({
-                name: 
+                name:
                     (msg.poll?.question.text ?? randomElement(ThreadNames))
                         .slice(0, 100),
                 reason: 'yes bum bum bum bum'

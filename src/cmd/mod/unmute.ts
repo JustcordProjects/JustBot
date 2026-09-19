@@ -2,8 +2,10 @@ import { Command } from '@/bot/command.ts';
 import { CommandFlags } from '@/bot/command/misc.ts';
 import { CommandPermissions } from '@/bot/command/permissions.ts';
 import { PredefinedColors } from '@/util/color.ts';
-import { sendLog } from '@/log/send-log.ts';
 import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
+import { sendLog } from '@/log/send-log.ts';
+
+import m from '@/util/mentions.ts';
 
 export default {
     name: 'unmute',
@@ -49,7 +51,7 @@ export default {
 
         sendLog({
             title: 'Odciszono użytkownika',
-            description: `Użytkownik <@${targetUser.id}> został odciszony przez <@${api.invoker.id}>.`,
+            description: `Użytkownik ${m.user(targetUser)} został odciszony przez ${m.user(api.invoker)}.`,
             fields: [{ name: 'Powód', value: reason }],
             color: PredefinedColors.Pink,
         });

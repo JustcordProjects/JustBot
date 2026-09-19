@@ -1,12 +1,19 @@
 import * as dsc from 'discord.js';
+
+import {
+    getErrorEmbed, getSuccessEmbed, getWarnEmbed,
+} from '@/util/log.ts';
+
 import { Command } from '@/bot/command.ts';
 import { CommandFlags } from '@/bot/command/misc.ts';
 import { CommandPermissions } from '@/bot/command/permissions.ts';
 import { CommandAPI } from '@/bot/command/api.ts';
+
 import { db } from '@/apis/db/bot-db.ts';
 import { output } from '@/bot/logging.ts';
-import { getErrorEmbed, getSuccessEmbed, getWarnEmbed } from '@/util/log.ts';
 import { cfg } from '@/bot/cfg.ts';
+
+import m from '@/util/mentions.ts';
 
 export default {
     name: 'reset',
@@ -106,7 +113,7 @@ export default {
                         break;
                     }
 
-                    const scopeText = userId ? `dla użytkownika <@${userId}>` : 'dla WSZYSTKICH użytkowników';
+                    const scopeText = userId ? `dla użytkownika ${m.user(userId)}` : 'dla WSZYSTKICH użytkowników';
                     await interaction.update({
                         embeds: [getSuccessEmbed('Reset zakończony', `Pomyślnie zresetowano tabele **${table}** ${scopeText}.`)],
                         components: [],

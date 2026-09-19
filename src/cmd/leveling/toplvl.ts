@@ -1,12 +1,14 @@
 import * as dsc from 'discord.js';
 
-import { cfg } from '@/bot/cfg.ts';
-import { lvlRoles } from '@/bot/level.ts';
-
 import { Command } from '@/bot/command.ts';
 import { CommandFlags } from '@/bot/command/misc.ts';
-import { output } from '@/bot/logging.ts';
 import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
+
+import { cfg } from '@/bot/cfg.ts';
+import { output } from '@/bot/logging.ts';
+import { lvlRoles } from '@/bot/level.ts';
+
+import m from '@/util/mentions.ts';
 
 function calculateLevel(xp: number, levelDivider: number): number {
     return Math.floor(
@@ -55,7 +57,11 @@ export default {
                     const userLvlRole = lvlRoles.filter((id) => member.roles.cache.has(id)).at(-1);
                     fields.push({
                         name: `${absCounter} » ${member.user.username}`,
-                        value: `${userLvlRole ? `<@&${userLvlRole}>` : `<@&${cfg.features.welcomer.freeRolesForEveryone[0]}>`}\n**Lvl**: ${calculateLevel(row.xp, cfg.features.leveling.levelDivider)}\n**XP**: ${row.xp}`,
+                        value: [
+                            userLvlRole ? m.role(userLvlRole) : m.role(cfg.features.welcomer.freeRolesForEveryone[0]),
+                            `**Lvl**: ${calculateLevel(row.xp, cfg.features.leveling.levelDivider)}`,
+                            `**XP**: ${row.xp}`
+                        ].join('\n'),
                         inline: true,
                     });
                 } catch (e) {

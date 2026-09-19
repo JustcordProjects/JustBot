@@ -7,6 +7,7 @@ import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
 
 import User from '@/apis/db/user.ts';
 import sleep from '@/util/sleep.ts';
+import m from '@/util/mentions.ts';
 
 const MIN_VOTES = 5;
 const TIME = 120_000;
@@ -41,7 +42,7 @@ export default {
                     new ReplyEmbed()
                         .setTitle('📌 Przypnij wiadomość')
                         .setDescription([
-                            `Użytkownik <@${api.executor.id}> chce przypiąć wiadomość od <@${quoted.author.id}>: https://discord.com/channels/${quoted.guildId}/${quoted.channelId}/${quoted.id}`,
+                            `Użytkownik ${m.user(api.executor)} chce przypiąć wiadomość od ${m.user(quoted.author)}: https://discord.com/channels/${quoted.guildId}/${quoted.channelId}/${quoted.id}`,
                             '',
                             `**Głosów:** ${votes}/${MIN_VOTES}`,
                             `**Głosowanie wygasa** <t:${Math.floor(expiresAt / 1000)}:R>`

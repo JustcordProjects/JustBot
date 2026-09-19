@@ -8,6 +8,7 @@ import { watchNewMember } from '@/bot/watchdog.ts';
 import { output } from '@/bot/logging.ts';
 
 import randomElement from '@/util/random-element.ts';
+import m             from '@/util/mentions.ts';
 
 const StartItId = '572906387382861835';
 
@@ -25,7 +26,7 @@ export const welcomeNewUserAction: Action<UserEventCtx> = {
                 try {
                     await member.roles.add(role);
                 } catch {
-                    output.warn("welcomer: can't apply role <@&" + role + '> to <@' + member.id + '>');
+                    output.warn(`welcomer: can't apply role ${m.role(role)} to ${m.user(member)}`);
                 }
             }
 
@@ -41,10 +42,10 @@ export const welcomeNewUserAction: Action<UserEventCtx> = {
             } else {
                 await welcomeChannel.send({
                     content: '<:join:1510910009368641667>' +
-                        randomElement(cfg.features.welcomer.welcomeMsgs).replace('<mention>', `<@${member.user.id}>`),
+                        randomElement(cfg.features.welcomer.welcomeMsgs).replace('<mention>', m.user(member.user)),
                     allowedMentions: cfg.features.welcomer.mentionNewPeopleInLobby ? {} : { parse: [] },
                 });
-                await generalChannel.send(`witaj <@${member.user.id}>, będzie nam miło jak się przywitasz czy coś <:emoji_a_radosci_nie_bylo_konca:1510697737920839680>`);
+                await generalChannel.send(`witaj ${m.user(member.user)}, będzie nam miło jak się przywitasz czy coś <:emoji_a_radosci_nie_bylo_konca:1510697737920839680>`);
             }
         },
     ],
@@ -68,7 +69,7 @@ export const sayGoodbyeAction: Action<UserEventCtx> = {
 
             await channel.send({
                 content: '<:leave:1510910039777345576>' +
-                    randomElement(cfg.features.welcomer.goodbyeMsgs).replace('<mention>', `<@${member.user.id}> (${member.user.username})`),
+                    randomElement(cfg.features.welcomer.goodbyeMsgs).replace('<mention>', `${m.user(member.user)} (${member.user.username})`),
                 allowedMentions: cfg.features.welcomer.mentionNewPeopleInLobby ? {} : { parse: [] },
             });
         },

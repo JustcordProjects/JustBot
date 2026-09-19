@@ -5,6 +5,8 @@ import { mkAutoreplyAction } from '../autoreply.ts';
 import { cfg } from '@/bot/cfg.ts';
 import { client } from '@/client.ts';
 
+import m from '@/util/mentions.ts';
+
 export default class AutoModRules {
     static readonly msgAuthorIsNotImmuneToAutomod = (msg: MessageEventCtx) => {
         for (const role of [...cfg.hierarchy.automodBypassRoles, cfg.hierarchy.administration.headAdmin]) {
@@ -21,7 +23,7 @@ export default class AutoModRules {
             { type: 'contains', keyword: '@here' },
             { type: 'contains', keyword: 'małpa here' },
         ],
-        reply: (msg) => `Upomnienie dla <@${msg.author.id}> za próbe pingu everyone!!11!1@!!`,
+        reply: (msg) => `Upomnienie dla ${m.user(msg.author)} za próbe pingu everyone!!11!1@!!`,
         additionalConstraints: [AutoModRules.msgAuthorIsNotImmuneToAutomod],
         additionalCallbacks: [PredefinedActionCallbacks.deleteMsgAutomod],
     });
@@ -37,7 +39,7 @@ export default class AutoModRules {
                 keyword: '(?:discord\\.gg|discord\\.com\\/invite)\\/[A-Za-z0-9]{4,}',
             },
         ],
-        reply: (msg) => `<@${msg.author.id}> ładnie proszę, wypier*alaj ze swoją reklamą na serwery reklamowe ;)'`,
+        reply: (msg) => `${m.user(msg.author)} ładnie proszę, wypier*alaj ze swoją reklamą na serwery reklamowe ;)'`,
         additionalCallbacks: [PredefinedActionCallbacks.deleteMsgAutomod],
         additionalConstraints: [AutoModRules.msgAuthorIsNotImmuneToAutomod, (ctx) => !(ctx.channel.isThread() && ctx.channel.parentId == '1510999452192866485')],
     });

@@ -1,14 +1,16 @@
+import * as dsc from 'discord.js';
+
 import { Command } from '@/bot/command.ts';
 import { CommandFlags } from '@/bot/command/misc.ts';
 import { CommandPermissions } from '@/bot/command/permissions.ts';
 import { PredefinedColors } from '@/util/color.ts';
 
-import * as dsc from 'discord.js';
-
-import warn from '@/apis/mod/warns.ts';
 import parseTimestamp, { Timestamp } from '@/util/parse-timestamp.ts';
-import clamp from '@/util/math/clamp.ts';
 import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
+
+import clamp from '@/util/math/clamp.ts';
+import warn  from '@/apis/mod/warns.ts';
+import m     from '@/util/mentions.ts';
 
 export default {
     name: 'warn',
@@ -93,10 +95,10 @@ export default {
             .setTitle(`📢 Masz warna, ${targetUser.user.username}!`)
             .setDescription(`Właśnie dostałeś darmoweeego warna (punktów: ${points})!`)
             .addFields(
-                { name: 'Moderator', value: `<@${api.invoker.id}>`, inline: true },
-                { name: 'Użytkownik', value: `<@${targetUser.id}>`, inline: true },
-                { name: 'Powód', value: reason, inline: false },
-                { name: 'Punkty', value: points.toString(), inline: true },
+                { name: 'Moderator',  value: m.user(api.invoker.id), inline: true  },
+                { name: 'Użytkownik', value: m.user(targetUser.id),  inline: true  },
+                { name: 'Powód',      value: reason,                 inline: false },
+                { name: 'Punkty',     value: points.toString(),      inline: true  },
             )
             .setColor(PredefinedColors.Orange);
 

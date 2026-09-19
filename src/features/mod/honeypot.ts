@@ -1,13 +1,16 @@
 import { PredefinedActionEventTypes, type Action, type MessageEventCtx } from '@/features/actions.ts';
-import AutoModRules from '@/features/mod/automod.ts';
-import { cfg } from '@/bot/cfg.ts';
 import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
 import { PredefinedColors } from '@/util/color.ts';
+import { GuildTextBasedChannel } from 'discord.js';
+
 import { sendLog } from '@/log/send-log.ts';
-import warn from '@/apis/mod/warns.ts';
 import { mkMessageReferenceEmbed } from '@/bot/templates/message-reference.ts';
 import { client } from '@/client.ts';
-import { GuildTextBasedChannel } from 'discord.js';
+import { cfg } from '@/bot/cfg.ts';
+
+import AutoModRules from '@/features/mod/automod.ts';
+import warn from '@/apis/mod/warns.ts';
+import m    from '@/util/mentions.ts';
 
 async function internal() {
     const channel = await client.channels.fetch(cfg.channels.important.honeypot) as GuildTextBasedChannel;
@@ -18,7 +21,7 @@ async function internal() {
                 .setDescription([
                     '# NIE WYSYŁAJ WIADOMOŚCI NA TYM KANALE',
                     'Ten kanał jest używany by łapać boty. Pisanie tutaj skończy się **natychmiastowym mute na 24 godziny**!',
-                    `Zamiast tego, napisz na <#${cfg.channels.general.general}> lub <#${cfg.channels.general.programming}>.`
+                    `Zamiast tego, napisz na ${m.chan(cfg.channels.general.general)} lub ${m.chan(cfg.channels.general.programming)}.`
                 ].join('\n'))
         ]
     });
@@ -65,8 +68,8 @@ export default function setupHoneypotAction() {
                 sendLog({
                     title: 'Kolejny spam-bot wysłał coś na honeypocie',
                     fields: [
-                        { name: 'Użytkownik', value: `<@${msg.member!.id}>`, inline: true },
-                        { name: 'Wysłano DM', value: dmSendSuccessfull ? 'Tak' : 'Nie', inline: true }
+                        { name: 'Użytkownik', value: m.user(msg.member!),               inline: true },
+                        { name: 'Wysłano DM', value: dmSendSuccessfull ? 'Tak' : 'Nie', inline: true },
                     ],
                     color: PredefinedColors.Red,
                     description: 'W skrócie to ten user dostał mute na 24 godziny za trigerrnięcie tego, trzeba było tak nie robić ig.',

@@ -1,14 +1,15 @@
 import { db } from '@/apis/db/bot-db.ts';
+import { output } from '@/bot/logging.ts';
 import { getRandomFloat } from '@/util/math/rand.ts';
 
 import { Command } from '@/bot/command.ts';
 import { CommandFlags } from '@/bot/command/misc.ts';
 import { PredefinedColors } from '@/util/color.ts';
-import { output } from '@/bot/logging.ts';
 import { ReplyEmbed } from '@/apis/translations/reply-embed.ts';
-import Money from '@/util/money.ts';
 
-import User from '@/apis/db/user.ts';
+import Money from '@/util/money.ts';
+import User  from '@/apis/db/user.ts';
+import m     from '@/util/mentions.ts';
 
 const CooldownMs = 5 * 60 * 1000;
 const BaseSuccessChance = 0.5;
@@ -115,7 +116,7 @@ export default {
                     const embed = new ReplyEmbed()
                         .setColor(PredefinedColors.Yellow)
                         .setTitle('Cel jest zbyt biedny')
-                        .setDescription(`<@${targetMember.id}> ma za mało pieniędzy (mniej niż ${MinStealable.format()}).`);
+                        .setDescription(`${m.user(targetMember)} ma za mało pieniędzy (mniej niż ${MinStealable.format()}).`);
                     return api.reply({ embeds: [embed] });
                 }
 
@@ -125,7 +126,11 @@ export default {
             const embed = new ReplyEmbed()
                 .setColor(result.success ? PredefinedColors.Green : PredefinedColors.Red)
                 .setTitle(result.success ? 'TAAAAAAAAAAAAAAAAK!' : 'System ochrony w banku się włączył.')
-                .setDescription(result.success ? `Udało Ci się ukraść <@${targetMember.id}> **${result.amount?.format()}** (${result.percent}%).` : `Nie udało Ci się nic ukraść od <@${targetMember.id}>!`);
+                .setDescription(
+                    result.success
+                        ? `Udało Ci się ukraść ${m.user(targetMember)} **${result.amount?.format()}** (${result.percent}%).`
+                        : `Nie udało Ci się nic ukraść od ${m.user(targetMember)}!`
+                );
 
             return api.reply({ embeds: [embed] });
         } catch (error) {

@@ -5,6 +5,7 @@ import { PredefinedColors } from '@/util/color.ts';
 import { sendLog } from '@/log/send-log.ts';
 
 import User from '@/apis/db/user.ts';
+import m    from '@/util/mentions.ts';
 
 export default async function ban(
     member: dsc.GuildMember,
@@ -38,7 +39,7 @@ export default async function ban(
             {
                 color: PredefinedColors.DarkGrey,
                 title: 'Zbanowano członka',
-                description: `Użytkownik <@${smember.id}> (${smember.user.username}) został zbanowany z serwera przez <@${data.mod}>!`,
+                description: `Użytkownik ${m.user(smember)} (${smember.user.username}) został zbanowany z serwera przez ${m.user(data.mod)}!`,
                 fields: [{ name: 'Powód', value: data.reason }],
             },
         );
