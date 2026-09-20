@@ -6,7 +6,7 @@ import { executeAsk } from '../../features/ei/ask.ts';
 
 export default {
     name: 'ask',
-    aliases: ['zapytaj'],
+    aliases: ['czy'],
     description: {
         main: "Poproś JustBOT'a o to, by zrobił to co chcesz lub po prostu pogadaj z tym samotnym botem",
         short: 'Zapytaj JustBOTa',
@@ -32,7 +32,10 @@ export default {
 
     execute(api) {
         const ctxMsgs = api.getTypedArg('context-msgs', 'int')?.value ?? cfg.features.ai.contextDefaultMessages;
-        const question = api.getTypedArg('question', 'string')!.value;
+
+        let question = api.getTypedArg('question', 'string')!.value;
+        if (api.invokedViaAlias == 'czy')
+            question = 'czy ' + question;
 
         if (!api.raw.msg) {
             return api.log.replyError(api, 'Błąd', 'Nie możesz używać tej super komendy w slash commands jeszcze.');
