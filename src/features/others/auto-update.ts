@@ -19,12 +19,15 @@ export const autoUpdateAction: Action<MessageEventCtx> = {
 
     callbacks: [
         async (msg) => {
+            const reaction = await msg.react('🤔');
+
             const cmd = new Deno.Command('git', {
                 args: ['pull', '--rebase'],
             });
             const out = await cmd.output();
 
             if (out.code != 0) {
+                await reaction.remove();
                 await msg.react('❌');
                 return await sendLog({
                     title: 'Auto update się zjebał',
@@ -43,6 +46,7 @@ export const autoUpdateAction: Action<MessageEventCtx> = {
             const checkOutput = await checkCmd.output();
 
             if (checkOutput.code != 0) {
+                await reaction.remove();
                 await msg.react('❌');
                 return await sendLog({
                     title: 'Auto update się zjebał',
@@ -51,6 +55,7 @@ export const autoUpdateAction: Action<MessageEventCtx> = {
                 });
             }
 
+            await reaction.remove();
             await msg.react('✅');
             await sendLog({
                 title: 'Zrobiłem ten auto update!',
