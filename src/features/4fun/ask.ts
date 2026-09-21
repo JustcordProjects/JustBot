@@ -19,7 +19,7 @@ export const askAction: Action<MessageEventCtx> = {
             const referenced = typeof ctx.reference?.messageId == 'string' && typeof ctx.reference?.guildId == 'string' && !ctx.flags.has('HasSnapshot')
                 ? await ctx.fetchReference() : false;
 
-            return ctx.content.trim().startsWith(`${client.user?.id}>`) ||
+            return ctx.content.trim().startsWith(`${m.user(client.user?.id ?? '0')}`) ||
                 (referenced
                     ? (
                         referenced.author.id == client.user?.id &&
