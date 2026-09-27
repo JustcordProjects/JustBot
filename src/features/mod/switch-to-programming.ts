@@ -17,7 +17,7 @@ const switchToProgrammingWords = [
     'void', 'int', 
     'i8', 'i16', 'i32', 'i64',
     'u8', 'u16', 'u32', 'u64',
-    'true', 'false', 'bool', 'boolean'
+    'bool', 'boolean'
 ].map((w) => w.toLowerCase());
 
 export const switchToProgrammingAction: Action<MessageEventCtx> = {
