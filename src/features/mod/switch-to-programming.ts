@@ -9,13 +9,15 @@ const switchToProgrammingWords = [
     // tooling 
     'deno', 'gcc', 'llvm',
     // random 
-    'ffi', 'abi', 
+    'ffi', 'abi', 'mutable', 'immutable', 
     // keywords
-    'function', 'extern',
+    'function', 'extern', 'const', 'readonly',
+    'var', 'let', 'while', 'for',
     // data types
     'void', 'int', 
     'i8', 'i16', 'i32', 'i64',
-    'u8', 'u16', 'u32', 'u64'
+    'u8', 'u16', 'u32', 'u64',
+    'true', 'false', 'bool', 'boolean'
 ].map((w) => w.toLowerCase());
 
 export const switchToProgrammingAction: Action<MessageEventCtx> = {
@@ -23,7 +25,7 @@ export const switchToProgrammingAction: Action<MessageEventCtx> = {
     activatesOn: PredefinedActionEventTypes.OnMessageCreateOrEdit,
     
     constraints: [
-        () => Math.random() < 0.3,
+        () => Math.random() < 0.45,
         (ctx) => ctx.channelId == cfg.channels.general.general,
         (ctx) => !!ctx.content && ctx.content.toLowerCase().split(/\s+/).some((word) => switchToProgrammingWords.includes(word))
     ],
