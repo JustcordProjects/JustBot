@@ -58,18 +58,20 @@ export default {
             reloadedThings.push('- role poziomów');
         }
 
-        if (!flags.includes('--no-music-db')) {
+        if (!flags.includes('--no-content-db')) {
             try {
                 for (const cdb of cfg.features.contentDatabases) {
-                    const channel = await api.guild!.channels.fetch(cdb.channel);
-                    if (channel?.isTextBased()) {
-                        const scanResult = await contentDatabaseScan(channel, cdb);
-                        db.content.clear(cdb.id);
-                        db.content.batchAddEntries(scanResult);
-                        reloadedThings.push(`- server ${cdb.id} database`);
-                    } else {
-                        failedThingsToReload.push(`- server ${cdb.id} database`);
-                    }
+                    for (const channelId of cdb.channels) {
+                        const channel = await api.guild!.channels.fetch(channelId);
+                        if (channel?.isTextBased()) {
+                            const scanResult = await contentDatabaseScan(channel, cdb);
+                            db.content.clear(cdb.id);
+                            db.content.batchAddEntries(scanResult);
+                            reloadedThings.push(`- server ${cdb.id} database`);
+                        } else {
+                            failedThingsToReload.push(`- server ${cdb.id} database`);
+                        }
+                    } 
                 }
             } catch {
                 failedThingsToReload.push('- server content database');

@@ -149,7 +149,7 @@ export const featuresCfg: config.Features = {
     contentDatabases: [
         {
             id: 'music',
-            channel: channelsCfg.other.music,
+            channels: [ channelsCfg.other.music ],
             domains: [
                 'youtube.com',
                 'youtu.be',
@@ -159,7 +159,7 @@ export const featuresCfg: config.Features = {
         },
         {
             id: 'video',
-            channel: channelsCfg.general.media,
+            channels: [ channelsCfg.general.media, channelsCfg.general.general ],
             domains: [
                 'youtube.com',
                 'youtu.be',

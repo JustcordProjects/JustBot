@@ -13,13 +13,13 @@ export const addMusicAction: Action<MessageEventCtx> = {
     constraints: [
         (msg: dsc.Message) => {
             if (msg.author.bot) return false;
-            return cfg.features.contentDatabases.some(cdb => cdb.channel === msg.channelId);
+            return cfg.features.contentDatabases.some(cdb => cdb.channels.includes(msg.channelId));
         },
     ],
     callbacks: [
         async (msg: dsc.Message) => {
             for (const cdb of cfg.features.contentDatabases) {
-                if (cdb.channel !== msg.channelId) continue;
+                if (!cdb.channels.includes(msg.channelId)) continue;
 
                 const links = extractMediaLinks(msg.content, cdb);
 

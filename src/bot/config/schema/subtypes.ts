@@ -30,7 +30,7 @@ export interface CmdArgRulesForNums {
 
 export interface ContentType {
     id: string;
-    channel: dsc.Snowflake;
+    channels: dsc.Snowflake[];
     domains: string[];
 }
 
