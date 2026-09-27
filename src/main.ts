@@ -72,6 +72,7 @@ import { autoUpdateAction } from './features/others/auto-update.ts';
 import { pollsModerator } from '@/features/mod/polls-mod.ts';
 import setupHoneypotAction from '@/features/mod/honeypot.ts';
 import { gifBanAction } from '@/features/mod/gifban.ts';
+import { switchToProgrammingAction } from '@/features/mod/switch-to-programming.ts';
 
 // --------------- INIT ---------------
 client.once('clientReady', async () => {
@@ -141,6 +142,7 @@ function setUpActions() {
         ...AutoModRules.all(),
         gifBanAction,
         pollsModerator,
+        switchToProgrammingAction,
         // msg-specific actions
         mediaChannelAction,
         countingChannelAction,
