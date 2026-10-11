@@ -73,6 +73,7 @@ import { pollsModerator } from '@/features/mod/polls-mod.ts';
 import setupHoneypotAction from '@/features/mod/honeypot.ts';
 import { gifBanAction } from '@/features/mod/gifban.ts';
 import { switchToProgrammingAction } from '@/features/mod/switch-to-programming.ts';
+import { scheduleSpecialFeature } from '@/features/others/let-the-hamsters-go-free.ts';
 
 // --------------- INIT ---------------
 client.once('clientReady', async () => {
@@ -178,6 +179,7 @@ function setUpEvents() {
 async function main() {
     initStatusGenerator();
     initExpiredWarnsDeleter();
+    scheduleSpecialFeature();
     setUpActions();
     setUpEvents();
 
