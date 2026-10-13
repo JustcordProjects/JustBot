@@ -92,19 +92,20 @@ export const SystemPrompt: string = [
 
 export async function initAskCmdModel() {
     const params = {
-        model: 'gemini-3.1-flash-lite-preview',
+        model: 'gemini-3.8-flash',
         config: {
             systemInstruction: SystemPrompt,
         },
     };
 
     gemini.initModel('ask-cmd', params);
+    gemini.initModel('ask-cmd', { ...params, model: 'gemini-3.1-flash-lite-preview' });
     gemini.initModel('ask-cmd', { ...params, model: 'gemini-2.5-flash' });
 }
 
 export async function initWikiModel() {
     const params = {
-        model: 'gemini-3.1-flash-lite-preview',
+        model: 'gemini-3.8-flash',
         config: {
             systemInstruction: [
                 'Twoim zadaniem jest odpowiadać jak Wikipedia.',
