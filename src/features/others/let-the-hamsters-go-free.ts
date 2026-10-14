@@ -1,3 +1,5 @@
+import * as cache from '@/apis/cache/cache.ts';
+
 import { client } from '@/client.ts';
 import { db } from '@/apis/db/bot-db.ts';
 import { Day } from '@/util/parse-timestamp.ts';
@@ -26,11 +28,21 @@ async function callback() {
         logError('stdwarn', err);
     }
 
+    await cache.store('let-the-hamsters-go-free', 'scheduled-run', 0);
     scheduleSpecialFeature();
 }
 
-export function scheduleSpecialFeature() {
-    const randomDays = Math.floor(Math.random() * 5) + 1;
-    const delay = randomDays * Day;
-    setTimeout(callback, delay * 1000);
+export async function scheduleSpecialFeature() {
+    let nextRun = await cache.load<number>('let-the-hamsters-go-free', 'scheduled-run');
+    const now = Date.now();
+
+    if (!nextRun || nextRun <= now) {
+        const randomDays = Math.floor(Math.random() * 5) + 1;
+        const delay = randomDays * Day;
+        nextRun = now + delay * 1000;
+        await cache.store('let-the-hamsters-go-free', 'scheduled-run', nextRun);
+    }
+
+    const remaining = Math.max(0, nextRun - now);
+    setTimeout(callback, remaining);
 }
