@@ -62,7 +62,7 @@ export default {
 
         try {
             const result = await doEval(api, code.src);
-            if (result) {
+            if (result != undefined) {
                 const sanitized = JSON5.stringify(result, null, 4)?.replace('```', '\`\`\`') ?? String(result);
                 if (sanitized.length >= 4096 - 10) {
                     return api.log.replyWarn(api, 'Za długi output', 'Tak w skrócie, to twój kod wyprodukował za długi output jak na discorda.');
