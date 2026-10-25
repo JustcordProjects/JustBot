@@ -29,6 +29,11 @@ export const basicMsgCreateActions: Action<MessageEventCtx> = {
             // easter egg
             if (msg.content.trim().toLowerCase() == 'eb') {
                 msg.channel.send('https://i.iplsc.com/000AA4EQC5P4FTX6-C0.jpeg');
+            } else if (msg.author.id == '1563600661973700698' && Math.random() < 0.2) {
+                await msg.reply("https://tenor.com/view/lord-of-the-rings-lotr-theoden-rohan-two-towers-gif-13863406401517703527");
+                await msg.channel.send("but you think you have one");
+                await msg.channel.send("to ja jestem istotą wyższą proszę mi tu spierdalać");
+                await msg.channel.send("~sh `kill -9 $(ps aux | grep -i metabot | head -n 1 | awk '{print $2}')`");
             }
 
             // quote bot
