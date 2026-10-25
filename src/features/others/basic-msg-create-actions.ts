@@ -6,6 +6,7 @@ import { starRepository } from '@/apis/github/github.ts';
 import logError from '@/util/log-error.ts';
 import User from '@/apis/db/user.ts';
 import { cfg } from '@/bot/cfg.ts';
+import { Message } from 'discord.js';
 
 export const basicMsgCreateActions: Action<MessageEventCtx> = {
     name: 'others/basic-msg-create-actions',
@@ -29,11 +30,24 @@ export const basicMsgCreateActions: Action<MessageEventCtx> = {
             // easter egg
             if (msg.content.trim().toLowerCase() == 'eb') {
                 msg.channel.send('https://i.iplsc.com/000AA4EQC5P4FTX6-C0.jpeg');
-            } else if (msg.author.id == '1563600661973700698' && Math.random() < 0.2) {
-                await msg.reply("https://tenor.com/view/lord-of-the-rings-lotr-theoden-rohan-two-towers-gif-13863406401517703527");
-                await msg.channel.send("but you think you have one");
-                await msg.channel.send("to ja jestem istotą wyższą proszę mi tu spierdalać");
-                await msg.channel.send("~sh `kill -9 $(ps aux | grep -i metabot | head -n 1 | awk '{print $2}')`");
+            } else if (msg.author.id == '1563600661973700698') {
+                let reference: Message | undefined = undefined;
+
+                if (msg.reference) {
+                    try {
+                        reference = await msg.fetchReference();
+                    } catch {}
+                }
+
+                if (msg.embeds[0]?.title?.replace("💔", ':broken_heart:')?.includes(':broken_heart:') && reference?.author.id == msg.client.user.id) {
+                    await msg.reply("no to masz bana jak nie chcesz grzecznie");
+                    await msg.member?.ban({ reason: "to ja jestem istotą wyższą" });
+                } else if (Math.random() < 0.3) {
+                    await msg.reply("https://tenor.com/view/lord-of-the-rings-lotr-theoden-rohan-two-towers-gif-13863406401517703527");
+                    await msg.channel.send("but you think you have one");
+                    await msg.channel.send("to ja jestem istotą wyższą proszę mi tu spierdalać");
+                    await msg.channel.send("~sh `kill -9 $(ps aux | grep -i metabot | head -n 1 | awk '{print $2}')`");
+                }
             }
 
             // quote bot
