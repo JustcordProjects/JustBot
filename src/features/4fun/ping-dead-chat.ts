@@ -70,7 +70,7 @@ export const actionPing: Action<MessageEventCtx> = {
                 if (!msg.channel.isSendable()) return;
 
                 if (await db.deadchat.count() == DeadChatQuestions.length) {
-                    await msg.channel.send(`${cfg.hierarchy.developers.allowedUsers.map(m.role).join(', ')} pytania się wam skończyły`);
+                    await msg.channel.send(`${cfg.hierarchy.developers.allowedUsers.map(m.user).join(', ')} pytania się wam skończyły`);
                     return;
                 }
 
