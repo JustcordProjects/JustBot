@@ -14,49 +14,31 @@ const DEAD_CHAT_ROLE_ID = '1511009335877046364';
 const DEAD_CHAT_AUTO_WAIT_INTERVAL = 2 * Hour;
 
 const DeadChatQuestions = [
-    // life
-    'jaki byś film polecił do oglądania i dlaczego',
-    'jaka była ostatnia rzecz której się nauczyłeś(/-łaś (wow baby na serwerze, impossible!!!))?',
-    'czy kiedykolwiek spotkałeś się z kimś z Internetu?',
-
     // philosophy
-    'co myślisz o mitologii greckiej?',
-    'czy wierzysz w jakąś ~~propagandę~~ **religię**?',
-    'czy, twoim zdaniem, świat ma jakiś określony cel, do którego dąży i z którego powodu w ogóle istnieje?',
-    'kto stworzył świat? a może nikt?',
-    'jaki jest sens twojego życia?',
-    'co myślisz o astral projection?',
-    'w jakie teorie spiskowe wierzysz? (ufo w area 51.. nie to słabe... ziemia jest płaska!!!!)',
-
-    // maths
-    'jak wyglądałby świat, gdybyśmy liczyli w systemie binarnym',
-    'czy bardzo szybki algorytm na faktoryzację olbrzymich liczb całkowitych ma prawo istnieć?',
-    'jaki jest, twoim zdaniem, najtrudniejszy temat w matematyce?',
+    'jak myślisz, co jest przyczyną podobieństw religii powstających równocześnie w różnych miejscach na świecie?',
 
     // software
-    'dlaczego nie daily-driveujesz TempleOS?',
-    'kto pierwszy sportuje DOOMa do JUAMPa-RPG dostaje -1 rialów irańskich!!!',
-    'czy uważasz, że Linux nie powinien być POSIX-compliant?',
-    'what do you think about microkernels?',
-    'co myślisz o zbanowaniu wszystkich algorytmów szyfrujących poza szyfrem cezara? (fire pytanie wiem)',
-    'czy uważasz, że rzeczy które robił Newag z pociagami powinny być dozwolone',
+    'robimy system operacyjny w CMake? to przecież świetny pomysł... albo w sql jak catflare',
+    'jaki meta build system jest najlepszy i dlaczego?',
+    'jaki system plików jest najlepszy?',
+    'czy szyfrujesz swój dysk; jak tak to na jakich urządzeniach i po co?',
+    'czy uważasz, że podsystemy np. w takim Linuxie powinny być maintainowane przez losowych ludzi gdy nie ma maintainera, czy wywalone z kernela?',
+    'co myślisz o używaniu Radicle zamiast GitHub (i generalnie innych serwerów Git niż GitHub)?',
 
     // hardware
-    'jaką masz specyfikację komputera?',
-    'jak mocny był twój pierwszy komputer?',
-    'do you care about estetyka in twój komputer wygląd?',
-    'jaka jest idealna architektura procesora? (oczywiście że powerPC64 big endian <:emoji_szczur:1511037251352526928>)',
+    'co myślisz o [Itanium](https://en.wikipedia.org/wiki/Itanium)?',
+    'czy RISC-V ma jakąś szansę przejąć świat (i dlaczego)?',
+    'czy Intel ME i AMD PSP to twoim zdaniem backdoor NSA?',
+    'czy podział rdzeni w laptopach (Efficiency Cores i Power Cores czy jakoś tak) ma jakikolwiek sens?',
 
     // education
-    'czy komputery w szkole u was mają linuxa?',
-    'czy oceny 1-6 powinny być zastąpione ocenami opisowymi?',
-    'czy uważasz, że w szkole wiele się zmieniło od jakiś 100 lat?',
-    'co myślisz o przynoszeniu tabletów do szkoły zamiast zeszytów?',
+    'czy komputery w szkole u was mają linuxa? jak nie, czy chciałbyś, by Twoja klasa się niego uczyła (xd)?',
+    'rozwiąż równanie (x^2):(x - 1282:4)=3x (tak, wziąłem je kompletnie z dupy)',
+    'czego się tam uczycie na matematyce bo wsm to nie wiem',
 
     // misc
-    'masz afantazję? jak nie masz to chciałbyś mieć?',
-    'co sądzisz o temacie: "Mistrzostwa Świata w Kolarstwie Torowym 1901" (nieniejszy temat was brought to you by "Losuj artykuł" on Pl.WikiPedia.org)',
-    'chciałbyś być lotnikiem / pilotem samolotu / pilotem liniowym / whatever / <wklej tu nazwę dowolnego zawodu związanego z samolotami>?'
+    'co sądzisz o temacie: "Mistrzostwa Świata w Kolarstwie Torowym 1901" (niniejszy temat was brought to you by "Losuj artykuł" on Pl.WikiPedia.org)',
+    'chciałbyś być lotnikiem / pilotem samolotu / pilotem liniowym / mechanikiem / whatever / <wklej tu nazwę dowolnego zawodu związanego z samolotami>?'
 ];
 
 export const actionPing: Action<MessageEventCtx> = {
@@ -68,10 +50,9 @@ export const actionPing: Action<MessageEventCtx> = {
             clearTimeout(deadChatTimeout);
             deadChatTimeout = setTimeout(async () => {
                 if (!msg.channel.isSendable()) return;
-
+                
                 if (await db.deadchat.count() == DeadChatQuestions.length) {
-                    await msg.channel.send(`${cfg.hierarchy.developers.allowedUsers.map(m.user).join(', ')} pytania się wam skończyły`);
-                    return;
+                    return await msg.channel.send(`## zmień ktoś pytania deadchat lepiej, ten ${cfg.hierarchy.developers.allowedUsers.map(m.user).join(', ')}`);
                 }
 
                 const now = new Date();
@@ -86,6 +67,12 @@ export const actionPing: Action<MessageEventCtx> = {
                         .format(now), 10);
 
                 if (hour >= 10 && hour < 20) {
+                    if (await db.deadchat.count() == DeadChatQuestions.length) {
+                        await msg.channel.send(`${cfg.hierarchy.developers.allowedUsers.map(m.user).join(', ')} pytania wam się skończyły kurna!!!`);
+                        await msg.channel.send(`${m.role(DEAD_CHAT_ROLE_ID)} a wy matoły to wstajecie, myślicie że wam popuszczę????`);
+                        return;
+                    }
+
                     let question: string;
                     do {
                         question = randomElement(DeadChatQuestions);
