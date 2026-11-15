@@ -99,7 +99,7 @@ export async function initAskCmdModel() {
     };
 
     gemini.initModel('ask-cmd', params);
-    gemini.initModel('ask-cmd', { ...params, model: 'gemini-3.1-flash-lite-preview' });
+    gemini.initModel('ask-cmd', { ...params, model: 'gemini-3.1-flash-lite' });
     gemini.initModel('ask-cmd', { ...params, model: 'gemini-2.5-flash' });
 }
 
